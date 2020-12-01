@@ -1,0 +1,53 @@
+import React, { useState } from 'react'
+import { Graph } from '@organigram/client-js'
+
+export const GraphContext = React.createContext({
+    graph: null,
+    loading: false,
+    error: null,
+    load: () => {}
+})
+
+export const GraphProvider = ({ contracts, children }) => {
+    const [graph, setGraph] = useState(null)
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(null)
+
+    const load = () => {
+        setError(null)
+        setLoading(true)
+        Graph.load(contracts)
+        .then(data => setGraph(data))
+        .catch(error => {
+            console.error("Error loading graph ", contracts, error.message)
+            setGraph(null)
+            setError(error)
+        })
+        .finally(() => setLoading(false))
+    }
+
+    // Initial load.
+    React.useEffect(() => { load() }, [])
+
+    return (
+        <GraphContext.Provider value={{
+            graph,
+            loading,
+            error,
+            load
+        }}>
+            {children}
+        </GraphContext.Provider>
+    )
+}
+
+export const useGraph = () => React.useContext(GraphContext)
+
+export const withGraphProvider = ComposedComponent =>
+    ({ contracts, ...props }) => {
+        return (
+            <GraphProvider contracts={contracts}>
+                <ComposedComponent {...props} />
+            </GraphProvider>
+        )
+    }
