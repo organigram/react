@@ -7,10 +7,10 @@ export const Nomination = props => {
   return procedure && /*#__PURE__*/React.createElement("div", {
     className: "procedure procedure-nomination"
   }, /*#__PURE__*/React.createElement("pre", null, JSON.stringify({ ...procedure,
-    metadata: { ...procedure.metadata,
-      cid: procedure.metadata.cid.toString(),
-      url: `https://ipfs.io/ipfs/${procedure.metadata.cid.toString()}`
-    }
+    metadata: procedure.metadata && procedure.metadata.cid ? { ...procedure.metadata,
+      cid: procedure.metadata.cid.toV0(),
+      url: `https://ipfs.io/ipfs/${procedure.metadata.cid.toV0()}`
+    } : procedure.metadata
   }, 0, 2)), props && props.children);
 };
 export default Nomination;

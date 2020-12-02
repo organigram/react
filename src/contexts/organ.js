@@ -29,7 +29,9 @@ export const OrganProvider = ({ address, children }) => {
     }
 
     // Initial load.
-    React.useEffect(() => { load() }, [])
+    React.useEffect(() => {
+        load()
+    }, [])
 
     return (
         <OrganContext.Provider value={{ organ, loading, error, load }}>

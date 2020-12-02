@@ -7,11 +7,11 @@ export const Nomination = props => {
         <div className="procedure procedure-nomination">
             <pre>{JSON.stringify({
                 ...procedure,
-                metadata: {
+                metadata: procedure.metadata && procedure.metadata.cid ? {
                     ...procedure.metadata,
-                    cid: procedure.metadata.cid.toString(),
-                    url: `https://ipfs.io/ipfs/${procedure.metadata.cid.toString()}`
-                }
+                    cid: procedure.metadata.cid.toV0(),
+                    url: `https://ipfs.io/ipfs/${procedure.metadata.cid.toV0()}`
+                } : procedure.metadata
             }, 0, 2)}</pre>
             {props && props.children}
         </div>
