@@ -30,7 +30,6 @@ export const OrganProvider = ({
 
 
   React.useEffect(() => {
-    console.log("organ", organ);
     if (!organ && address) load();
   }, []);
   return /*#__PURE__*/React.createElement(OrganContext.Provider, {

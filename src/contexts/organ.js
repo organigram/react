@@ -31,7 +31,6 @@ export const OrganProvider = ({ organ, address, children }) => {
 
     // Initial load.
     React.useEffect(() => {
-        console.log("organ", organ)
         if (!organ && address)
             load()
     }, [])
