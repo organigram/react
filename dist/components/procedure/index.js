@@ -35,7 +35,7 @@ export const Procedure = props => {
     return loading ? props.loading || /*#__PURE__*/React.createElement("p", null, "Loading.") : props.not_found || /*#__PURE__*/React.createElement("p", null, "Procedure not found.");
   }
 
-  return /*#__PURE__*/React.createElement(React.Fragment, null, loading && /*#__PURE__*/React.createElement("p", null, "Loading."), error && /*#__PURE__*/React.createElement("p", null, "Error: ", error.message), procedure && ProcedureComponent && /*#__PURE__*/React.createElement(React.Suspense, {
+  return /*#__PURE__*/React.createElement(React.Fragment, null, loading && /*#__PURE__*/React.createElement("p", null, "Loading."), error && /*#__PURE__*/React.createElement("pre", null, "Error: ", JSON.stringify(error, null, 2)), procedure && ProcedureComponent && /*#__PURE__*/React.createElement(React.Suspense, {
     fallback: "Loading..."
   }, /*#__PURE__*/React.createElement(ProcedureComponent, props)));
 };

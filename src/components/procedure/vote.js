@@ -9,8 +9,8 @@ export const Vote = props => {
                 ...procedure,
                 metadata: {
                     ...procedure.metadata,
-                    cid: procedure.metadata.cid.toString(),
-                    url: `https://ipfs.io/ipfs/${procedure.metadata.cid.toString()}`
+                    cid: `${procedure.metadata.cid}`,
+                    url: `https://ipfs.io/ipfs/${procedure.metadata.cid}`
                 }
             }, 0, 2)}</pre>
             {props && props.children}

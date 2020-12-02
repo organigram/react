@@ -8,16 +8,16 @@ export const Graph = props => {
     return (
         <div {...props}>
             {loading && <p>Loading graph...</p>}
-            {error && <p>Error: <pre>{JSON.stringify(error, null, 2)}</pre></p>}
+            {error && <pre>Error: {JSON.stringify(error, null, 2)}</pre>}
             {graph && (
                 <div className="graph">
                     <h3>Organs</h3>
                     <ul>
-                        {graph.organs.map(o => <li key={o.address}><Organ address={o.address} /></li>)}
+                        {graph.organs.map(o => <li key={o.address}><Organ organ={o} /></li>)}
                     </ul>
                     <h3>Procedures</h3>
                     <ul>
-                        {graph.procedures.map(p => <li key={p.address}><Procedure address={p.address} /></li>)}
+                        {graph.procedures.map(p => <li key={p.address}><Procedure procedure={p} /></li>)}
                     </ul>
                 </div>
             )}

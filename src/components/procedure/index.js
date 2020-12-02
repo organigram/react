@@ -35,7 +35,7 @@ export const Procedure = props => {
     return (
         <>
             {loading && <p>Loading.</p>}
-            {error && <p>Error: {error.message}</p>}
+            {error && <pre>Error: {JSON.stringify(error, null, 2)}</pre>}
             {procedure && ProcedureComponent && (
                 <React.Suspense fallback={"Loading..."}>
                     <ProcedureComponent {...props} />

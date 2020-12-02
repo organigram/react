@@ -7,30 +7,33 @@ export const ProcedureContext = /*#__PURE__*/React.createContext({
   load: () => {}
 });
 export const ProcedureProvider = ({
+  procedure,
   address,
   children
 }) => {
-  const [procedure, setProcedure] = React.useState(null);
-  const [loading, setLoading] = React.useState(true);
+  const [_procedure, setProcedure] = React.useState(procedure || null);
+  const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
 
   const load = () => {
-    setError(null);
-    setLoading(true);
-    Procedure.load(address).then(data => setProcedure(data)).catch(error => {
-      console.error("Error loading procedure ", address, error.message);
-      setProcedure(null);
-      setError(error);
-    }).finally(() => setLoading(false));
+    if (address || procedure.address) {
+      setError(null);
+      setLoading(true);
+      Procedure.load(address).then(data => setProcedure(data)).catch(error => {
+        console.error("Error loading procedure ", address, error.message);
+        setProcedure(null);
+        setError(error);
+      }).finally(() => setLoading(false));
+    }
   }; // Initial load.
 
 
   React.useEffect(() => {
-    load();
+    if (!procedure && address) load();
   }, []);
   return /*#__PURE__*/React.createElement(ProcedureContext.Provider, {
     value: {
-      procedure,
+      procedure: _procedure,
       loading,
       error,
       load
@@ -39,8 +42,10 @@ export const ProcedureProvider = ({
 };
 export const useProcedure = () => React.useContext(ProcedureContext);
 export const withProcedureProvider = ComposedComponent => ({
+  procedure,
   address,
   ...props
 }) => /*#__PURE__*/React.createElement(ProcedureProvider, {
+  procedure: procedure,
   address: address
 }, /*#__PURE__*/React.createElement(ComposedComponent, props));

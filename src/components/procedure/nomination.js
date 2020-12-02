@@ -9,8 +9,8 @@ export const Nomination = props => {
                 ...procedure,
                 metadata: procedure.metadata && procedure.metadata.cid ? {
                     ...procedure.metadata,
-                    cid: procedure.metadata.cid.toV0(),
-                    url: `https://ipfs.io/ipfs/${procedure.metadata.cid.toV0()}`
+                    cid: `${procedure.metadata.cid}`,
+                    url: `https://ipfs.io/ipfs/${procedure.metadata.cid}`
                 } : procedure.metadata
             }, 0, 2)}</pre>
             {props && props.children}

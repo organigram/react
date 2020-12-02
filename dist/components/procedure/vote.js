@@ -8,8 +8,8 @@ export const Vote = props => {
     className: "procedure procedure-vote"
   }, /*#__PURE__*/React.createElement("pre", null, JSON.stringify({ ...procedure,
     metadata: { ...procedure.metadata,
-      cid: procedure.metadata.cid.toString(),
-      url: `https://ipfs.io/ipfs/${procedure.metadata.cid.toString()}`
+      cid: `${procedure.metadata.cid}`,
+      url: `https://ipfs.io/ipfs/${procedure.metadata.cid}`
     }
   }, 0, 2)), props && props.children);
 };

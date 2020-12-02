@@ -7,32 +7,35 @@ export const OrganContext = /*#__PURE__*/React.createContext({
   load: () => {}
 });
 export const OrganProvider = ({
+  organ,
   address,
   children
 }) => {
-  // @todo WHEN useGraph is available, we can init Organ from the Graph if present.
   // @todo Use a cache stored in useOrganigramClient (required) for organs & procedures sync.
-  const [organ, setOrgan] = React.useState(null);
-  const [loading, setLoading] = React.useState(true);
+  const [_organ, setOrgan] = React.useState(organ || null);
+  const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
 
   const load = () => {
-    setError(null);
-    setLoading(true);
-    Organ.load(address).then(data => setOrgan(data)).catch(error => {
-      console.error("Error loading organ ", address, error.message);
-      setOrgan(null);
-      setError(error);
-    }).finally(() => setLoading(false));
+    if (address || organ.address) {
+      setError(null);
+      setLoading(true);
+      Organ.load(address).then(data => setOrgan(data)).catch(error => {
+        console.error("Error loading organ ", address, error.message);
+        setOrgan(null);
+        setError(error);
+      }).finally(() => setLoading(false));
+    }
   }; // Initial load.
 
 
   React.useEffect(() => {
-    load();
+    console.log("organ", organ);
+    if (!organ && address) load();
   }, []);
   return /*#__PURE__*/React.createElement(OrganContext.Provider, {
     value: {
-      organ,
+      organ: _organ,
       loading,
       error,
       load
@@ -41,8 +44,10 @@ export const OrganProvider = ({
 };
 export const useOrgan = () => React.useContext(OrganContext);
 export const withOrganProvider = ComposedComponent => ({
+  organ,
   address,
   ...props
 }) => /*#__PURE__*/React.createElement(OrganProvider, {
+  organ: organ,
   address: address
 }, /*#__PURE__*/React.createElement(ComposedComponent, props));
