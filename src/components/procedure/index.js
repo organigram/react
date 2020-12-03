@@ -3,28 +3,22 @@ import { useProcedure, withProcedureProvider } from "../../contexts/procedure"
 
 export const Procedure = props => {
     const { procedure, loading, error } = useProcedure()
-    const [ProcedureComponent, setProcedureComponent] = React.useState(null)
+    const [ProcedureComponent, setProcedureComponent] = React.useState()
 
     React.useEffect(async () => {
-        if (!procedure)
-            setProcedureComponent(null)
-        else {
-            let Component = null
-            switch (procedure.type) {
-                case 'nomination':
-                    Component = React.lazy(() => import('./nomination'))
+        if (procedure.type)
+            switch(procedure.type) {
+                case '0xc5f28e49': // Nomination.
+                    setProcedureComponent(React.lazy(() => import('./nomination')))
                     break
-                case 'vote':
-                    Component = React.lazy(() => import('./vote'))
+                case '0xc9d27afe': // Vote.
+                    setProcedureComponent(React.lazy(() => import('./vote')))
                     break
                 default:
-                    // @todo : Dev only.
-                    Component = componentProps => <pre>{JSON.stringify(componentProps, 0, 2)}</pre>
+                    console.log('procedure.type', procedure.type)
                     break
             }
-            setProcedureComponent(Component)
-        }
-    }, [procedure])
+    }, [procedure.type])
 
     if (!procedure) {
         return loading ?
@@ -36,8 +30,8 @@ export const Procedure = props => {
         <>
             {loading && <p>Loading.</p>}
             {error && <pre>Error: {JSON.stringify(error, null, 2)}</pre>}
-            {procedure && ProcedureComponent && (
-                <React.Suspense fallback={"Loading..."}>
+            {procedure && procedure.type && ProcedureComponent && (
+                <React.Suspense fallback={<p>Loading...</p>}>
                     <ProcedureComponent {...props} />
                 </React.Suspense>
             )} 

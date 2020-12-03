@@ -6,7 +6,7 @@ export const Nomination = props => {
   } = useProcedure();
   return procedure && /*#__PURE__*/React.createElement("div", {
     className: "procedure procedure-nomination"
-  }, /*#__PURE__*/React.createElement("pre", null, JSON.stringify({ ...procedure,
+  }, /*#__PURE__*/React.createElement("p", null, "Nomination"), /*#__PURE__*/React.createElement("pre", null, JSON.stringify({ ...procedure,
     metadata: procedure.metadata && procedure.metadata.cid ? { ...procedure.metadata,
       cid: `${procedure.metadata.cid}`,
       url: `https://ipfs.io/ipfs/${procedure.metadata.cid}`

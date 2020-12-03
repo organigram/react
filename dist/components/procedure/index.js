@@ -6,37 +6,31 @@ export const Procedure = props => {
     loading,
     error
   } = useProcedure();
-  const [ProcedureComponent, setProcedureComponent] = React.useState(null);
+  const [ProcedureComponent, setProcedureComponent] = React.useState();
   React.useEffect(async () => {
-    if (!procedure) setProcedureComponent(null);else {
-      let Component = null;
+    if (procedure.type) switch (procedure.type) {
+      case '0xc5f28e49':
+        // Nomination.
+        setProcedureComponent( /*#__PURE__*/React.lazy(() => import('./nomination')));
+        break;
 
-      switch (procedure.type) {
-        case 'nomination':
-          Component = /*#__PURE__*/React.lazy(() => import('./nomination'));
-          break;
+      case '0xc9d27afe':
+        // Vote.
+        setProcedureComponent( /*#__PURE__*/React.lazy(() => import('./vote')));
+        break;
 
-        case 'vote':
-          Component = /*#__PURE__*/React.lazy(() => import('./vote'));
-          break;
-
-        default:
-          // @todo : Dev only.
-          Component = componentProps => /*#__PURE__*/React.createElement("pre", null, JSON.stringify(componentProps, 0, 2));
-
-          break;
-      }
-
-      setProcedureComponent(Component);
+      default:
+        console.log('procedure.type', procedure.type);
+        break;
     }
-  }, [procedure]);
+  }, [procedure.type]);
 
   if (!procedure) {
     return loading ? props.loading || /*#__PURE__*/React.createElement("p", null, "Loading.") : props.not_found || /*#__PURE__*/React.createElement("p", null, "Procedure not found.");
   }
 
-  return /*#__PURE__*/React.createElement(React.Fragment, null, loading && /*#__PURE__*/React.createElement("p", null, "Loading."), error && /*#__PURE__*/React.createElement("pre", null, "Error: ", JSON.stringify(error, null, 2)), procedure && ProcedureComponent && /*#__PURE__*/React.createElement(React.Suspense, {
-    fallback: "Loading..."
+  return /*#__PURE__*/React.createElement(React.Fragment, null, loading && /*#__PURE__*/React.createElement("p", null, "Loading."), error && /*#__PURE__*/React.createElement("pre", null, "Error: ", JSON.stringify(error, null, 2)), procedure && procedure.type && ProcedureComponent && /*#__PURE__*/React.createElement(React.Suspense, {
+    fallback: /*#__PURE__*/React.createElement("p", null, "Loading...")
   }, /*#__PURE__*/React.createElement(ProcedureComponent, props)));
 };
 export default withProcedureProvider(Procedure);

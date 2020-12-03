@@ -5,6 +5,7 @@ export const Nomination = props => {
     const { procedure } = useProcedure()
     return procedure && (
         <div className="procedure procedure-nomination">
+            <p>Nomination</p>
             <pre>{JSON.stringify({
                 ...procedure,
                 metadata: procedure.metadata && procedure.metadata.cid ? {
