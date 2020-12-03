@@ -12,7 +12,15 @@ export const Vote = props => {
                     ...procedure.metadata,
                     cid: `${procedure.metadata.cid}`,
                     url: `https://ipfs.io/ipfs/${procedure.metadata.cid}`
-                }
+                },
+                moves: procedure.moves.map(m => ({
+                    ...m,
+                    metadata: m.metadata && m.metadata.cid ? {
+                        ...m.metadata,
+                        cid: `${m.metadata.cid}`,
+                        url: `https://ipfs.io/ipfs/${m.metadata.cid}`
+                    } : m.metadata
+                }))
             }, 0, 2)}</pre>
             {props && props.children}
         </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useProcedure, withProcedureProvider } from "../../contexts/procedure";
+import { ProcedureMoves } from './moves';
 export const Procedure = props => {
   const {
     procedure,
@@ -31,6 +32,6 @@ export const Procedure = props => {
 
   return /*#__PURE__*/React.createElement(React.Fragment, null, loading && /*#__PURE__*/React.createElement("p", null, "Loading."), error && /*#__PURE__*/React.createElement("pre", null, "Error: ", JSON.stringify(error, null, 2)), procedure && procedure.type && ProcedureComponent && /*#__PURE__*/React.createElement(React.Suspense, {
     fallback: /*#__PURE__*/React.createElement("p", null, "Loading...")
-  }, /*#__PURE__*/React.createElement(ProcedureComponent, props)));
+  }, /*#__PURE__*/React.createElement(ProcedureComponent, props)), procedure && procedure.type && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(ProcedureMoves, null)));
 };
 export default withProcedureProvider(Procedure);

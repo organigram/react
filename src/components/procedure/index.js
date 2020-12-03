@@ -1,5 +1,6 @@
 import React from 'react'
 import { useProcedure, withProcedureProvider } from "../../contexts/procedure"
+import { ProcedureMoves } from './moves'
 
 export const Procedure = props => {
     const { procedure, loading, error } = useProcedure()
@@ -34,7 +35,12 @@ export const Procedure = props => {
                 <React.Suspense fallback={<p>Loading...</p>}>
                     <ProcedureComponent {...props} />
                 </React.Suspense>
-            )} 
+            )}
+            {procedure && procedure.type && (
+                <>
+                    <ProcedureMoves />
+                </>
+            )}
         </>
     )
 }
