@@ -81,10 +81,9 @@ export const OrganEntrySelector = ({ onSelect }) => {
         const entry = entries.find(e => e.index === event.target.value)
         onSelect(entry)
     }
-
     return (
         <select onChange={handleChange} className="form-control">
-            <option>-- Select an entry</option>
+            <option value="">-- Select an entry</option>
             {entries.map(e =>
                 <option key={e.index} value={e.index}>{`${e.index} ${e.address} [${e.cid}]`}</option>
             )}
@@ -114,7 +113,7 @@ export const OrganProcedureSelector = ({ onSelect }) => {
     }
     return (
         <select onChange={handleChange} className="form-control">
-            <option>-- Select a procedure</option>
+            <option value="">-- Select a procedure</option>
             {procedures.map(p =>
                 <option key={p.address} value={p.address}>{`${p.address} [${p.permissions}]`}</option>
             )}
@@ -172,7 +171,7 @@ export const OrganFormRemoveEntries = () => {
                 )}
                 <li key="add">
                     <OrganEntrySelector onSelect={e =>
-                        !entries.find(ese => ese.index === e.index) && setEntries(es => [...es, e])
+                        e && !entries.find(ese => ese.index === e.index) && setEntries(es => [...es, e])
                     } />
                 </li>
             </ul>
@@ -187,7 +186,7 @@ export const OrganFormReplaceEntry = () => {
     const [entry, setEntry] = useState()
     return (
         <div className="organ-replaceEntry">
-            <OrganEntrySelector onSelect={e => setIndex(e.index)} />
+            <OrganEntrySelector onSelect={e => e && setIndex(e.index)} />
             <OrganEntryForm onSave={setEntry} />
             <button onClick={() => replaceEntry(index, entry).catch(console.error)} className="btn btn-outline-primary">Replace Entry</button>
         </div>
@@ -210,7 +209,7 @@ export const OrganFormRemoveProcedure = () => {
     const [procedure, setProcedure] = useState()
     return (
         <div className="organ-removeProcedure">
-            <OrganProcedureSelector onSelect={setProcedure}/>
+            <OrganProcedureSelector onSelect={p => p && setProcedure(p)}/>
             <button onClick={() => removeProcedure(procedure.address).catch(console.error)} className="btn btn-outline-primary">Remove Procedure</button>
         </div>
     )
@@ -222,8 +221,8 @@ export const OrganFormReplaceProcedure = () => {
     const [newProcedure, setNewProcedure] = useState()
     return (
         <div className="organ-replaceProcedure">
-            <OrganProcedureSelector onSelect={setOldProcedure}/>
-            <OrganProcedureForm onSave={setNewProcedure} />
+            <OrganProcedureSelector onSelect={p => p && setOldProcedure(p)}/>
+            <OrganProcedureForm onSave={p => p && setNewProcedure(p)} />
             <button onClick={() => replaceProcedure(oldProcedure.address, newProcedure).catch(console.error)} className="btn btn-outline-primary">Replace Procedure</button>
         </div>
     )

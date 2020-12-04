@@ -5,8 +5,7 @@ export const NominationMove = ({ move }) => {
     const { procedure: { data } } = useProcedure()
     return data ? (
         <div className="procedure-move procedure-move-vote">
-            <p>Nomination Move</p>
-            {data.nominate && <button className="btn btn-danger" onClick={() => data.nominate(move.key)}>Vote</button>}
+            {data.nominate && <button className="btn btn-danger" onClick={() => data.nominate(move.key)}>Nominate!</button>}
         </div>
     ) : <></>
 }

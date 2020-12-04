@@ -87,7 +87,9 @@ export const OrganEntrySelector = ({
   return /*#__PURE__*/React.createElement("select", {
     onChange: handleChange,
     className: "form-control"
-  }, /*#__PURE__*/React.createElement("option", null, "-- Select an entry"), entries.map(e => /*#__PURE__*/React.createElement("option", {
+  }, /*#__PURE__*/React.createElement("option", {
+    value: ""
+  }, "-- Select an entry"), entries.map(e => /*#__PURE__*/React.createElement("option", {
     key: e.index,
     value: e.index
   }, `${e.index} ${e.address} [${e.cid}]`)));
@@ -141,7 +143,9 @@ export const OrganProcedureSelector = ({
   return /*#__PURE__*/React.createElement("select", {
     onChange: handleChange,
     className: "form-control"
-  }, /*#__PURE__*/React.createElement("option", null, "-- Select a procedure"), procedures.map(p => /*#__PURE__*/React.createElement("option", {
+  }, /*#__PURE__*/React.createElement("option", {
+    value: ""
+  }, "-- Select a procedure"), procedures.map(p => /*#__PURE__*/React.createElement("option", {
     key: p.address,
     value: p.address
   }, `${p.address} [${p.permissions}]`)));
@@ -215,7 +219,7 @@ export const OrganFormRemoveEntries = () => {
   }, "x"), `${e.address} [${e.cid}]`)), /*#__PURE__*/React.createElement("li", {
     key: "add"
   }, /*#__PURE__*/React.createElement(OrganEntrySelector, {
-    onSelect: e => !entries.find(ese => ese.index === e.index) && setEntries(es => [...es, e])
+    onSelect: e => e && !entries.find(ese => ese.index === e.index) && setEntries(es => [...es, e])
   }))), /*#__PURE__*/React.createElement("button", {
     onClick: () => removeEntries(indexes).catch(console.error),
     className: "btn btn-outline-primary"
@@ -232,7 +236,7 @@ export const OrganFormReplaceEntry = () => {
   return /*#__PURE__*/React.createElement("div", {
     className: "organ-replaceEntry"
   }, /*#__PURE__*/React.createElement(OrganEntrySelector, {
-    onSelect: e => setIndex(e.index)
+    onSelect: e => e && setIndex(e.index)
   }), /*#__PURE__*/React.createElement(OrganEntryForm, {
     onSave: setEntry
   }), /*#__PURE__*/React.createElement("button", {
@@ -266,7 +270,7 @@ export const OrganFormRemoveProcedure = () => {
   return /*#__PURE__*/React.createElement("div", {
     className: "organ-removeProcedure"
   }, /*#__PURE__*/React.createElement(OrganProcedureSelector, {
-    onSelect: setProcedure
+    onSelect: p => p && setProcedure(p)
   }), /*#__PURE__*/React.createElement("button", {
     onClick: () => removeProcedure(procedure.address).catch(console.error),
     className: "btn btn-outline-primary"
@@ -283,9 +287,9 @@ export const OrganFormReplaceProcedure = () => {
   return /*#__PURE__*/React.createElement("div", {
     className: "organ-replaceProcedure"
   }, /*#__PURE__*/React.createElement(OrganProcedureSelector, {
-    onSelect: setOldProcedure
+    onSelect: p => p && setOldProcedure(p)
   }), /*#__PURE__*/React.createElement(OrganProcedureForm, {
-    onSave: setNewProcedure
+    onSave: p => p && setNewProcedure(p)
   }), /*#__PURE__*/React.createElement("button", {
     onClick: () => replaceProcedure(oldProcedure.address, newProcedure).catch(console.error),
     className: "btn btn-outline-primary"

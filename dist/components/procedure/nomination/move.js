@@ -10,9 +10,9 @@ export const NominationMove = ({
   } = useProcedure();
   return data ? /*#__PURE__*/React.createElement("div", {
     className: "procedure-move procedure-move-vote"
-  }, /*#__PURE__*/React.createElement("p", null, "Nomination Move"), data.nominate && /*#__PURE__*/React.createElement("button", {
+  }, data.nominate && /*#__PURE__*/React.createElement("button", {
     className: "btn btn-danger",
     onClick: () => data.nominate(move.key)
-  }, "Vote")) : /*#__PURE__*/React.createElement(React.Fragment, null);
+  }, "Nominate!")) : /*#__PURE__*/React.createElement(React.Fragment, null);
 };
 export default NominationMove;

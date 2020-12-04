@@ -104,8 +104,8 @@ export const ProcedureMove = ({ move }) => {
                 <div>
                     Creator: <code>{move.creator}</code><br/>
                     Locked? <code>{move.locked ? "true" : "false"}</code><br/>
-                    Applied? <code>{move.locked ? "true" : "false"}</code><br/>
-                    Processing? <code>{move.locked ? "true" : "false"}</code><br/>
+                    Applied? <code>{move.applied ? "true" : "false"}</code><br/>
+                    Processing? <code>{move.processing ? "true" : "false"}</code><br/>
                     Metadata: <code>{`${move.metadata.cid}`}</code> <a href={`https://ipfs.io/ipfs/${move.metadata.cid}`} target="_blank">view</a><br/>
                     Operations:
                     <pre>{JSON.stringify(move.operations, null, 2)}</pre>
