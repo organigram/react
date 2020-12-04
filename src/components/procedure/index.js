@@ -111,7 +111,7 @@ export const ProcedureMove = ({ move }) => {
             <div className="card-body">
                 <h5>{move.key}</h5>
                 <div>
-                    <button onClick={() => reloadMove(move.key)} className="btn btn-sm">Reload Move</button>
+                    <button onClick={() => reloadMove(move.key)} className="btn btn-sm">Reload Move</button><br/>
                     Creator: <code>{move.creator}</code><br/>
                     Locked? <code>{move.locked ? "true" : "false"}</code><br/>
                     Applied? <code>{move.applied ? "true" : "false"}</code><br/>

@@ -2,7 +2,7 @@
  * @TODO : Move non-React code to @organigram/client-js.
  */
 import React, { useState } from 'react'
-import Web3 from 'web3'
+import { web3 } from '@organigram/client-js'
 
 export const ETHEREUM_TIMER_DELAY = 2000
 export const ETHEREUM_UNKNOWN = 'ETHEREUM_UNKNOWN'
@@ -22,10 +22,7 @@ export const Web3Context = React.createContext({
   networkIsValid: false,
   balance: 'n/a',
   status: ETHEREUM_UNKNOWN,
-  web3:
-    window.web3 &&
-    window.web3.currentProvider &&
-    new Web3(window.web3.currentProvider),
+  web3,
   ecRecover: null,
   sign: null,
   unlock: () => {}
@@ -45,7 +42,7 @@ export const Web3Provider = ({ children }) => {
     const [balance, setBalance] = useState(null)
     const [loading, setLoading] = useState(true)
     const [status, setStatus] = useState(ETHEREUM_UNKNOWN)
-    const [_web3, setWeb3] = useState(null)
+    const _web3 = web3
 
     const setNetwork = _network => {
         _setNetwork(_network)
@@ -82,6 +79,8 @@ export const Web3Provider = ({ children }) => {
                             ) {
                                 setAccount(newAccount)
                             }
+
+                            console.log("NEW ACCOUNT", newAccount)
 
                             // Update network (async).
                             const newNetworkId = _web3.currentProvider.networkVersion
