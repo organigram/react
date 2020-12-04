@@ -1,10 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useProcedure, withProcedureProvider } from "../../contexts/procedure"
-import { ProcedureMoves } from './moves'
 
 export const Procedure = props => {
     const { procedure, loading, error } = useProcedure()
-    const [ProcedureComponent, setProcedureComponent] = React.useState()
+    const [ProcedureComponent, setProcedureComponent] = useState()
 
     React.useEffect(async () => {
         if (procedure.type)
@@ -46,3 +45,119 @@ export const Procedure = props => {
 }
 
 export default withProcedureProvider(Procedure)
+
+
+export const ProcedureMoves = () => {
+    const { procedure: { moves, createMove } } = useProcedure()
+    const [currentMove, setCurrentMove] = useState()
+
+    return (
+        <div className="row">
+            <div className="col">
+                <button onClick={() => createMove()}>Create Move</button>
+                <hr />
+                <ul>
+                    {moves && moves.map(move => (
+                        <li key={`move-${move.key}`} onClick={() => setCurrentMove(move)}>
+                            <pre>{move.key}</pre>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
+            <div className="col">
+                {currentMove && (
+                    <ProcedureMove move={currentMove} />
+                )}
+            </div>
+        </div>
+    )
+
+}
+
+export const ProcedureMove = ({ move }) => (
+    <div className="procedure-move">
+        <pre>{JSON.stringify(move, null, 2)}</pre>
+        <ProcedureMoveFormLock move={move} />
+        <ProcedureMoveFormAddEntries move={move} />
+        <ProcedureMoveFormRemoveEntry move={move} />
+        <ProcedureMoveFormReplaceEntry move={move} />
+        <ProcedureMoveFormAddProcedure move={move} />
+        <ProcedureMoveFormRemoveProcedure move={move} />
+        <ProcedureMoveFormReplaceProcedure move={move} />
+        <ProcedureMoveFormCall move={move} />
+    </div>
+)
+
+export const ProcedureMoveFormLock = ({ move }) => {
+    const { procedure: { lockMove } } = useProcedure()
+    return (
+        <div className="procedure-move-lockMove">
+            <button onClick={() => lockMove(move.key).catch(console.error)}>Lock Move</button>
+        </div>
+    )
+}
+
+export const ProcedureMoveFormAddEntries = ({ move }) => {
+    const { procedure: { moveAddEntries } } = useProcedure()
+    return (
+        <div className="procedure-move-moveAddEntries">
+            <button onClick={() => moveAddEntries(move.key, ).catch(console.error)}>Add Entries</button>
+        </div>
+    )
+}
+
+export const ProcedureMoveFormRemoveEntry = ({ move }) => {
+    const { procedure: { moveRemoveEntry } } = useProcedure()
+    return (
+        <div className="procedure-move-moveRemoveEntry">
+            <button onClick={() => moveRemoveEntry(move.key).catch(console.error)}>Remove Entry</button>
+        </div>
+    )
+}
+
+export const ProcedureMoveFormReplaceEntry = ({ move }) => {
+    const { procedure: { moveReplaceEntry } } = useProcedure()
+    return (
+        <div className="procedure-move-moveReplaceEntry">
+            <button onClick={() => moveReplaceEntry(move.key).catch(console.error)}>Replace Entry</button>
+        </div>
+    )
+}
+
+export const ProcedureMoveFormAddProcedure = ({ move }) => {
+    const { procedure: { moveAddProcedure } } = useProcedure()
+    return (
+        <div className="procedure-move-moveAddProcedure">
+            <button onClick={() => moveAddProcedure(move.key).catch(console.error)}>Add Procedure</button>
+        </div>
+    )
+}
+
+export const ProcedureMoveFormRemoveProcedure = ({ move }) => {
+    const { procedure: { moveRemoveProcedure } } = useProcedure()
+    return (
+        <div className="procedure-move-moveRemoveProcedure">
+            <button onClick={() => moveRemoveProcedure(move.key).catch(console.error)}>Remove Procedure</button>
+        </div>
+    )
+}
+
+export const ProcedureMoveFormReplaceProcedure = ({ move }) => {
+    const { procedure: { moveReplaceProcedure } } = useProcedure()
+    return (
+        <div className="procedure-move-moveReplaceProcedure">
+            <button onClick={() => moveReplaceProcedure(move.key).catch(console.error)}>Replace Procedure</button>
+        </div>
+    )
+}
+
+export const ProcedureMoveFormCall = ({ move }) => {
+    const { procedure: { moveCall } } = useProcedure()
+    const [state, setState] = useState()
+    return (
+        <div className="procedure-move-moveCall">
+            <button onClick={() => moveCall(move.key).catch(console.error)}>Add Special Call</button>
+        </div>
+    )
+}
