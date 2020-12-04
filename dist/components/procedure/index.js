@@ -180,12 +180,12 @@ export const ProcedureMoveFormAddEntries = ({
     target: "_blank"
   }, `${e.cid}`), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("button", {
     className: "btn btn-sm btn-danger",
-    onClick: () => remoteEntry(e)
+    onClick: () => removeEntry(e)
   }, "remove")))), /*#__PURE__*/React.createElement(OrganEntryForm, {
     onSave: entry => entry && setEntries([...entries, entry])
   }), /*#__PURE__*/React.createElement("button", {
     onClick: () => {
-      if (organ && entries) moveAddEntries(move.key, organ, entries).catch(console.error);
+      if (organ && entries) moveAddEntries(move.key, organ.address, entries).catch(console.error);
     },
     className: "btn btn-primary"
   }, "Add Entries"));
@@ -210,10 +210,12 @@ export const ProcedureMoveFormRemoveEntry = ({
   }, /*#__PURE__*/React.createElement(ContractSelector, {
     contracts: organs,
     onSelect: o => o && setOrgan(o)
-  }), organ && /*#__PURE__*/React.createElement(OrganEntrySelector, {
+  }), organ && /*#__PURE__*/React.createElement(React.Fragment, null, entry && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("code", null, entry.address), " ", /*#__PURE__*/React.createElement("span", {
+    className: "text-info"
+  }, `${entry.cid}`)), /*#__PURE__*/React.createElement(OrganEntrySelector, {
     entries: organ.entries,
     onSelect: e => e && setEntry(e)
-  }), /*#__PURE__*/React.createElement("button", {
+  })), /*#__PURE__*/React.createElement("button", {
     onClick: () => {
       if (organ && entry) moveRemoveEntry(move.key, organ.address, entry).catch(console.error);
     },
@@ -244,9 +246,11 @@ export const ProcedureMoveFormReplaceEntry = ({
   }), organ && /*#__PURE__*/React.createElement(OrganEntrySelector, {
     entries: organ.entries,
     onSelect: e => e && setIndex(e.index)
-  }), organ && index && /*#__PURE__*/React.createElement(OrganEntryForm, {
+  }), organ && index && /*#__PURE__*/React.createElement(React.Fragment, null, entry && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("code", null, entry.address), " ", /*#__PURE__*/React.createElement("span", {
+    className: "text-info"
+  }, `${entry.cid}`)), /*#__PURE__*/React.createElement(OrganEntryForm, {
     onSave: e => setEntry(e)
-  }), /*#__PURE__*/React.createElement("button", {
+  })), /*#__PURE__*/React.createElement("button", {
     onClick: () => {
       if (organ && index && entry) moveReplaceEntry(move.key, organ.address, index, entry).catch(console.error);
     },
@@ -263,7 +267,7 @@ export const ProcedureMoveFormAddProcedure = ({
   } = useGraph();
   const {
     procedure: {
-      moveRemoveProcedure
+      moveAddProcedure
     }
   } = useProcedure();
   const [organ, setOrgan] = useState();
@@ -273,11 +277,13 @@ export const ProcedureMoveFormAddProcedure = ({
   }, /*#__PURE__*/React.createElement(ContractSelector, {
     contracts: organs,
     onSelect: o => o && setOrgan(o)
-  }), organ && /*#__PURE__*/React.createElement(OrganProcedureForm, {
+  }), organ && /*#__PURE__*/React.createElement(React.Fragment, null, procedure && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("code", null, procedure.address), " ", /*#__PURE__*/React.createElement("span", {
+    className: "text-info"
+  }, `${procedure.permissions}`)), /*#__PURE__*/React.createElement(OrganProcedureForm, {
     onSave: p => p && setProcedure(p)
-  }), /*#__PURE__*/React.createElement("button", {
+  })), /*#__PURE__*/React.createElement("button", {
     onClick: () => {
-      if (organ && procedure) moveAddProcedure(move.key, organ.address).catch(console.error);
+      if (organ && procedure) moveAddProcedure(move.key, organ.address, procedure).catch(console.error);
     },
     className: "btn btn-primary"
   }, "Add Procedure"));
@@ -336,9 +342,11 @@ export const ProcedureMoveFormReplaceProcedure = ({
   }), organ && /*#__PURE__*/React.createElement(OrganProcedureSelector, {
     procedures: organ.procedures,
     onSelect: p => p && setOldProcedure(p)
-  }), organ && /*#__PURE__*/React.createElement(OrganProcedureForm, {
+  }), organ && /*#__PURE__*/React.createElement(React.Fragment, null, procedure && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("code", null, procedure.address), " ", /*#__PURE__*/React.createElement("span", {
+    className: "text-info"
+  }, `${procedure.permissions}`)), /*#__PURE__*/React.createElement(OrganProcedureForm, {
     onSave: p => p && setNewProcedure(p)
-  }), /*#__PURE__*/React.createElement("button", {
+  })), /*#__PURE__*/React.createElement("button", {
     onClick: () => {
       if (organ && oldProcedure && newProcedure) moveReplaceProcedure(move.key, organ.address, oldProcedure.address, newProcedure).catch(console.error);
     },

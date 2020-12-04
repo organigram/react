@@ -16,7 +16,7 @@ export const Graph = props => {
   }) => address), ...graph.procedures.map(({
     address
   }) => address)];
-  return /*#__PURE__*/React.createElement("div", props, /*#__PURE__*/React.createElement("h1", null, "Graph Explorer"), loading && /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/React.createElement("div", props, loading && /*#__PURE__*/React.createElement("div", {
     className: "alert alert-info"
   }, "Loading graph..."), error && /*#__PURE__*/React.createElement("div", {
     className: "alert alert-danger"
@@ -47,14 +47,14 @@ export const Graph = props => {
     className: "list-unstyled"
   }, graph.organs.map(o => /*#__PURE__*/React.createElement("li", {
     key: o.address,
-    className: "list-item"
+    className: "list-item mb-3"
   }, /*#__PURE__*/React.createElement(Organ, {
     organ: o
   })))), /*#__PURE__*/React.createElement("h2", null, "Procedures"), /*#__PURE__*/React.createElement("ul", {
     className: "list-unstyled"
   }, graph.procedures.map(p => /*#__PURE__*/React.createElement("li", {
     key: p.address,
-    className: "list-item"
+    className: "list-item mb-3"
   }, /*#__PURE__*/React.createElement(Procedure, {
     procedure: p
   }))))));

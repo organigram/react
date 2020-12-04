@@ -175,7 +175,7 @@ export const ProcedureMoveFormAddEntries = ({ move }) => {
                         </a><br />
                         <button
                             className="btn btn-sm btn-danger"
-                            onClick={() => remoteEntry(e)}
+                            onClick={() => removeEntry(e)}
                         >remove</button>
                     </li> 
                 ))}
@@ -183,7 +183,7 @@ export const ProcedureMoveFormAddEntries = ({ move }) => {
             <OrganEntryForm onSave={entry => entry && setEntries([...entries, entry])} />
             <button onClick={() => {
                 if (organ && entries)
-                    moveAddEntries(move.key, organ, entries).catch(console.error)
+                    moveAddEntries(move.key, organ.address, entries).catch(console.error)
             }} className="btn btn-primary">Add Entries</button>
         </div>
     )
@@ -197,7 +197,12 @@ export const ProcedureMoveFormRemoveEntry = ({ move }) => {
     return (
         <div className="procedure-move-moveRemoveEntry">
             <ContractSelector contracts={organs} onSelect={o => o && setOrgan(o)} />
-            {organ && <OrganEntrySelector entries={organ.entries} onSelect={e => e && setEntry(e)} />}
+            {organ && (
+                <>
+                    {entry && <><code>{entry.address}</code> <span className="text-info">{`${entry.cid}`}</span></>}
+                    <OrganEntrySelector entries={organ.entries} onSelect={e => e && setEntry(e)} />
+                </>
+            )}
             <button onClick={() => {
                 if (organ && entry)
                     moveRemoveEntry(move.key, organ.address, entry).catch(console.error)
@@ -217,7 +222,10 @@ export const ProcedureMoveFormReplaceEntry = ({ move }) => {
             <ContractSelector contracts={organs} onSelect={o => o && setOrgan(o)} />
             {organ && <OrganEntrySelector entries={organ.entries} onSelect={e => e && setIndex(e.index)} />}
             {organ && index && (
-                <OrganEntryForm onSave={e => setEntry(e)} />
+                <>
+                    {entry && <><code>{entry.address}</code> <span className="text-info">{`${entry.cid}`}</span></>}
+                    <OrganEntryForm onSave={e => setEntry(e)} />
+                </>
             )}
             <button onClick={() => {
                 if (organ && index && entry)
@@ -230,18 +238,21 @@ export const ProcedureMoveFormReplaceEntry = ({ move }) => {
 
 export const ProcedureMoveFormAddProcedure = ({ move }) => {
     const { graph: { organs } } = useGraph()
-    const { procedure: { moveRemoveProcedure } } = useProcedure()
+    const { procedure: { moveAddProcedure } } = useProcedure()
     const [organ, setOrgan] = useState()
     const [procedure, setProcedure] = useState()
     return (
         <div className="procedure-move-moveAddProcedure">
             <ContractSelector contracts={organs} onSelect={o => o && setOrgan(o)} />
             {organ && (
-                <OrganProcedureForm onSave={p => p && setProcedure(p)} />
+                <>
+                    {procedure && <><code>{procedure.address}</code> <span className="text-info">{`${procedure.permissions}`}</span></>}
+                    <OrganProcedureForm onSave={p => p && setProcedure(p)} />
+                </>
             )}
             <button onClick={() => {
                 if (organ && procedure)
-                    moveAddProcedure(move.key, organ.address, ).catch(console.error)
+                    moveAddProcedure(move.key, organ.address, procedure).catch(console.error)
             }} className="btn btn-primary">Add Procedure</button>
         </div>
     )
@@ -279,7 +290,10 @@ export const ProcedureMoveFormReplaceProcedure = ({ move }) => {
                 <OrganProcedureSelector procedures={organ.procedures} onSelect={p => p && setOldProcedure(p)} />
             )}
             {organ && (
-                <OrganProcedureForm onSave={p => p && setNewProcedure(p)} />
+                <>
+                    {procedure && <><code>{procedure.address}</code> <span className="text-info">{`${procedure.permissions}`}</span></>}
+                    <OrganProcedureForm onSave={p => p && setNewProcedure(p)} />
+                </>
             )}
             <button onClick={() => {
                 if (organ && oldProcedure && newProcedure)

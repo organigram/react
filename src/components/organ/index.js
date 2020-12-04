@@ -66,8 +66,9 @@ export const OrganEntryForm = ({ onSave }) => {
     return (
         <form onSubmit={e => {
             e.preventDefault()
-            const { address, cid, reset } = e.currentTarget
-            onSave({ address, cid }).then(() => reset())
+            const { address, cid } = e.currentTarget
+            onSave({ address: address.value, cid: cid.value })
+            e.currentTarget.reset()
         }} className="form">
             <div><input type="text" name="address" placeholder="address" className="form-control" /></div>
             <div><input type="text" name="cid" placeholder="cid" className="form-control" /></div>
@@ -95,8 +96,9 @@ export const OrganProcedureForm = ({ onSave }) => {
     return (
         <form onSubmit={e => {
             e.preventDefault()
-            const { address, permissions, reset } = e.currentTarget
-            onSave({ address, permissions }).then(() => reset())
+            const { address, permissions } = e.currentTarget
+            onSave({ address: address.value, permissions: permissions.value })
+            e.currentTarget.reset()
         }} className="form">
             <div><input type="text" name="address" placeholder="address" className="form-control" /></div>
             <div><input type="text" name="permissions" placeholder="permissions" className="form-control" /></div>

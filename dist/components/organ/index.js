@@ -47,13 +47,13 @@ export const OrganEntryForm = ({
       e.preventDefault();
       const {
         address,
-        cid,
-        reset
+        cid
       } = e.currentTarget;
       onSave({
-        address,
-        cid
-      }).then(() => reset());
+        address: address.value,
+        cid: cid.value
+      });
+      e.currentTarget.reset();
     },
     className: "form"
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("input", {
@@ -98,13 +98,13 @@ export const OrganProcedureForm = ({
       e.preventDefault();
       const {
         address,
-        permissions,
-        reset
+        permissions
       } = e.currentTarget;
       onSave({
-        address,
-        permissions
-      }).then(() => reset());
+        address: address.value,
+        permissions: permissions.value
+      });
+      e.currentTarget.reset();
     },
     className: "form"
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("input", {
