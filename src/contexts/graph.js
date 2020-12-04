@@ -5,7 +5,9 @@ export const GraphContext = React.createContext({
     graph: null,
     loading: false,
     error: null,
-    load: () => {}
+    load: async () => {},
+    addContracts: async () => {},
+    removeContracts: async () => {}
 })
 
 export const GraphProvider = ({ contracts, children }) => {
@@ -26,6 +28,26 @@ export const GraphProvider = ({ contracts, children }) => {
         .finally(() => setLoading(false))
     }
 
+    const addContracts = React.useCallback(async contracts => {
+        if (graph)
+            graph.addContracts(contracts)
+            .then(ng => setGraph(og => ng))
+            .catch(error => {
+                console.error("Error adding contracts to graph.", contracts, error.message)
+                setError(error.message)
+            })
+    }, [graph])
+
+    const removeContracts = React.useCallback(async contracts => {
+        if (graph)
+            graph.removeContracts(contracts)
+            .then(ng => setGraph(og => ng))
+            .catch(error => {
+                console.error("Error removing contracts from graph.", contracts, error.message)
+                setError(error.message)
+            })
+    }, [graph])
+
     // Initial load.
     React.useEffect(() => { load() }, [])
 
@@ -34,7 +56,9 @@ export const GraphProvider = ({ contracts, children }) => {
             graph,
             loading,
             error,
-            load
+            load,
+            addContracts,
+            removeContracts
         }}>
             {children}
         </GraphContext.Provider>

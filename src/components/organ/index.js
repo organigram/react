@@ -16,14 +16,22 @@ export const Organ = props => {
                         <h5>Metadata</h5>
                         <code>{`${organ.metadata.cid}`}</code> <a href={`https://ipfs.io/ipfs/${organ.metadata.cid}`} target="_blank">view</a>
                         <h5>Procedures</h5>
-                        <ul>
-                            {organ.procedures.map((op, i) => <li key={op.address}>{`${op.address} ${op.permissions}`}</li>)}
+                        <ul className="list-unstyled">
+                            {organ.procedures.map((op, i) => (
+                                <li key={op.address} className="list-item">
+                                    <code>{op.address}</code> <span className="text-info">{`${op.permissions}`}</span>
+                                </li>
+                            ))}
                         </ul>
-                        <h5>
-                            Entries
-                        </h5>
-                        <ul>
-                            {organ.entries.map((e, i) => <li key={e.index}>{`${e.index} ${e.address} [${e.cid}]`}</li>)}
+                        <h5>Entries</h5>
+                        <ul className="list-unstyled">
+                            {organ.entries.map((e, i) => (
+                                <li key={e.index} className="list-item">
+                                    <em>{e.index}</em>{" "}
+                                    <code>{e.address}</code><br/>
+                                    <a href={`https://ipfs.io/ipfs/${e.cid}`} target="_blank">{`${e.cid}`}</a>
+                                </li>
+                            ))}
                         </ul>
                         <button className="btn btn-sm" onClick={() => toggleForms()}>toggle forms</button>
                         {showForms && (
@@ -56,6 +64,7 @@ export default withOrganProvider(Organ)
 export const OrganEntryForm = ({ onSave }) => {
     return (
         <form onSubmit={e => {
+            e.preventDefault()
             const { address, cid, reset } = e.currentTarget
             onSave({ address, cid }).then(() => reset())
         }} className="form">

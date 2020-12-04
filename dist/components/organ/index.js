@@ -17,11 +17,22 @@ export const Organ = props => {
   }, /*#__PURE__*/React.createElement("h4", null, organ.address), /*#__PURE__*/React.createElement("h5", null, "Metadata"), /*#__PURE__*/React.createElement("code", null, `${organ.metadata.cid}`), " ", /*#__PURE__*/React.createElement("a", {
     href: `https://ipfs.io/ipfs/${organ.metadata.cid}`,
     target: "_blank"
-  }, "view"), /*#__PURE__*/React.createElement("h5", null, "Procedures"), /*#__PURE__*/React.createElement("ul", null, organ.procedures.map((op, i) => /*#__PURE__*/React.createElement("li", {
-    key: op.address
-  }, `${op.address} ${op.permissions}`))), /*#__PURE__*/React.createElement("h5", null, "Entries"), /*#__PURE__*/React.createElement("ul", null, organ.entries.map((e, i) => /*#__PURE__*/React.createElement("li", {
-    key: e.index
-  }, `${e.index} ${e.address} [${e.cid}]`))), /*#__PURE__*/React.createElement("button", {
+  }, "view"), /*#__PURE__*/React.createElement("h5", null, "Procedures"), /*#__PURE__*/React.createElement("ul", {
+    className: "list-unstyled"
+  }, organ.procedures.map((op, i) => /*#__PURE__*/React.createElement("li", {
+    key: op.address,
+    className: "list-item"
+  }, /*#__PURE__*/React.createElement("code", null, op.address), " ", /*#__PURE__*/React.createElement("span", {
+    className: "text-info"
+  }, `${op.permissions}`)))), /*#__PURE__*/React.createElement("h5", null, "Entries"), /*#__PURE__*/React.createElement("ul", {
+    className: "list-unstyled"
+  }, organ.entries.map((e, i) => /*#__PURE__*/React.createElement("li", {
+    key: e.index,
+    className: "list-item"
+  }, /*#__PURE__*/React.createElement("em", null, e.index), " ", /*#__PURE__*/React.createElement("code", null, e.address), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("a", {
+    href: `https://ipfs.io/ipfs/${e.cid}`,
+    target: "_blank"
+  }, `${e.cid}`)))), /*#__PURE__*/React.createElement("button", {
     className: "btn btn-sm",
     onClick: () => toggleForms()
   }, "toggle forms"), showForms && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(OrganFormUpdateMetadata, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(OrganFormAddEntries, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(OrganFormRemoveEntries, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(OrganFormReplaceEntry, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(OrganFormAddProcedure, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(OrganFormRemoveProcedure, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(OrganFormReplaceProcedure, null)))));
@@ -32,6 +43,7 @@ export const OrganEntryForm = ({
 }) => {
   return /*#__PURE__*/React.createElement("form", {
     onSubmit: e => {
+      e.preventDefault();
       const {
         address,
         cid,
