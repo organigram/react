@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { useOrgan, withOrganProvider } from "../../contexts/organ"
 
 export const Organ = props => {
-    const { organ, loading, error } = useOrgan()
+    const { organ, loading, error, reloadMetadata, reloadEntries, reloadProcedures } = useOrgan()
     const [showForms, setShowForms] = useState(false)
     const toggleForms = () => setShowForms(sf => !sf)
     return (
@@ -17,8 +17,10 @@ export const Organ = props => {
                         <h5>Balance</h5>
                         <p>Ξ {organ.balance}</p>
                         <h5>Metadata</h5>
+                        <button onClick={() => reloadMetadata()} className="btn btn-sm">reload</button>
                         <p><code>{`${organ.metadata.cid}`}</code> <a href={`https://ipfs.io/ipfs/${organ.metadata.cid}`} target="_blank">view</a></p>
                         <h5>Procedures</h5>
+                        <button onClick={() => reloadProcedures()} className="btn btn-sm">reload</button>
                         <ul className="list-unstyled mb-1">
                             {organ.procedures.map((op, i) => (
                                 <li key={op.address} className="list-item">
@@ -27,6 +29,7 @@ export const Organ = props => {
                             ))}
                         </ul>
                         <h5>Entries</h5>
+                        <button onClick={() => reloadEntries()} className="btn btn-sm">reload</button>
                         <ul className="list-unstyled mb-1">
                             {organ.entries.map((e, i) => (
                                 <li key={e.index} className="list-item">
@@ -36,6 +39,7 @@ export const Organ = props => {
                                 </li>
                             ))}
                         </ul>
+                        <hr />
                         <button className="btn btn-sm" onClick={() => toggleForms()}>toggle forms</button>
                         {showForms && (
                             <>

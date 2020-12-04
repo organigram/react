@@ -5,7 +5,10 @@ export const Organ = props => {
   const {
     organ,
     loading,
-    error
+    error,
+    reloadMetadata,
+    reloadEntries,
+    reloadProcedures
   } = useOrgan();
   const [showForms, setShowForms] = useState(false);
 
@@ -15,17 +18,26 @@ export const Organ = props => {
     className: "card"
   }, /*#__PURE__*/React.createElement("div", {
     className: "card-body"
-  }, /*#__PURE__*/React.createElement("h4", null, organ.address), /*#__PURE__*/React.createElement("h5", null, "Balance"), /*#__PURE__*/React.createElement("p", null, "\u039E ", organ.balance), /*#__PURE__*/React.createElement("h5", null, "Metadata"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("code", null, `${organ.metadata.cid}`), " ", /*#__PURE__*/React.createElement("a", {
+  }, /*#__PURE__*/React.createElement("h4", null, organ.address), /*#__PURE__*/React.createElement("h5", null, "Balance"), /*#__PURE__*/React.createElement("p", null, "\u039E ", organ.balance), /*#__PURE__*/React.createElement("h5", null, "Metadata"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => reloadMetadata(),
+    className: "btn btn-sm"
+  }, "reload"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("code", null, `${organ.metadata.cid}`), " ", /*#__PURE__*/React.createElement("a", {
     href: `https://ipfs.io/ipfs/${organ.metadata.cid}`,
     target: "_blank"
-  }, "view")), /*#__PURE__*/React.createElement("h5", null, "Procedures"), /*#__PURE__*/React.createElement("ul", {
+  }, "view")), /*#__PURE__*/React.createElement("h5", null, "Procedures"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => reloadProcedures(),
+    className: "btn btn-sm"
+  }, "reload"), /*#__PURE__*/React.createElement("ul", {
     className: "list-unstyled mb-1"
   }, organ.procedures.map((op, i) => /*#__PURE__*/React.createElement("li", {
     key: op.address,
     className: "list-item"
   }, /*#__PURE__*/React.createElement("code", null, op.address), " ", /*#__PURE__*/React.createElement("span", {
     className: "text-info"
-  }, `${op.permissions}`)))), /*#__PURE__*/React.createElement("h5", null, "Entries"), /*#__PURE__*/React.createElement("ul", {
+  }, `${op.permissions}`)))), /*#__PURE__*/React.createElement("h5", null, "Entries"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => reloadEntries(),
+    className: "btn btn-sm"
+  }, "reload"), /*#__PURE__*/React.createElement("ul", {
     className: "list-unstyled mb-1"
   }, organ.entries.map((e, i) => /*#__PURE__*/React.createElement("li", {
     key: e.index,
@@ -33,7 +45,7 @@ export const Organ = props => {
   }, /*#__PURE__*/React.createElement("em", null, e.index), " ", /*#__PURE__*/React.createElement("code", null, e.address), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("a", {
     href: `https://ipfs.io/ipfs/${e.cid}`,
     target: "_blank"
-  }, `${e.cid}`)))), /*#__PURE__*/React.createElement("button", {
+  }, `${e.cid}`)))), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement("button", {
     className: "btn btn-sm",
     onClick: () => toggleForms()
   }, "toggle forms"), showForms && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(OrganFormUpdateMetadata, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(OrganFormAddEntries, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(OrganFormRemoveEntries, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(OrganFormReplaceEntry, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(OrganFormAddProcedure, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(OrganFormRemoveProcedure, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(OrganFormReplaceProcedure, null)))));

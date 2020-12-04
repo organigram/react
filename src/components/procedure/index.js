@@ -87,7 +87,7 @@ export const ProcedureMoves = () => {
 }
 
 export const ProcedureMove = ({ move }) => {
-    const { procedure: { type } } = useProcedure()
+    const { procedure: { type }, reloadMove } = useProcedure()
     const [showForms, setShowForms] = useState(false)
     const toggleForms = () => setShowForms(sf => !sf)
     const [ProcedureMoveComponent, setProcedureMoveComponent] = useState()
@@ -111,6 +111,7 @@ export const ProcedureMove = ({ move }) => {
             <div className="card-body">
                 <h5>{move.key}</h5>
                 <div>
+                    <button onClick={() => reloadMove(move.key)} className="btn btn-sm">Reload Move</button>
                     Creator: <code>{move.creator}</code><br/>
                     Locked? <code>{move.locked ? "true" : "false"}</code><br/>
                     Applied? <code>{move.applied ? "true" : "false"}</code><br/>
