@@ -4,7 +4,10 @@ export const OrganContext = /*#__PURE__*/React.createContext({
   organ: null,
   loading: false,
   error: null,
-  load: () => {}
+  load: () => {},
+  reloadEntries: async () => {},
+  reloadProcedures: async () => {},
+  reloadMetadata: async () => {}
 });
 export const OrganProvider = ({
   organ,
@@ -26,8 +29,17 @@ export const OrganProvider = ({
         setError(error);
       }).finally(() => setLoading(false));
     }
-  }; // Initial load.
+  };
 
+  const reloadEntries = React.useCallback(() => {
+    if (_organ.address && _organ.reloadEntries) _organ.reloadEntries().then(o => setOrgan(o));
+  }, [_organ.address, _organ.reloadEntries]);
+  const reloadMetadata = React.useCallback(() => {
+    if (_organ.address && _organ.reloadMetadata) _organ.reloadMetadata().then(o => setOrgan(o));
+  }, [_organ.address, _organ.reloadMetadata]);
+  const reloadProcedures = React.useCallback(() => {
+    if (_organ.address && _organ.reloadProcedures) _organ.reloadProcedures().then(o => setOrgan(o));
+  }, [_organ.address, _organ.reloadProcedures]); // Initial load.
 
   React.useEffect(() => {
     if (!organ && address) load();
@@ -37,7 +49,10 @@ export const OrganProvider = ({
       organ: _organ,
       loading,
       error,
-      load
+      load,
+      reloadEntries,
+      reloadProcedures,
+      reloadMetadata
     }
   }, children);
 };

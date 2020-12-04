@@ -7,7 +7,8 @@ export const Procedure = props => {
   const {
     procedure,
     loading,
-    error
+    error,
+    reloadMetadata
   } = useProcedure();
   const [ProcedureComponent, setProcedureComponent] = useState();
   React.useEffect(async () => {
@@ -39,7 +40,10 @@ export const Procedure = props => {
   }, /*#__PURE__*/React.createElement("h4", null, procedure.address), /*#__PURE__*/React.createElement("h5", null, "Metadata"), /*#__PURE__*/React.createElement("code", null, `${procedure.metadata.cid}`), " ", /*#__PURE__*/React.createElement("a", {
     href: `https://ipfs.io/ipfs/${procedure.metadata.cid}`,
     target: "_blank"
-  }, "view"), /*#__PURE__*/React.createElement("h5", null, "Moves"), /*#__PURE__*/React.createElement(ProcedureMoves, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(React.Suspense, {
+  }, "view"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => reloadMetadata(),
+    className: "btn btn-sm"
+  }, "Reload Metadata"), /*#__PURE__*/React.createElement("h5", null, "Moves"), /*#__PURE__*/React.createElement(ProcedureMoves, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(React.Suspense, {
     fallback: /*#__PURE__*/React.createElement("p", null, "Loading...")
   }, /*#__PURE__*/React.createElement(ProcedureComponent, props)))));
 };
@@ -49,7 +53,8 @@ export const ProcedureMoves = () => {
     procedure: {
       moves,
       createMove
-    }
+    },
+    reloadMoves
   } = useProcedure();
   const [currentMove, setCurrentMove] = useState();
   return /*#__PURE__*/React.createElement("div", {
@@ -57,9 +62,14 @@ export const ProcedureMoves = () => {
   }, /*#__PURE__*/React.createElement("div", {
     className: "col-2"
   }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => createMove(),
+    onClick: () => {
+      createMove().then(() => reloadMoves()).catch(() => {});
+    },
     className: "btn btn-primary"
-  }, "Create Move"), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement("ul", null, moves && moves.map(move => /*#__PURE__*/React.createElement("li", {
+  }, "Create Move"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => reloadMoves(),
+    className: "btn btn-sm"
+  }, "Reload Moves"), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement("ul", null, moves && moves.map(move => /*#__PURE__*/React.createElement("li", {
     key: `move-${move.key}`,
     onClick: () => setCurrentMove(move)
   }, /*#__PURE__*/React.createElement("pre", null, move.key))))), /*#__PURE__*/React.createElement("div", {
@@ -136,13 +146,14 @@ export const ProcedureMoveFormLock = ({
   const {
     procedure: {
       lockMove
-    }
+    },
+    reloadMove
   } = useProcedure();
   return !move.locked && /*#__PURE__*/React.createElement("div", {
     className: "procedure-move-lockMove"
   }, /*#__PURE__*/React.createElement("button", {
     onClick: () => {
-      lockMove(move.key).catch(console.error);
+      lockMove(move.key).then(() => reloadMove(move.key)).catch(console.error);
     },
     className: "btn btn-success"
   }, "Lock Move"));
@@ -158,7 +169,8 @@ export const ProcedureMoveFormAddEntries = ({
   const {
     procedure: {
       moveAddEntries
-    }
+    },
+    reloadMove
   } = useProcedure();
   const [organ, setOrgan] = useState();
   const [entries, setEntries] = useState([]);
@@ -185,7 +197,7 @@ export const ProcedureMoveFormAddEntries = ({
     onSave: entry => entry && setEntries([...entries, entry])
   }), /*#__PURE__*/React.createElement("button", {
     onClick: () => {
-      if (organ && entries) moveAddEntries(move.key, organ.address, entries).catch(console.error);
+      if (organ && entries) moveAddEntries(move.key, organ.address, entries).then(() => reloadMove(move.key)).catch(console.error);
     },
     className: "btn btn-primary"
   }, "Add Entries"));
@@ -201,7 +213,8 @@ export const ProcedureMoveFormRemoveEntry = ({
   const {
     procedure: {
       moveRemoveEntry
-    }
+    },
+    reloadMove
   } = useProcedure();
   const [organ, setOrgan] = useState();
   const [entry, setEntry] = useState();
@@ -217,7 +230,7 @@ export const ProcedureMoveFormRemoveEntry = ({
     onSelect: e => e && setEntry(e)
   })), /*#__PURE__*/React.createElement("button", {
     onClick: () => {
-      if (organ && entry) moveRemoveEntry(move.key, organ.address, entry).catch(console.error);
+      if (organ && entry) moveRemoveEntry(move.key, organ.address, entry).then(() => reloadMove(move.key)).catch(console.error);
     },
     className: "btn btn-primary"
   }, "Remove Entry"));
@@ -233,7 +246,8 @@ export const ProcedureMoveFormReplaceEntry = ({
   const {
     procedure: {
       moveReplaceEntry
-    }
+    },
+    reloadMove
   } = useProcedure();
   const [organ, setOrgan] = useState();
   const [index, setIndex] = useState();
@@ -252,7 +266,7 @@ export const ProcedureMoveFormReplaceEntry = ({
     onSave: e => setEntry(e)
   })), /*#__PURE__*/React.createElement("button", {
     onClick: () => {
-      if (organ && index && entry) moveReplaceEntry(move.key, organ.address, index, entry).catch(console.error);
+      if (organ && index && entry) moveReplaceEntry(move.key, organ.address, index, entry).then(() => reloadMove(move.key)).catch(console.error);
     },
     className: "btn btn-primary"
   }, "Replace Entry"));
@@ -268,7 +282,8 @@ export const ProcedureMoveFormAddProcedure = ({
   const {
     procedure: {
       moveAddProcedure
-    }
+    },
+    reloadMove
   } = useProcedure();
   const [organ, setOrgan] = useState();
   const [procedure, setProcedure] = useState();
@@ -283,7 +298,7 @@ export const ProcedureMoveFormAddProcedure = ({
     onSave: p => p && setProcedure(p)
   })), /*#__PURE__*/React.createElement("button", {
     onClick: () => {
-      if (organ && procedure) moveAddProcedure(move.key, organ.address, procedure).catch(console.error);
+      if (organ && procedure) moveAddProcedure(move.key, organ.address, procedure).then(() => reloadMove(move.key)).catch(console.error);
     },
     className: "btn btn-primary"
   }, "Add Procedure"));
@@ -299,7 +314,8 @@ export const ProcedureMoveFormRemoveProcedure = ({
   const {
     procedure: {
       moveRemoveProcedure
-    }
+    },
+    reloadMove
   } = useProcedure();
   const [organ, setOrgan] = useState();
   const [procedure, setProcedure] = useState();
@@ -313,7 +329,7 @@ export const ProcedureMoveFormRemoveProcedure = ({
     onSelect: p => p && setProcedure(p)
   }), /*#__PURE__*/React.createElement("button", {
     onClick: () => {
-      if (organ && procedure) moveRemoveProcedure(move.key, organ.address, procedure.address).catch(console.error);
+      if (organ && procedure) moveRemoveProcedure(move.key, organ.address, procedure.address).then(() => reloadMove(move.key)).catch(console.error);
     },
     className: "btn btn-primary"
   }, "Remove Procedure"));
@@ -329,7 +345,8 @@ export const ProcedureMoveFormReplaceProcedure = ({
   const {
     procedure: {
       moveReplaceProcedure
-    }
+    },
+    reloadMove
   } = useProcedure();
   const [organ, setOrgan] = useState();
   const [oldProcedure, setOldProcedure] = useState();
@@ -348,7 +365,7 @@ export const ProcedureMoveFormReplaceProcedure = ({
     onSave: p => p && setNewProcedure(p)
   })), /*#__PURE__*/React.createElement("button", {
     onClick: () => {
-      if (organ && oldProcedure && newProcedure) moveReplaceProcedure(move.key, organ.address, oldProcedure.address, newProcedure).catch(console.error);
+      if (organ && oldProcedure && newProcedure) moveReplaceProcedure(move.key, organ.address, oldProcedure.address, newProcedure).then(() => reloadMove(move.key)).catch(console.error);
     },
     className: "btn btn-primary"
   }, "Replace Procedure"));
@@ -359,14 +376,15 @@ export const ProcedureMoveFormCall = ({
   const {
     procedure: {
       moveCall
-    }
+    },
+    reloadMove
   } = useProcedure();
   const [state, setState] = useState();
   return /*#__PURE__*/React.createElement("div", {
     className: "procedure-move-moveCall"
   }, /*#__PURE__*/React.createElement("button", {
     onClick: () => {
-      moveCall(move.key).catch(console.error);
+      moveCall(move.key).then(() => reloadMove(move.key)).catch(console.error);
     },
     className: "btn btn-warning"
   }, "Add Special Call"));

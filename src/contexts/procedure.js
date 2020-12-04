@@ -5,7 +5,10 @@ export const ProcedureContext = React.createContext({
     procedure: null,
     loading: false,
     error: null,
-    load: () => {}
+    load: async () => {},
+    reloadMoves: async () => {},
+    reloadMetadata: async () => {},
+    reloadMove: async key => {}
 })
 
 export const ProcedureProvider = ({ procedure, address, children }) => {
@@ -34,8 +37,31 @@ export const ProcedureProvider = ({ procedure, address, children }) => {
             load()
     }, [])
 
+    const reloadMoves = React.useCallback(() => {
+        if (_procedure.address && _procedure.reloadMoves)
+            _procedure.reloadMoves().then(p => setProcedure(p))
+    }, [_procedure.address, _procedure.reloadMoves])
+
+    const reloadMetadata = React.useCallback(() => {
+        if (_procedure.address && _procedure.reloadMoves)
+            _procedure.reloadMetadata().then(p => setProcedure(p))
+    }, [_procedure.address, _procedure.reloadMoves])
+
+    const reloadMove = React.useCallback((moveKey) => {
+        if (_procedure.address && _procedure.reloadMoves)
+            _procedure.reloadMove(moveKey).then(p => setProcedure(p))
+    }, [_procedure.address, _procedure.reloadMoves])
+
     return (
-        <ProcedureContext.Provider value={{ procedure: _procedure, loading, error, load }}>
+        <ProcedureContext.Provider value={{
+            procedure: _procedure,
+            loading,
+            error,
+            load,
+            reloadMoves,
+            reloadMetadata,
+            reloadMove
+        }}>
             {children}
         </ProcedureContext.Provider>
     )

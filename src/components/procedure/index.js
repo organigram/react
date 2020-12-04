@@ -5,7 +5,7 @@ import { useGraph } from "../../contexts/graph"
 import { ContractSelector } from '../graph'
 
 export const Procedure = props => {
-    const { procedure, loading, error } = useProcedure()
+    const { procedure, loading, error, reloadMetadata } = useProcedure()
     const [ProcedureComponent, setProcedureComponent] = useState()
 
     React.useEffect(async () => {
@@ -39,6 +39,7 @@ export const Procedure = props => {
                         <h4>{procedure.address}</h4>
                         <h5>Metadata</h5>
                         <code>{`${procedure.metadata.cid}`}</code> <a href={`https://ipfs.io/ipfs/${procedure.metadata.cid}`} target="_blank">view</a>
+                        <button onClick={() => reloadMetadata()} className="btn btn-sm">Reload Metadata</button>
                         <h5>Moves</h5>
                         <ProcedureMoves />
                         <hr/>
@@ -55,13 +56,18 @@ export const Procedure = props => {
 export default withProcedureProvider(Procedure)
 
 export const ProcedureMoves = () => {
-    const { procedure: { moves, createMove } } = useProcedure()
+    const { procedure: { moves, createMove }, reloadMoves } = useProcedure()
     const [currentMove, setCurrentMove] = useState()
 
     return (
         <div className="row">
             <div className="col-2">
-                <button onClick={() => createMove()} className="btn btn-primary">Create Move</button>
+                <button onClick={() => {
+                    createMove()
+                    .then(() => reloadMoves())
+                    .catch(() => {})
+                }} className="btn btn-primary">Create Move</button>
+                <button onClick={() => reloadMoves()} className="btn btn-sm">Reload Moves</button>
                 <hr />
                 <ul>
                     {moves && moves.map(move => (
@@ -145,11 +151,13 @@ export const ProcedureMove = ({ move }) => {
 }
 
 export const ProcedureMoveFormLock = ({ move }) => {
-    const { procedure: { lockMove } } = useProcedure()
+    const { procedure: { lockMove }, reloadMove } = useProcedure()
     return !move.locked && (
         <div className="procedure-move-lockMove">
             <button onClick={() => {
-                lockMove(move.key).catch(console.error)
+                lockMove(move.key)
+                .then(() => reloadMove(move.key))
+                .catch(console.error)
             }} className="btn btn-success">Lock Move</button>
         </div>
     )
@@ -157,7 +165,7 @@ export const ProcedureMoveFormLock = ({ move }) => {
 
 export const ProcedureMoveFormAddEntries = ({ move }) => {
     const { graph: { organs } } = useGraph()
-    const { procedure: { moveAddEntries } } = useProcedure()
+    const { procedure: { moveAddEntries }, reloadMove } = useProcedure()
     const [organ, setOrgan] = useState()
     const [entries, setEntries] = useState([])
     const removeEntry = entry =>
@@ -183,7 +191,9 @@ export const ProcedureMoveFormAddEntries = ({ move }) => {
             <OrganEntryForm onSave={entry => entry && setEntries([...entries, entry])} />
             <button onClick={() => {
                 if (organ && entries)
-                    moveAddEntries(move.key, organ.address, entries).catch(console.error)
+                    moveAddEntries(move.key, organ.address, entries)
+                    .then(() => reloadMove(move.key))
+                    .catch(console.error)
             }} className="btn btn-primary">Add Entries</button>
         </div>
     )
@@ -191,7 +201,7 @@ export const ProcedureMoveFormAddEntries = ({ move }) => {
 
 export const ProcedureMoveFormRemoveEntry = ({ move }) => {
     const { graph: { organs } } = useGraph()
-    const { procedure: { moveRemoveEntry } } = useProcedure()
+    const { procedure: { moveRemoveEntry }, reloadMove } = useProcedure()
     const [organ, setOrgan] = useState()
     const [entry, setEntry] = useState()
     return (
@@ -205,7 +215,9 @@ export const ProcedureMoveFormRemoveEntry = ({ move }) => {
             )}
             <button onClick={() => {
                 if (organ && entry)
-                    moveRemoveEntry(move.key, organ.address, entry).catch(console.error)
+                    moveRemoveEntry(move.key, organ.address, entry)
+                    .then(() => reloadMove(move.key))
+                    .catch(console.error)
             }} className="btn btn-primary">Remove Entry</button>
         </div>
     )
@@ -213,7 +225,7 @@ export const ProcedureMoveFormRemoveEntry = ({ move }) => {
 
 export const ProcedureMoveFormReplaceEntry = ({ move }) => {
     const { graph: { organs } } = useGraph()
-    const { procedure: { moveReplaceEntry } } = useProcedure()
+    const { procedure: { moveReplaceEntry }, reloadMove } = useProcedure()
     const [organ, setOrgan] = useState()
     const [index, setIndex] = useState()
     const [entry, setEntry] = useState()
@@ -230,6 +242,7 @@ export const ProcedureMoveFormReplaceEntry = ({ move }) => {
             <button onClick={() => {
                 if (organ && index && entry)
                     moveReplaceEntry(move.key, organ.address, index, entry)
+                    .then(() => reloadMove(move.key))
                     .catch(console.error)
             }} className="btn btn-primary">Replace Entry</button>
         </div>
@@ -238,7 +251,7 @@ export const ProcedureMoveFormReplaceEntry = ({ move }) => {
 
 export const ProcedureMoveFormAddProcedure = ({ move }) => {
     const { graph: { organs } } = useGraph()
-    const { procedure: { moveAddProcedure } } = useProcedure()
+    const { procedure: { moveAddProcedure }, reloadMove } = useProcedure()
     const [organ, setOrgan] = useState()
     const [procedure, setProcedure] = useState()
     return (
@@ -252,7 +265,9 @@ export const ProcedureMoveFormAddProcedure = ({ move }) => {
             )}
             <button onClick={() => {
                 if (organ && procedure)
-                    moveAddProcedure(move.key, organ.address, procedure).catch(console.error)
+                    moveAddProcedure(move.key, organ.address, procedure)
+                    .then(() => reloadMove(move.key))
+                    .catch(console.error)
             }} className="btn btn-primary">Add Procedure</button>
         </div>
     )
@@ -260,7 +275,7 @@ export const ProcedureMoveFormAddProcedure = ({ move }) => {
 
 export const ProcedureMoveFormRemoveProcedure = ({ move }) => {
     const { graph: { organs } } = useGraph()
-    const { procedure: { moveRemoveProcedure } } = useProcedure()
+    const { procedure: { moveRemoveProcedure }, reloadMove } = useProcedure()
     const [organ, setOrgan] = useState()
     const [procedure, setProcedure] = useState()
     return (
@@ -271,7 +286,9 @@ export const ProcedureMoveFormRemoveProcedure = ({ move }) => {
             )}
             <button onClick={() => {
                 if (organ && procedure)
-                    moveRemoveProcedure(move.key, organ.address, procedure.address).catch(console.error)
+                    moveRemoveProcedure(move.key, organ.address, procedure.address)
+                    .then(() => reloadMove(move.key))
+                    .catch(console.error)
             }} className="btn btn-primary">Remove Procedure</button>
         </div>
     )
@@ -279,7 +296,7 @@ export const ProcedureMoveFormRemoveProcedure = ({ move }) => {
 
 export const ProcedureMoveFormReplaceProcedure = ({ move }) => {
     const { graph: { organs } } = useGraph()
-    const { procedure: { moveReplaceProcedure } } = useProcedure()
+    const { procedure: { moveReplaceProcedure }, reloadMove } = useProcedure()
     const [organ, setOrgan] = useState()
     const [oldProcedure, setOldProcedure] = useState()
     const [newProcedure, setNewProcedure] = useState()
@@ -297,19 +314,23 @@ export const ProcedureMoveFormReplaceProcedure = ({ move }) => {
             )}
             <button onClick={() => {
                 if (organ && oldProcedure && newProcedure)
-                    moveReplaceProcedure(move.key, organ.address, oldProcedure.address, newProcedure).catch(console.error)
+                    moveReplaceProcedure(move.key, organ.address, oldProcedure.address, newProcedure)
+                    .then(() => reloadMove(move.key))
+                    .catch(console.error)
             }} className="btn btn-primary">Replace Procedure</button>
         </div>
     )
 }
 
 export const ProcedureMoveFormCall = ({ move }) => {
-    const { procedure: { moveCall } } = useProcedure()
+    const { procedure: { moveCall }, reloadMove } = useProcedure()
     const [state, setState] = useState()
     return (
         <div className="procedure-move-moveCall">
             <button onClick={() => {
-                moveCall(move.key).catch(console.error)
+                moveCall(move.key)
+                .then(() => reloadMove(move.key))
+                .catch(console.error)
             }} className="btn btn-warning">Add Special Call</button>
         </div>
     )

@@ -15,18 +15,18 @@ export const Organ = props => {
     className: "card"
   }, /*#__PURE__*/React.createElement("div", {
     className: "card-body"
-  }, /*#__PURE__*/React.createElement("h4", null, organ.address), /*#__PURE__*/React.createElement("h5", null, "Metadata"), /*#__PURE__*/React.createElement("code", null, `${organ.metadata.cid}`), " ", /*#__PURE__*/React.createElement("a", {
+  }, /*#__PURE__*/React.createElement("h4", null, organ.address), /*#__PURE__*/React.createElement("h5", null, "Balance"), /*#__PURE__*/React.createElement("p", null, "\u039E ", organ.balance), /*#__PURE__*/React.createElement("h5", null, "Metadata"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("code", null, `${organ.metadata.cid}`), " ", /*#__PURE__*/React.createElement("a", {
     href: `https://ipfs.io/ipfs/${organ.metadata.cid}`,
     target: "_blank"
-  }, "view"), /*#__PURE__*/React.createElement("h5", null, "Procedures"), /*#__PURE__*/React.createElement("ul", {
-    className: "list-unstyled"
+  }, "view")), /*#__PURE__*/React.createElement("h5", null, "Procedures"), /*#__PURE__*/React.createElement("ul", {
+    className: "list-unstyled mb-1"
   }, organ.procedures.map((op, i) => /*#__PURE__*/React.createElement("li", {
     key: op.address,
     className: "list-item"
   }, /*#__PURE__*/React.createElement("code", null, op.address), " ", /*#__PURE__*/React.createElement("span", {
     className: "text-info"
   }, `${op.permissions}`)))), /*#__PURE__*/React.createElement("h5", null, "Entries"), /*#__PURE__*/React.createElement("ul", {
-    className: "list-unstyled"
+    className: "list-unstyled mb-1"
   }, organ.entries.map((e, i) => /*#__PURE__*/React.createElement("li", {
     key: e.index,
     className: "list-item"
@@ -145,7 +145,8 @@ export const OrganFormUpdateMetadata = () => {
   const {
     organ: {
       updateMetadata
-    }
+    },
+    reloadMetadata
   } = useOrgan();
   const cidRef = React.useRef();
   return /*#__PURE__*/React.createElement("div", {
@@ -158,14 +159,17 @@ export const OrganFormUpdateMetadata = () => {
     className: "form-control"
   }), /*#__PURE__*/React.createElement("button", {
     className: "btn btn-primary",
-    onClick: () => updateMetadata(cidRef.current.value).catch(console.error)
+    onClick: () => {
+      updateMetadata(cidRef.current.value).then(() => reloadMetadata()).catch(console.error);
+    }
   }, "Update Metadata"));
 };
 export const OrganFormAddEntries = () => {
   const {
     organ: {
       addEntries
-    }
+    },
+    reloadEntries
   } = useOrgan();
   const [entries, setEntries] = useState([]);
   return /*#__PURE__*/React.createElement("div", {
@@ -186,7 +190,9 @@ export const OrganFormAddEntries = () => {
       cid
     }])
   }))), /*#__PURE__*/React.createElement("button", {
-    onClick: () => addEntries(entries).catch(console.error),
+    onClick: () => {
+      addEntries(entries).then(() => reloadEntries()).catch(console.error);
+    },
     className: "btn btn-primary"
   }, "Add Entries"));
 };
@@ -195,7 +201,8 @@ export const OrganFormRemoveEntries = () => {
     organ: {
       entries: organEntries,
       removeEntries
-    }
+    },
+    reloadEntries
   } = useOrgan();
   const [entries, setEntries] = useState([]);
   const indexes = entries.map(e => e.index);
@@ -214,7 +221,9 @@ export const OrganFormRemoveEntries = () => {
     entries: organEntries,
     onSelect: e => e && !entries.find(ese => ese.index === e.index) && setEntries(es => [...es, e])
   }))), /*#__PURE__*/React.createElement("button", {
-    onClick: () => removeEntries(indexes).catch(console.error),
+    onClick: () => {
+      removeEntries(indexes).then(() => reloadEntries()).catch(console.error);
+    },
     className: "btn btn-primary"
   }, "Remove Entries"));
 };
@@ -223,7 +232,8 @@ export const OrganFormReplaceEntry = () => {
     organ: {
       entries: organEntries,
       replaceEntry
-    }
+    },
+    reloadEntries
   } = useOrgan();
   const [index, setIndex] = useState();
   const [entry, setEntry] = useState();
@@ -235,7 +245,9 @@ export const OrganFormReplaceEntry = () => {
   }), /*#__PURE__*/React.createElement(OrganEntryForm, {
     onSave: e => e && setEntry(e)
   }), /*#__PURE__*/React.createElement("button", {
-    onClick: () => replaceEntry(index, entry).catch(console.error),
+    onClick: () => {
+      replaceEntry(index, entry).then(() => reloadEntries()).catch(console.error);
+    },
     className: "btn btn-primary"
   }, "Replace Entry"));
 };
@@ -243,7 +255,8 @@ export const OrganFormAddProcedure = () => {
   const {
     organ: {
       addProcedure
-    }
+    },
+    reloadProcedures
   } = useOrgan();
   const [procedure, setProcedure] = useState();
   return /*#__PURE__*/React.createElement("div", {
@@ -251,7 +264,9 @@ export const OrganFormAddProcedure = () => {
   }, /*#__PURE__*/React.createElement(OrganProcedureForm, {
     onSave: p => p && setProcedure(p)
   }), /*#__PURE__*/React.createElement("button", {
-    onClick: () => addProcedure(procedure).catch(console.error),
+    onClick: () => {
+      addProcedure(procedure).then(() => reloadProcedures()).catch(console.error);
+    },
     className: "btn btn-primary"
   }, "Add Procedure"));
 };
@@ -260,7 +275,8 @@ export const OrganFormRemoveProcedure = () => {
     organ: {
       procedures,
       removeProcedure
-    }
+    },
+    reloadProcedures
   } = useOrgan();
   const [procedure, setProcedure] = useState();
   return /*#__PURE__*/React.createElement("div", {
@@ -269,7 +285,9 @@ export const OrganFormRemoveProcedure = () => {
     procedures: procedures,
     onSelect: p => p && setProcedure(p)
   }), /*#__PURE__*/React.createElement("button", {
-    onClick: () => removeProcedure(procedure.address).catch(console.error),
+    onClick: () => {
+      removeProcedure(procedure.address).then(() => reloadProcedures()).catch(console.error);
+    },
     className: "btn btn-primary"
   }, "Remove Procedure"));
 };
@@ -278,7 +296,8 @@ export const OrganFormReplaceProcedure = () => {
     organ: {
       procedures,
       replaceProcedure
-    }
+    },
+    reloadProcedures
   } = useOrgan();
   const [oldProcedure, setOldProcedure] = useState();
   const [newProcedure, setNewProcedure] = useState();
@@ -290,7 +309,9 @@ export const OrganFormReplaceProcedure = () => {
   }), /*#__PURE__*/React.createElement(OrganProcedureForm, {
     onSave: p => p && setNewProcedure(p)
   }), /*#__PURE__*/React.createElement("button", {
-    onClick: () => replaceProcedure(oldProcedure.address, newProcedure).catch(console.error),
+    onClick: () => {
+      replaceProcedure(oldProcedure.address, newProcedure).then(() => reloadProcedures()).catch(console.error);
+    },
     className: "btn btn-primary"
   }, "Replace Procedure"));
 };

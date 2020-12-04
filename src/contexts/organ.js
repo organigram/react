@@ -5,7 +5,10 @@ export const OrganContext = React.createContext({
     organ: null,
     loading: false,
     error: null,
-    load: () => {}
+    load: () => {},
+    reloadEntries: async () => {},
+    reloadProcedures: async () => {},
+    reloadMetadata: async () => {}
 })
 
 export const OrganProvider = ({ organ, address, children }) => {
@@ -29,6 +32,21 @@ export const OrganProvider = ({ organ, address, children }) => {
         }
     }
 
+    const reloadEntries = React.useCallback(() => {
+        if (_organ.address && _organ.reloadEntries)
+            _organ.reloadEntries().then(o => setOrgan(o))
+    }, [_organ.address, _organ.reloadEntries])
+
+    const reloadMetadata = React.useCallback(() => {
+        if (_organ.address && _organ.reloadMetadata)
+            _organ.reloadMetadata().then(o => setOrgan(o))
+    }, [_organ.address, _organ.reloadMetadata])
+
+    const reloadProcedures = React.useCallback(() => {
+        if (_organ.address && _organ.reloadProcedures)
+            _organ.reloadProcedures().then(o => setOrgan(o))
+    }, [_organ.address, _organ.reloadProcedures])
+
     // Initial load.
     React.useEffect(() => {
         if (!organ && address)
@@ -36,7 +54,15 @@ export const OrganProvider = ({ organ, address, children }) => {
     }, [])
 
     return (
-        <OrganContext.Provider value={{ organ: _organ, loading, error, load }}>
+        <OrganContext.Provider value={{
+            organ: _organ,
+            loading,
+            error,
+            load,
+            reloadEntries,
+            reloadProcedures,
+            reloadMetadata
+        }}>
             {children}
         </OrganContext.Provider>
     )
