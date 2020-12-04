@@ -69,9 +69,8 @@ export const Web3Provider = ({
 
               if (account !== null && account !== selected && account !== newAccount) {
                 setAccount(newAccount);
-              }
+              } // Update network (async).
 
-              console.log("NEW ACCOUNT", newAccount); // Update network (async).
 
               const newNetworkId = _web3.currentProvider.networkVersion;
               let newNetwork;

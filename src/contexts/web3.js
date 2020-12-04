@@ -80,8 +80,6 @@ export const Web3Provider = ({ children }) => {
                                 setAccount(newAccount)
                             }
 
-                            console.log("NEW ACCOUNT", newAccount)
-
                             // Update network (async).
                             const newNetworkId = _web3.currentProvider.networkVersion
                             let newNetwork
