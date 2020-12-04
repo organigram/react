@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+import { OrganEntryForm, OrganEntrySelector, OrganProcedureForm, OrganProcedureSelector } from '../organ';
 import { useProcedure, withProcedureProvider } from "../../contexts/procedure";
+import { useGraph } from "../../contexts/graph";
+import { ContractSelector } from '../graph';
 export const Procedure = props => {
   const {
     procedure,
@@ -102,28 +105,28 @@ export const ProcedureMove = ({
   }, /*#__PURE__*/React.createElement("h5", null, move.key), /*#__PURE__*/React.createElement("div", null, "Creator: ", /*#__PURE__*/React.createElement("code", null, move.creator), /*#__PURE__*/React.createElement("br", null), "Locked? ", /*#__PURE__*/React.createElement("code", null, move.locked ? "true" : "false"), /*#__PURE__*/React.createElement("br", null), "Applied? ", /*#__PURE__*/React.createElement("code", null, move.applied ? "true" : "false"), /*#__PURE__*/React.createElement("br", null), "Processing? ", /*#__PURE__*/React.createElement("code", null, move.processing ? "true" : "false"), /*#__PURE__*/React.createElement("br", null), "Metadata: ", /*#__PURE__*/React.createElement("code", null, `${move.metadata.cid}`), " ", /*#__PURE__*/React.createElement("a", {
     href: `https://ipfs.io/ipfs/${move.metadata.cid}`,
     target: "_blank"
-  }, "view"), /*#__PURE__*/React.createElement("br", null), "Operations:", /*#__PURE__*/React.createElement("pre", null, JSON.stringify(move.operations, null, 2))), /*#__PURE__*/React.createElement(React.Suspense, {
+  }, "view"), /*#__PURE__*/React.createElement("br", null), "Operations:", /*#__PURE__*/React.createElement("pre", null, JSON.stringify(move.operations, null, 2))), move.locked && /*#__PURE__*/React.createElement(React.Suspense, {
     fallback: /*#__PURE__*/React.createElement("p", null, "Loading...")
   }, ProcedureMoveComponent && /*#__PURE__*/React.createElement(ProcedureMoveComponent, {
     move: move
-  })), /*#__PURE__*/React.createElement("button", {
+  })), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement("button", {
     className: "btn btn-sm",
     onClick: () => toggleForms()
   }, "toggle forms"), showForms && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(ProcedureMoveFormLock, {
     move: move
-  }), /*#__PURE__*/React.createElement(ProcedureMoveFormAddEntries, {
+  }), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(ProcedureMoveFormAddEntries, {
     move: move
-  }), /*#__PURE__*/React.createElement(ProcedureMoveFormRemoveEntry, {
+  }), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(ProcedureMoveFormRemoveEntry, {
     move: move
-  }), /*#__PURE__*/React.createElement(ProcedureMoveFormReplaceEntry, {
+  }), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(ProcedureMoveFormReplaceEntry, {
     move: move
-  }), /*#__PURE__*/React.createElement(ProcedureMoveFormAddProcedure, {
+  }), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(ProcedureMoveFormAddProcedure, {
     move: move
-  }), /*#__PURE__*/React.createElement(ProcedureMoveFormRemoveProcedure, {
+  }), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(ProcedureMoveFormRemoveProcedure, {
     move: move
-  }), /*#__PURE__*/React.createElement(ProcedureMoveFormReplaceProcedure, {
+  }), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(ProcedureMoveFormReplaceProcedure, {
     move: move
-  }), /*#__PURE__*/React.createElement(ProcedureMoveFormCall, {
+  }), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(ProcedureMoveFormCall, {
     move: move
   }))));
 };
@@ -135,94 +138,211 @@ export const ProcedureMoveFormLock = ({
       lockMove
     }
   } = useProcedure();
-  return /*#__PURE__*/React.createElement("div", {
+  return !move.locked && /*#__PURE__*/React.createElement("div", {
     className: "procedure-move-lockMove"
   }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => lockMove(move.key).catch(console.error)
+    onClick: () => {
+      lockMove(move.key).catch(console.error);
+    },
+    className: "btn btn-success"
   }, "Lock Move"));
 };
 export const ProcedureMoveFormAddEntries = ({
   move
 }) => {
   const {
+    graph: {
+      organs
+    }
+  } = useGraph();
+  const {
     procedure: {
       moveAddEntries
     }
   } = useProcedure();
+  const [organ, setOrgan] = useState();
+  const [entries, setEntries] = useState([]);
+
+  const removeEntry = entry => setEntries(es => es.filter(ese => ese.address !== entry.address || `${ese.cid}` !== `${entry.cid}`));
+
   return /*#__PURE__*/React.createElement("div", {
     className: "procedure-move-moveAddEntries"
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => moveAddEntries(move.key).catch(console.error)
+  }, /*#__PURE__*/React.createElement(ContractSelector, {
+    contracts: organs,
+    onSelect: o => o && setOrgan(o)
+  }), /*#__PURE__*/React.createElement("ul", {
+    className: "list-unstyled"
+  }, entries.map((e, i) => /*#__PURE__*/React.createElement("li", {
+    key: i,
+    className: "list-item"
+  }, /*#__PURE__*/React.createElement("code", null, e.address), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("a", {
+    href: `https://ipfs.io/ipfs/${e.cid}`,
+    target: "_blank"
+  }, `${e.cid}`), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-sm btn-danger",
+    onClick: () => remoteEntry(e)
+  }, "remove")))), /*#__PURE__*/React.createElement(OrganEntryForm, {
+    onSave: entry => entry && setEntries([...entries, entry])
+  }), /*#__PURE__*/React.createElement("button", {
+    onClick: () => {
+      if (organ && entries) moveAddEntries(move.key, organ, entries).catch(console.error);
+    },
+    className: "btn btn-primary"
   }, "Add Entries"));
 };
 export const ProcedureMoveFormRemoveEntry = ({
   move
 }) => {
   const {
+    graph: {
+      organs
+    }
+  } = useGraph();
+  const {
     procedure: {
       moveRemoveEntry
     }
   } = useProcedure();
+  const [organ, setOrgan] = useState();
+  const [entry, setEntry] = useState();
   return /*#__PURE__*/React.createElement("div", {
     className: "procedure-move-moveRemoveEntry"
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => moveRemoveEntry(move.key).catch(console.error)
+  }, /*#__PURE__*/React.createElement(ContractSelector, {
+    contracts: organs,
+    onSelect: o => o && setOrgan(o)
+  }), organ && /*#__PURE__*/React.createElement(OrganEntrySelector, {
+    entries: organ.entries,
+    onSelect: e => e && setEntry(e)
+  }), /*#__PURE__*/React.createElement("button", {
+    onClick: () => {
+      if (organ && entry) moveRemoveEntry(move.key, organ.address, entry).catch(console.error);
+    },
+    className: "btn btn-primary"
   }, "Remove Entry"));
 };
 export const ProcedureMoveFormReplaceEntry = ({
   move
 }) => {
   const {
+    graph: {
+      organs
+    }
+  } = useGraph();
+  const {
     procedure: {
       moveReplaceEntry
     }
   } = useProcedure();
+  const [organ, setOrgan] = useState();
+  const [index, setIndex] = useState();
+  const [entry, setEntry] = useState();
   return /*#__PURE__*/React.createElement("div", {
     className: "procedure-move-moveReplaceEntry"
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => moveReplaceEntry(move.key).catch(console.error)
+  }, /*#__PURE__*/React.createElement(ContractSelector, {
+    contracts: organs,
+    onSelect: o => o && setOrgan(o)
+  }), organ && /*#__PURE__*/React.createElement(OrganEntrySelector, {
+    entries: organ.entries,
+    onSelect: e => e && setIndex(e.index)
+  }), organ && index && /*#__PURE__*/React.createElement(OrganEntryForm, {
+    onSave: e => setEntry(e)
+  }), /*#__PURE__*/React.createElement("button", {
+    onClick: () => {
+      if (organ && index && entry) moveReplaceEntry(move.key, organ.address, index, entry).catch(console.error);
+    },
+    className: "btn btn-primary"
   }, "Replace Entry"));
 };
 export const ProcedureMoveFormAddProcedure = ({
   move
 }) => {
   const {
+    graph: {
+      organs
+    }
+  } = useGraph();
+  const {
     procedure: {
-      moveAddProcedure
+      moveRemoveProcedure
     }
   } = useProcedure();
+  const [organ, setOrgan] = useState();
+  const [procedure, setProcedure] = useState();
   return /*#__PURE__*/React.createElement("div", {
     className: "procedure-move-moveAddProcedure"
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => moveAddProcedure(move.key).catch(console.error)
+  }, /*#__PURE__*/React.createElement(ContractSelector, {
+    contracts: organs,
+    onSelect: o => o && setOrgan(o)
+  }), organ && /*#__PURE__*/React.createElement(OrganProcedureForm, {
+    onSave: p => p && setProcedure(p)
+  }), /*#__PURE__*/React.createElement("button", {
+    onClick: () => {
+      if (organ && procedure) moveAddProcedure(move.key, organ.address).catch(console.error);
+    },
+    className: "btn btn-primary"
   }, "Add Procedure"));
 };
 export const ProcedureMoveFormRemoveProcedure = ({
   move
 }) => {
   const {
+    graph: {
+      organs
+    }
+  } = useGraph();
+  const {
     procedure: {
       moveRemoveProcedure
     }
   } = useProcedure();
+  const [organ, setOrgan] = useState();
+  const [procedure, setProcedure] = useState();
   return /*#__PURE__*/React.createElement("div", {
     className: "procedure-move-moveRemoveProcedure"
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => moveRemoveProcedure(move.key).catch(console.error)
+  }, /*#__PURE__*/React.createElement(ContractSelector, {
+    contracts: organs,
+    onSelect: o => o && setOrgan(o)
+  }), organ && /*#__PURE__*/React.createElement(OrganProcedureSelector, {
+    procedures: organ.procedures,
+    onSelect: p => p && setProcedure(p)
+  }), /*#__PURE__*/React.createElement("button", {
+    onClick: () => {
+      if (organ && procedure) moveRemoveProcedure(move.key, organ.address, procedure.address).catch(console.error);
+    },
+    className: "btn btn-primary"
   }, "Remove Procedure"));
 };
 export const ProcedureMoveFormReplaceProcedure = ({
   move
 }) => {
   const {
+    graph: {
+      organs
+    }
+  } = useGraph();
+  const {
     procedure: {
       moveReplaceProcedure
     }
   } = useProcedure();
+  const [organ, setOrgan] = useState();
+  const [oldProcedure, setOldProcedure] = useState();
+  const [newProcedure, setNewProcedure] = useState();
   return /*#__PURE__*/React.createElement("div", {
     className: "procedure-move-moveReplaceProcedure"
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => moveReplaceProcedure(move.key).catch(console.error)
+  }, /*#__PURE__*/React.createElement(ContractSelector, {
+    contracts: organs,
+    onSelect: o => o && setOrgan(o)
+  }), organ && /*#__PURE__*/React.createElement(OrganProcedureSelector, {
+    procedures: organ.procedures,
+    onSelect: p => p && setOldProcedure(p)
+  }), organ && /*#__PURE__*/React.createElement(OrganProcedureForm, {
+    onSave: p => p && setNewProcedure(p)
+  }), /*#__PURE__*/React.createElement("button", {
+    onClick: () => {
+      if (organ && oldProcedure && newProcedure) moveReplaceProcedure(move.key, organ.address, oldProcedure.address, newProcedure).catch(console.error);
+    },
+    className: "btn btn-primary"
   }, "Replace Procedure"));
 };
 export const ProcedureMoveFormCall = ({
@@ -237,6 +357,9 @@ export const ProcedureMoveFormCall = ({
   return /*#__PURE__*/React.createElement("div", {
     className: "procedure-move-moveCall"
   }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => moveCall(move.key).catch(console.error)
+    onClick: () => {
+      moveCall(move.key).catch(console.error);
+    },
+    className: "btn btn-warning"
   }, "Add Special Call"));
 };

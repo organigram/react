@@ -60,3 +60,22 @@ export const Graph = props => {
   }))))));
 };
 export default withGraphProvider(Graph);
+export const ContractSelector = ({
+  contracts,
+  onSelect
+}) => {
+  const handleChange = event => {
+    const contract = contracts.find(c => c.address === event.target.value);
+    if (contract) onSelect(contract);
+  };
+
+  return /*#__PURE__*/React.createElement("select", {
+    onChange: handleChange,
+    className: "form-control"
+  }, /*#__PURE__*/React.createElement("option", {
+    value: ""
+  }, "-- Select a contract"), contracts.map(c => /*#__PURE__*/React.createElement("option", {
+    key: c.address,
+    value: c.address
+  }, c.address)));
+};

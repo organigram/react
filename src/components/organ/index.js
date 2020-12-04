@@ -1,3 +1,4 @@
+import organ from '@organigram/client-js/dist/organ'
 import React, { useState } from 'react'
 import { useOrgan, withOrganProvider } from "../../contexts/organ"
 
@@ -75,8 +76,7 @@ export const OrganEntryForm = ({ onSave }) => {
     )
 }
 
-export const OrganEntrySelector = ({ onSelect }) => {
-    const { organ: { entries } } = useOrgan()
+export const OrganEntrySelector = ({ entries, onSelect }) => {
     const handleChange = (event) => {
         const entry = entries.find(e => e.index === event.target.value)
         onSelect(entry)
@@ -105,8 +105,7 @@ export const OrganProcedureForm = ({ onSave }) => {
     )
 }
 
-export const OrganProcedureSelector = ({ onSelect }) => {
-    const { organ: { procedures } } = useOrgan()
+export const OrganProcedureSelector = ({ procedures, onSelect }) => {
     const handleChange = (event) => {
         const procedure = procedures.find(p => p.address === event.target.value)
         onSelect(procedure)
@@ -127,7 +126,7 @@ export const OrganFormUpdateMetadata = () => {
     return (
         <div className="organ-updateMetadata">
             <input ref={cidRef} type="text" name="cid" placeholder="cid" className="form-control" />
-            <button className="btn btn-outline-primary"
+            <button className="btn btn-primary"
                 onClick={() => updateMetadata(cidRef.current.value).catch(console.error)}
             >Update Metadata</button>
         </div>
@@ -151,13 +150,13 @@ export const OrganFormAddEntries = () => {
                 </li>
             </ul>
 
-            <button onClick={() => addEntries(entries).catch(console.error)} className="btn btn-outline-primary">Add Entries</button>
+            <button onClick={() => addEntries(entries).catch(console.error)} className="btn btn-primary">Add Entries</button>
         </div>
     )
 }
 
 export const OrganFormRemoveEntries = () => {
-    const { organ: { removeEntries } } = useOrgan()
+    const { organ: { entries: organEntries, removeEntries } } = useOrgan()
     const [entries, setEntries] = useState([])
     const indexes = entries.map(e => e.index)
     return (
@@ -170,25 +169,25 @@ export const OrganFormRemoveEntries = () => {
                     </li>
                 )}
                 <li key="add">
-                    <OrganEntrySelector onSelect={e =>
+                    <OrganEntrySelector entries={organEntries} onSelect={e =>
                         e && !entries.find(ese => ese.index === e.index) && setEntries(es => [...es, e])
                     } />
                 </li>
             </ul>
-            <button onClick={() => removeEntries(indexes).catch(console.error)} className="btn btn-outline-primary">Remove Entries</button>
+            <button onClick={() => removeEntries(indexes).catch(console.error)} className="btn btn-primary">Remove Entries</button>
         </div>
     )
 }
 
 export const OrganFormReplaceEntry = () => {
-    const { organ: { replaceEntry } } = useOrgan()
+    const { organ: { entries: organEntries, replaceEntry } } = useOrgan()
     const [index, setIndex] = useState()
     const [entry, setEntry] = useState()
     return (
         <div className="organ-replaceEntry">
-            <OrganEntrySelector onSelect={e => e && setIndex(e.index)} />
-            <OrganEntryForm onSave={setEntry} />
-            <button onClick={() => replaceEntry(index, entry).catch(console.error)} className="btn btn-outline-primary">Replace Entry</button>
+            <OrganEntrySelector entries={organEntries} onSelect={e => e && setIndex(e.index)} />
+            <OrganEntryForm onSave={e => e && setEntry(e)} />
+            <button onClick={() => replaceEntry(index, entry).catch(console.error)} className="btn btn-primary">Replace Entry</button>
         </div>
     )
 }
@@ -198,32 +197,32 @@ export const OrganFormAddProcedure = () => {
     const [procedure, setProcedure] = useState()
     return (
         <div className="organ-addProcedure">
-            <OrganProcedureForm onSave={setProcedure} />
-            <button onClick={() => addProcedure(procedure).catch(console.error)} className="btn btn-outline-primary">Add Procedure</button>
+            <OrganProcedureForm onSave={p => p && setProcedure(p)} />
+            <button onClick={() => addProcedure(procedure).catch(console.error)} className="btn btn-primary">Add Procedure</button>
         </div>
     )
 }
 
 export const OrganFormRemoveProcedure = () => {
-    const { organ: { removeProcedure } } = useOrgan()
+    const { organ: { procedures, removeProcedure } } = useOrgan()
     const [procedure, setProcedure] = useState()
     return (
         <div className="organ-removeProcedure">
-            <OrganProcedureSelector onSelect={p => p && setProcedure(p)}/>
-            <button onClick={() => removeProcedure(procedure.address).catch(console.error)} className="btn btn-outline-primary">Remove Procedure</button>
+            <OrganProcedureSelector procedures={procedures} onSelect={p => p && setProcedure(p)}/>
+            <button onClick={() => removeProcedure(procedure.address).catch(console.error)} className="btn btn-primary">Remove Procedure</button>
         </div>
     )
 }
 
 export const OrganFormReplaceProcedure = () => {
-    const { organ: { replaceProcedure } } = useOrgan()
+    const { organ: { procedures, replaceProcedure } } = useOrgan()
     const [oldProcedure, setOldProcedure] = useState()
     const [newProcedure, setNewProcedure] = useState()
     return (
         <div className="organ-replaceProcedure">
-            <OrganProcedureSelector onSelect={p => p && setOldProcedure(p)}/>
+            <OrganProcedureSelector procedures={procedures} onSelect={p => p && setOldProcedure(p)}/>
             <OrganProcedureForm onSave={p => p && setNewProcedure(p)} />
-            <button onClick={() => replaceProcedure(oldProcedure.address, newProcedure).catch(console.error)} className="btn btn-outline-primary">Replace Procedure</button>
+            <button onClick={() => replaceProcedure(oldProcedure.address, newProcedure).catch(console.error)} className="btn btn-primary">Replace Procedure</button>
         </div>
     )
 }

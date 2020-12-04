@@ -49,3 +49,18 @@ export const Graph = props => {
 }
 
 export default withGraphProvider(Graph)
+
+export const ContractSelector = ({ contracts, onSelect }) => {
+    const handleChange = (event) => {
+        const contract = contracts.find(c => c.address === event.target.value)
+        if (contract) onSelect(contract)
+    }
+    return (
+        <select onChange={handleChange} className="form-control">
+            <option value="">-- Select a contract</option>
+            {contracts.map(c =>
+                <option key={c.address} value={c.address}>{c.address}</option>
+            )}
+        </select>
+    )
+}
