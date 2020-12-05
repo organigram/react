@@ -34,13 +34,13 @@ export const ProcedureProvider = ({
   React.useEffect(() => {
     if (!procedure && address) load();
   }, []);
-  const reloadMoves = React.useCallback(() => {
+  const reloadMoves = React.useCallback(async () => {
     if (_procedure.address && _procedure.reloadMoves) _procedure.reloadMoves().then(p => setProcedure(_prev => p));
   }, [_procedure.address, _procedure.reloadMoves]);
-  const reloadMetadata = React.useCallback(() => {
+  const reloadMetadata = React.useCallback(async () => {
     if (_procedure.address && _procedure.reloadMoves) _procedure.reloadMetadata().then(p => setProcedure(_prev => p));
   }, [_procedure.address, _procedure.reloadMoves]);
-  const reloadMove = React.useCallback(moveKey => {
+  const reloadMove = React.useCallback(async moveKey => {
     if (_procedure.address && _procedure.reloadMoves) _procedure.reloadMove(moveKey).then(p => setProcedure(_prev => p));
   }, [_procedure.address, _procedure.reloadMoves]);
   return /*#__PURE__*/React.createElement(ProcedureContext.Provider, {

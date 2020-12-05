@@ -216,28 +216,40 @@ export const ProcedureMoveFormRemoveEntry = ({
   } = useGraph();
   const {
     procedure: {
-      moveRemoveEntry
+      moveRemoveEntries
     },
     reloadMove
   } = useProcedure();
   const [organ, setOrgan] = useState();
-  const [entry, setEntry] = useState();
+  const [entries, setEntries] = useState([]);
+
+  const removeEntry = entry => setEntries(es => es.filter(ese => ese.address !== entry.address || `${ese.cid}` !== `${entry.cid}`));
+
   return /*#__PURE__*/React.createElement("div", {
-    className: "procedure-move-moveRemoveEntry"
+    className: "procedure-move-moveRemoveEntries"
   }, /*#__PURE__*/React.createElement(ContractSelector, {
     contracts: organs,
     onSelect: o => o && setOrgan(o)
-  }), organ && /*#__PURE__*/React.createElement(React.Fragment, null, entry && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("code", null, entry.address), " ", /*#__PURE__*/React.createElement("span", {
-    className: "text-info"
-  }, `${entry.cid}`)), /*#__PURE__*/React.createElement(OrganEntrySelector, {
+  }), organ && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("ul", {
+    className: "list-unstyled"
+  }, entries.map((e, i) => /*#__PURE__*/React.createElement("li", {
+    key: i,
+    className: "list-item"
+  }, /*#__PURE__*/React.createElement("code", null, e.address), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("a", {
+    href: `https://ipfs.io/ipfs/${e.cid}`,
+    target: "_blank"
+  }, `${e.cid}`), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-sm btn-danger",
+    onClick: () => removeEntry(e)
+  }, "remove")))), /*#__PURE__*/React.createElement(OrganEntrySelector, {
     entries: organ.entries,
-    onSelect: e => e && setEntry(e)
+    onSelect: e => e && setEntries([...entries, e])
   })), /*#__PURE__*/React.createElement("button", {
     onClick: () => {
-      if (organ && entry) moveRemoveEntry(move.key, organ.address, entry).then(() => reloadMove(move.key)).catch(console.error);
+      if (organ && entries.length > 0) moveRemoveEntries(move.key, organ.address, entries.map(e => e.index)).then(() => reloadMove(move.key)).catch(console.error);
     },
     className: "btn btn-primary"
-  }, "Remove Entry"));
+  }, "Remove Entries"));
 };
 export const ProcedureMoveFormReplaceEntry = ({
   move

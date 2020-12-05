@@ -202,24 +202,39 @@ export const ProcedureMoveFormAddEntries = ({ move }) => {
 
 export const ProcedureMoveFormRemoveEntry = ({ move }) => {
     const { graph: { organs } } = useGraph()
-    const { procedure: { moveRemoveEntry }, reloadMove } = useProcedure()
+    const { procedure: { moveRemoveEntries }, reloadMove } = useProcedure()
     const [organ, setOrgan] = useState()
-    const [entry, setEntry] = useState()
+    const [entries, setEntries] = useState([])
+    const removeEntry = entry =>
+        setEntries(es => es.filter(ese => ese.address !== entry.address || `${ese.cid}` !== `${entry.cid}`))
     return (
-        <div className="procedure-move-moveRemoveEntry">
+        <div className="procedure-move-moveRemoveEntries">
             <ContractSelector contracts={organs} onSelect={o => o && setOrgan(o)} />
             {organ && (
                 <>
-                    {entry && <><code>{entry.address}</code> <span className="text-info">{`${entry.cid}`}</span></>}
-                    <OrganEntrySelector entries={organ.entries} onSelect={e => e && setEntry(e)} />
+                    <ul className="list-unstyled">
+                        {entries.map((e,i) => (
+                            <li key={i} className="list-item">
+                                <code>{e.address}</code><br/>
+                                <a href={`https://ipfs.io/ipfs/${e.cid}`} target="_blank">
+                                    {`${e.cid}`}
+                                </a><br />
+                                <button
+                                    className="btn btn-sm btn-danger"
+                                    onClick={() => removeEntry(e)}
+                                >remove</button>
+                            </li> 
+                        ))}
+                    </ul>
+                    <OrganEntrySelector entries={organ.entries} onSelect={e => e && setEntries([...entries, e])} />
                 </>
             )}
             <button onClick={() => {
-                if (organ && entry)
-                    moveRemoveEntry(move.key, organ.address, entry)
+                if (organ && entries.length > 0)
+                    moveRemoveEntries(move.key, organ.address, entries.map(e => e.index))
                     .then(() => reloadMove(move.key))
                     .catch(console.error)
-            }} className="btn btn-primary">Remove Entry</button>
+            }} className="btn btn-primary">Remove Entries</button>
         </div>
     )
 }
