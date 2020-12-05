@@ -32,13 +32,13 @@ export const OrganProvider = ({
   };
 
   const reloadEntries = React.useCallback(() => {
-    if (_organ.address && _organ.reloadEntries) _organ.reloadEntries().then(o => setOrgan(o));
+    if (_organ.address && _organ.reloadEntries) _organ.reloadEntries().then(o => setOrgan(_prev => o));
   }, [_organ.address, _organ.reloadEntries]);
   const reloadMetadata = React.useCallback(() => {
-    if (_organ.address && _organ.reloadMetadata) _organ.reloadMetadata().then(o => setOrgan(o));
+    if (_organ.address && _organ.reloadMetadata) _organ.reloadMetadata().then(o => setOrgan(_prev => o));
   }, [_organ.address, _organ.reloadMetadata]);
   const reloadProcedures = React.useCallback(() => {
-    if (_organ.address && _organ.reloadProcedures) _organ.reloadProcedures().then(o => setOrgan(o));
+    if (_organ.address && _organ.reloadProcedures) _organ.reloadProcedures().then(o => setOrgan(_prev => o));
   }, [_organ.address, _organ.reloadProcedures]); // Initial load.
 
   React.useEffect(() => {
