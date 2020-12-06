@@ -10,7 +10,7 @@
     "react": "^17.0.1"
   },
   "dependencies": {
-    "@organigram/client-js": "bitbucket:organigram/client-js.git#master"
+    "@organigram/client-js": "git+https://alxmhe:ETwr5WUv3DJEjjJegRG6@bitbucket.org/organigram/client-js.git#master"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.8",

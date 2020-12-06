@@ -1392,11 +1392,11 @@
   resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-3.3.0.tgz#ffdb693c5c349fc33bba420248dd3ac0a2d7c408"
   integrity sha512-AemZEsQYtUp1WRkcmZm1div5ORfTpLquLaziCIrSagjxyKdmObxuaY1yjQ5SHFMctR8rLwp706NXTbiIRJg7pw==
 
-"@organigram/client-js@bitbucket:organigram/client-js.git#master":
+"@organigram/client-js@git+https://alxmhe:ETwr5WUv3DJEjjJegRG6@bitbucket.org/organigram/client-js.git#master":
   version "1.0.0"
-  resolved "git+ssh://git@bitbucket.org/organigram/client-js.git#074e6c5ada8d7223ee21e3fecd579c317d012558"
+  resolved "git+https://alxmhe:ETwr5WUv3DJEjjJegRG6@bitbucket.org/organigram/client-js.git#6977289f66979bbb5e24d3027c3b7420a59e0d91"
   dependencies:
-    "@organigram/contracts" "git+ssh://git@bitbucket.org:organigram/contracts.git#develop"
+    "@organigram/contracts" "bitbucket:organigram/contracts.git#develop"
     ipfs-core "^0.3.0"
     ipfs-provider "^1.1.0"
     it-all "^1.0.4"
@@ -1404,9 +1404,9 @@
     uint8arrays "^1.1.0"
     web3 "^1.3.0"
 
-"@organigram/contracts@git+ssh://git@bitbucket.org:organigram/contracts.git#develop":
+"@organigram/contracts@bitbucket:organigram/contracts.git#develop":
   version "0.1.2"
-  resolved "git+ssh://git@bitbucket.org:organigram/contracts.git#eb307028abd2dc3b3039cfff37863edb5d3fc802"
+  resolved "git+ssh://git@bitbucket.org/organigram/contracts.git#eb307028abd2dc3b3039cfff37863edb5d3fc802"
   dependencies:
     "@openzeppelin/contracts" "^3.2.0"
 
