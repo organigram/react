@@ -41,19 +41,19 @@ export const ProcedureProvider = ({ procedure, address, children }) => {
         if (_procedure.address && _procedure.reloadMoves)
             _procedure.reloadMoves()
             .then(p => setProcedure(_prev => p))
-    }, [_procedure.address, _procedure.reloadMoves])
+    }, [_procedure])
 
     const reloadMetadata = React.useCallback(async () => {
-        if (_procedure.address && _procedure.reloadMoves)
+        if (_procedure && _procedure.reloadMoves)
             _procedure.reloadMetadata()
             .then(p => setProcedure(_prev => p))
-    }, [_procedure.address, _procedure.reloadMoves])
+    }, [_procedure])
 
     const reloadMove = React.useCallback(async (moveKey) => {
-        if (_procedure.address && _procedure.reloadMoves)
+        if (_procedure && _procedure.reloadMoves)
             _procedure.reloadMove(moveKey)
             .then(p => setProcedure(_prev => p))
-    }, [_procedure.address, _procedure.reloadMoves])
+    }, [_procedure])
 
     return (
         <ProcedureContext.Provider value={{
