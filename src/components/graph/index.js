@@ -37,17 +37,17 @@ export const Graph = props => {
                             <button type="submit" className="btn btn-warning">Add Contract</button>
                         </form>
                     </div>
-                    <button onClick={async () => 
+                    <button className="btn btn-primary" onClick={async () => 
                         OrganClass.deploy(EMPTY_CID)
                         .then(o => addContracts([o.address]))
                         .catch(error => console.error(error.message))
                     }>Deploy organ</button>
-                    <button onClick={async () => 
+                    <button className="btn btn-primary" onClick={async () => 
                         ProcedureNominationClass.deploy(EMPTY_CID)
                         .then(o => addContracts([o.address]))
                         .catch(error => console.error(error.message))
                     }>Deploy nomination</button>
-                    <button onClick={async () => 
+                    <button className="btn btn-primary" onClick={async () => 
                         ProcedureVoteClass.deploy(EMPTY_CID)
                         .then(o => addContracts([o.address]))
                         .catch(error => console.error(error.message))

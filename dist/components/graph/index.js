@@ -44,10 +44,13 @@ export const Graph = props => {
     type: "submit",
     className: "btn btn-warning"
   }, "Add Contract"))), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
     onClick: async () => OrganClass.deploy(EMPTY_CID).then(o => addContracts([o.address])).catch(error => console.error(error.message))
   }, "Deploy organ"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
     onClick: async () => ProcedureNominationClass.deploy(EMPTY_CID).then(o => addContracts([o.address])).catch(error => console.error(error.message))
   }, "Deploy nomination"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
     onClick: async () => ProcedureVoteClass.deploy(EMPTY_CID).then(o => addContracts([o.address])).catch(error => console.error(error.message))
   }, "Deploy vote"), /*#__PURE__*/React.createElement("h2", null, "Organs"), /*#__PURE__*/React.createElement("ul", {
     className: "list-unstyled"
