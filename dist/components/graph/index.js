@@ -1,4 +1,4 @@
-import organ from '@organigram/client-js/dist/organ';
+import { Organ as OrganClass, ProcedureNomination as ProcedureNominationClass, ProcedureVote as ProcedureVoteClass } from "@organigram/client-js";
 import React from 'react';
 import { useGraph, withGraphProvider } from "../../contexts/graph";
 import Organ from "../organ";
@@ -43,7 +43,13 @@ export const Graph = props => {
   }), /*#__PURE__*/React.createElement("button", {
     type: "submit",
     className: "btn btn-warning"
-  }, "Add Contract"))), /*#__PURE__*/React.createElement("h2", null, "Organs"), /*#__PURE__*/React.createElement("ul", {
+  }, "Add Contract"))), /*#__PURE__*/React.createElement("button", {
+    onClick: async () => OrganClass.deploy(EMPTY_CID).then(o => addContracts([o.address])).catch(error => console.error(error.message))
+  }, "Deploy organ"), /*#__PURE__*/React.createElement("button", {
+    onClick: async () => ProcedureNominationClass.deploy(EMPTY_CID).then(o => addContracts([o.address])).catch(error => console.error(error.message))
+  }, "Deploy nomination"), /*#__PURE__*/React.createElement("button", {
+    onClick: async () => ProcedureVoteClass.deploy(EMPTY_CID).then(o => addContracts([o.address])).catch(error => console.error(error.message))
+  }, "Deploy vote"), /*#__PURE__*/React.createElement("h2", null, "Organs"), /*#__PURE__*/React.createElement("ul", {
     className: "list-unstyled"
   }, graph.organs.map(o => /*#__PURE__*/React.createElement("li", {
     key: o.address,

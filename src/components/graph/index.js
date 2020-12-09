@@ -1,4 +1,8 @@
-import organ from '@organigram/client-js/dist/organ'
+import {
+    Organ as OrganClass,
+    ProcedureNomination as ProcedureNominationClass,
+    ProcedureVote as ProcedureVoteClass
+} from "@organigram/client-js"
 import React from 'react'
 import { useGraph, withGraphProvider } from "../../contexts/graph"
 import Organ from "../organ"
@@ -33,6 +37,21 @@ export const Graph = props => {
                             <button type="submit" className="btn btn-warning">Add Contract</button>
                         </form>
                     </div>
+                    <button onClick={async () => 
+                        OrganClass.deploy(EMPTY_CID)
+                        .then(o => addContracts([o.address]))
+                        .catch(error => console.error(error.message))
+                    }>Deploy organ</button>
+                    <button onClick={async () => 
+                        ProcedureNominationClass.deploy(EMPTY_CID)
+                        .then(o => addContracts([o.address]))
+                        .catch(error => console.error(error.message))
+                    }>Deploy nomination</button>
+                    <button onClick={async () => 
+                        ProcedureVoteClass.deploy(EMPTY_CID)
+                        .then(o => addContracts([o.address]))
+                        .catch(error => console.error(error.message))
+                    }>Deploy vote</button>
                     <h2>Organs</h2>
                     <ul className="list-unstyled">
                         {graph.organs.map(o => <li key={o.address} className="list-item mb-3"><Organ organ={o} /></li>)}

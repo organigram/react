@@ -2,7 +2,7 @@
  * @TODO : Move non-React code to @organigram/client-js.
  */
 import React, { useState } from 'react'
-import { web3 } from '@organigram/client-js'
+import { web3, getNetwork, hasLibraries as web3hasLibraries } from '@organigram/client-js'
 
 export const ETHEREUM_TIMER_DELAY = 2000
 export const ETHEREUM_UNKNOWN = 'ETHEREUM_UNKNOWN'
@@ -25,6 +25,7 @@ export const Web3Context = React.createContext({
   web3,
   ecRecover: null,
   sign: null,
+  hasLibraries: false,
   unlock: () => {}
 })
 
@@ -42,11 +43,13 @@ export const Web3Provider = ({ children }) => {
     const [balance, setBalance] = useState(null)
     const [loading, setLoading] = useState(true)
     const [status, setStatus] = useState(ETHEREUM_UNKNOWN)
+    const [hasLibraries, setHasLibraries] = useState(false)
     const _web3 = web3
 
     const setNetwork = _network => {
         _setNetwork(_network)
         _setNetworkIsValid(_network === 'rinkeby' || _network === 'private') // @TODO : Rinkeby only in production.
+        web3hasLibraries().then(setHasLibraries)
     }
 
     React.useEffect(() => {
@@ -82,27 +85,7 @@ export const Web3Provider = ({ children }) => {
 
                             // Update network (async).
                             const newNetworkId = _web3.currentProvider.networkVersion
-                            let newNetwork
-                            switch (newNetworkId) {
-                                case ETHEREUM_NETWORK_ID_MAINNET:
-                                    newNetwork = 'mainnet'
-                                    break
-                                case ETHEREUM_NETWORK_ID_MORDEN:
-                                    newNetwork = 'morden'
-                                    break
-                                case ETHEREUM_NETWORK_ID_ROPSTEN:
-                                    newNetwork = 'ropsten'
-                                    break
-                                case ETHEREUM_NETWORK_ID_RINKEBY:
-                                    newNetwork = 'rinkeby'
-                                    break
-                                case ETHEREUM_NETWORK_ID_KOVAN:
-                                    newNetwork = 'kovan'
-                                    break
-                                default:
-                                    newNetwork = 'private'
-                                    break
-                            }
+                            const newNetwork = await getNetwork().catch(() => "private")
                             if (newNetwork !== network)
                                 setNetwork(newNetwork)
 
@@ -179,6 +162,7 @@ export const Web3Provider = ({ children }) => {
             web3: _web3,
             ecRecover,
             sign,
+            hasLibraries,
             unlock,
             reset,
             enable,
