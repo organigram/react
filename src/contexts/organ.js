@@ -2,6 +2,7 @@ import React from 'react'
 import { Organ } from '@organigram/client-js'
 
 export const OrganContext = React.createContext({
+    address: null,
     organ: null,
     loading: false,
     error: null,
@@ -58,6 +59,7 @@ export const OrganProvider = ({ organ, address, children }) => {
 
     return (
         <OrganContext.Provider value={{
+            address,
             organ: _organ,
             loading,
             error,
