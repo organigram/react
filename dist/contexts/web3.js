@@ -114,9 +114,6 @@ export const Web3Provider = ({
 
   const reset = value => setAccount(value);
 
-  const ecRecover = _web3 && _web3.eth && _web3.eth.personal && _web3.eth.personal.ecRecover ? _web3.eth.personal.ecRecover : null;
-  const sign = _web3 && _web3.eth && _web3.eth.personal && _web3.eth.personal.sign ? _web3.eth.personal.sign : null;
-
   const enable = () => {
     reset('');
     if (typeof window.web3 !== 'undefined') window.web3.currentProvider.enable();
@@ -132,8 +129,6 @@ export const Web3Provider = ({
       balance,
       status,
       web3: _web3,
-      ecRecover,
-      sign,
       hasLibraries,
       unlock,
       reset,

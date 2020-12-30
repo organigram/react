@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Graph } from '@organigram/client-js'
+import { useWeb3 } from './web3'
 
 export const GraphContext = React.createContext({
     graph: null,
@@ -11,6 +12,7 @@ export const GraphContext = React.createContext({
 })
 
 export const GraphProvider = ({ contracts, children }) => {
+    const { network } = useWeb3()
     const [graph, setGraph] = useState(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
@@ -49,7 +51,7 @@ export const GraphProvider = ({ contracts, children }) => {
     }, [graph])
 
     // Initial load.
-    React.useEffect(() => { load() }, [])
+    React.useEffect(() => { load() }, [network])
 
     return (
         <GraphContext.Provider value={{

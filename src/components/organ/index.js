@@ -1,6 +1,7 @@
 import organ from '@organigram/client-js/dist/organ'
 import React, { useState } from 'react'
 import { useOrgan, withOrganProvider } from "../../contexts/organ"
+import Upload from '../vault/upload'
 
 export const Organ = props => {
     const { organ, loading, error, reloadMetadata, reloadEntries, reloadProcedures } = useOrgan()
@@ -11,15 +12,18 @@ export const Organ = props => {
             {loading && <p>Loading organ...</p>}
             {error && <pre>Error: {JSON.stringify(error, null, 2)}</pre>}
             {organ && (
-                <div className="card">
-                    <div className="card-body">
-                        <h4>{organ.address}</h4>
-                        <h5>Balance</h5>
-                        <p>Ξ {organ.balance}</p>
-                        <h5>Metadata</h5>
+                <div className="organ card card-body bg-secondary">
+                    {organ.metadata.data.name && <h5 className="card-title">{`${organ.metadata.data.name}`}</h5>}
+                    <strong>{`${organ.address}`}</strong>
+                    <u><em>Balance</em></u>
+                    <p>Ξ {organ.balance}</p>
+                    <u><em>Metadata</em></u>
+                    <div>
                         <button onClick={() => reloadMetadata()} className="btn btn-sm">reload</button>
                         <p><code>{`${organ.metadata.cid}`}</code> <a href={`https://ipfs.io/ipfs/${organ.metadata.cid}`} target="_blank">view</a></p>
-                        <h5>Procedures</h5>
+                    </div>
+                    <u><em>Procedures</em></u>
+                    <div>
                         <button onClick={() => reloadProcedures()} className="btn btn-sm">reload</button>
                         <ul className="list-unstyled mb-1">
                             {organ.procedures.map((op, i) => (
@@ -28,7 +32,9 @@ export const Organ = props => {
                                 </li>
                             ))}
                         </ul>
-                        <h5>Entries</h5>
+                    </div>
+                    <u><em>Entries</em></u>
+                    <div>
                         <button onClick={() => reloadEntries()} className="btn btn-sm">reload</button>
                         <ul className="list-unstyled mb-1">
                             {organ.entries.map((e, i) => (
@@ -39,7 +45,9 @@ export const Organ = props => {
                                 </li>
                             ))}
                         </ul>
-                        <hr />
+                    </div>
+                    <hr className="mb-1" />
+                    <div>
                         <button className="btn btn-sm" onClick={() => toggleForms()}>toggle forms</button>
                         {showForms && (
                             <>
@@ -69,17 +77,20 @@ export const Organ = props => {
 export default withOrganProvider(Organ)
 
 export const OrganEntryForm = ({ onSave }) => {
+    const [cid, setCid] = useState()
+    const [address, setAddress] = useState("")
+
+    React.useEffect(() => {
+        if (address && cid && onSave)
+            onSave({ address, cid })
+    }, [cid, address])
+
     return (
-        <form onSubmit={e => {
-            e.preventDefault()
-            const { address, cid } = e.currentTarget
-            onSave({ address: address.value, cid: cid.value })
-            e.currentTarget.reset()
-        }} className="form">
-            <div><input type="text" name="address" placeholder="address" className="form-control" /></div>
-            <div><input type="text" name="cid" placeholder="cid" className="form-control" /></div>
-            <button type="submit" className="btn btn-sm">save</button>
-        </form>
+        <>
+            <input type="text" name="address" placeholder="address" defaultValue={address} onChange={e => setAddress(e.target.value)} className="form-control" />
+            {cid && <p><code>{`${cid}`}</code>&nbsp;<a href={`ipfs://${cid}`} target="_blank">open</a></p>}
+            <Upload cid={cid} onCID={c => setCid(c)} />
+        </>
     )
 }
 
@@ -167,6 +178,9 @@ export const OrganFormAddEntries = () => {
                 .then(() => reloadEntries())
                 .catch(console.error)
             }} className="btn btn-primary">Add Entries</button>
+
+            <hr/>
+            <Upload onUpload={() => alert("Uploaded.")} />
         </div>
     )
 }

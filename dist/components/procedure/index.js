@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { OrganEntryForm, OrganEntrySelector, OrganProcedureForm, OrganProcedureSelector } from '../organ';
 import { useProcedure, withProcedureProvider } from "../../contexts/procedure";
 import { useGraph } from "../../contexts/graph";
-import { ContractSelector } from '../graph';
+import { ContractSelector } from '../graph/contracts';
 export const Procedure = props => {
   const {
     procedure,
@@ -15,15 +15,18 @@ export const Procedure = props => {
     if (procedure.type) switch (procedure.type) {
       case '0xc5f28e49':
         // Nomination.
+        procedure.typename = "Nomination";
         setProcedureComponent( /*#__PURE__*/React.lazy(() => import('./nomination')));
         break;
 
       case '0xc9d27afe':
         // Vote.
+        procedure.typename = "Vote";
         setProcedureComponent( /*#__PURE__*/React.lazy(() => import('./vote')));
         break;
 
       default:
+        procedure.typename = "";
         setProcedureComponent();
         break;
     }
@@ -34,18 +37,18 @@ export const Procedure = props => {
   }
 
   return /*#__PURE__*/React.createElement(React.Fragment, null, loading && /*#__PURE__*/React.createElement("p", null, "Loading."), error && /*#__PURE__*/React.createElement("pre", null, "Error: ", JSON.stringify(error, null, 2)), procedure && procedure.type && ProcedureComponent && /*#__PURE__*/React.createElement("div", {
-    className: "card procedure"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "card-body"
-  }, /*#__PURE__*/React.createElement("h4", null, procedure.address), /*#__PURE__*/React.createElement("h5", null, "Metadata"), /*#__PURE__*/React.createElement("code", null, `${procedure.metadata.cid}`), " ", /*#__PURE__*/React.createElement("a", {
-    href: `https://ipfs.io/ipfs/${procedure.metadata.cid}`,
-    target: "_blank"
-  }, "view"), /*#__PURE__*/React.createElement("button", {
+    className: "procedure card card-body bg-secondary"
+  }, procedure.metadata.data.name && /*#__PURE__*/React.createElement("h5", {
+    className: "card-title"
+  }, `${procedure.metadata.data.name}`), /*#__PURE__*/React.createElement("strong", null, `${procedure.address}`), procedure.typename && /*#__PURE__*/React.createElement("p", null, `${procedure.typename}`), /*#__PURE__*/React.createElement("u", null, /*#__PURE__*/React.createElement("em", null, "Metadata")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
     onClick: () => reloadMetadata(),
     className: "btn btn-sm"
-  }, "Reload Metadata"), /*#__PURE__*/React.createElement("h5", null, "Moves"), /*#__PURE__*/React.createElement(ProcedureMoves, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(React.Suspense, {
-    fallback: /*#__PURE__*/React.createElement("p", null, "Loading...")
-  }, /*#__PURE__*/React.createElement(ProcedureComponent, props)))));
+  }, "reload"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("code", null, `${procedure.metadata.cid}`), " ", /*#__PURE__*/React.createElement("a", {
+    href: `https://ipfs.io/ipfs/${procedure.metadata.cid}`,
+    target: "_blank"
+  }, "view"))), /*#__PURE__*/React.createElement("u", null, /*#__PURE__*/React.createElement("em", null, "Moves")), /*#__PURE__*/React.createElement(ProcedureMoves, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(React.Suspense, {
+    fallback: "Loading..."
+  }, /*#__PURE__*/React.createElement(ProcedureComponent, props))));
 };
 export default withProcedureProvider(Procedure);
 export const ProcedureMoves = () => {
@@ -57,11 +60,7 @@ export const ProcedureMoves = () => {
     reloadMoves
   } = useProcedure();
   const [currentMove, setCurrentMove] = useState();
-  return /*#__PURE__*/React.createElement("div", {
-    className: "row"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "col-2"
-  }, /*#__PURE__*/React.createElement("button", {
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
     onClick: () => {
       createMove().then(() => reloadMoves()).catch(() => {});
     },
@@ -69,14 +68,21 @@ export const ProcedureMoves = () => {
   }, "Create Move"), /*#__PURE__*/React.createElement("button", {
     onClick: () => reloadMoves(),
     className: "btn btn-sm"
-  }, "Reload Moves"), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement("ul", null, moves && moves.map(move => /*#__PURE__*/React.createElement("li", {
+  }, "Reload Moves")), /*#__PURE__*/React.createElement("div", {
+    className: "row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "col-2"
+  }, /*#__PURE__*/React.createElement("ul", null, /*#__PURE__*/React.createElement("li", {
+    key: "none",
+    onClick: () => setCurrentMove(null)
+  }, "Hide"), moves && moves.map(move => /*#__PURE__*/React.createElement("li", {
     key: `move-${move.key}`,
     onClick: () => setCurrentMove(move)
-  }, /*#__PURE__*/React.createElement("pre", null, move.key))))), /*#__PURE__*/React.createElement("div", {
+  }, `${move.key}`)))), /*#__PURE__*/React.createElement("div", {
     className: "col-10"
   }, currentMove && /*#__PURE__*/React.createElement(ProcedureMove, {
     move: currentMove
-  })));
+  }))));
 };
 export const ProcedureMove = ({
   move

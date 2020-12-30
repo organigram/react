@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { OrganEntryForm, OrganEntrySelector, OrganProcedureForm, OrganProcedureSelector } from '../organ'
 import { useProcedure, withProcedureProvider } from "../../contexts/procedure"
 import { useGraph } from "../../contexts/graph"
-import { ContractSelector } from '../graph'
+import { ContractSelector } from '../graph/contracts'
 
 export const Procedure = props => {
     const { procedure, loading, error, reloadMetadata } = useProcedure()
@@ -12,12 +12,15 @@ export const Procedure = props => {
         if (procedure.type)
             switch(procedure.type) {
                 case '0xc5f28e49': // Nomination.
+                    procedure.typename = "Nomination"
                     setProcedureComponent(React.lazy(() => import('./nomination')))
                     break
                 case '0xc9d27afe': // Vote.
+                    procedure.typename = "Vote"
                     setProcedureComponent(React.lazy(() => import('./vote')))
                     break
                 default:
+                    procedure.typename = ""
                     setProcedureComponent()
                     break
             }
@@ -34,19 +37,21 @@ export const Procedure = props => {
             {loading && <p>Loading.</p>}
             {error && <pre>Error: {JSON.stringify(error, null, 2)}</pre>}
             {procedure && procedure.type && ProcedureComponent && (
-                <div className="card procedure">
-                    <div className="card-body">
-                        <h4>{procedure.address}</h4>
-                        <h5>Metadata</h5>
-                        <code>{`${procedure.metadata.cid}`}</code> <a href={`https://ipfs.io/ipfs/${procedure.metadata.cid}`} target="_blank">view</a>
-                        <button onClick={() => reloadMetadata()} className="btn btn-sm">Reload Metadata</button>
-                        <h5>Moves</h5>
-                        <ProcedureMoves />
-                        <hr/>
-                        <React.Suspense fallback={<p>Loading...</p>}>
-                            <ProcedureComponent {...props} />
-                        </React.Suspense>
+                <div className="procedure card card-body bg-secondary">
+                    {procedure.metadata.data.name && <h5 className="card-title">{`${procedure.metadata.data.name}`}</h5>}
+                    <strong>{`${procedure.address}`}</strong>
+                    {procedure.typename && <p>{`${procedure.typename}`}</p>}
+                    <u><em>Metadata</em></u>
+                    <div>
+                        <button onClick={() => reloadMetadata()} className="btn btn-sm">reload</button>
+                        <p><code>{`${procedure.metadata.cid}`}</code> <a href={`https://ipfs.io/ipfs/${procedure.metadata.cid}`} target="_blank">view</a></p>
                     </div>
+                    <u><em>Moves</em></u>
+                    <ProcedureMoves />
+                    <hr/>
+                    <React.Suspense fallback={"Loading..."}>
+                        <ProcedureComponent {...props} />
+                    </React.Suspense>
                 </div>
             )}
         </>
@@ -60,28 +65,31 @@ export const ProcedureMoves = () => {
     const [currentMove, setCurrentMove] = useState()
 
     return (
-        <div className="row">
-            <div className="col-2">
+        <>
+            <div>
                 <button onClick={() => {
                     createMove()
                     .then(() => reloadMoves())
                     .catch(() => {})
                 }} className="btn btn-primary">Create Move</button>
                 <button onClick={() => reloadMoves()} className="btn btn-sm">Reload Moves</button>
-                <hr />
-                <ul>
-                    {moves && moves.map(move => (
-                        <li key={`move-${move.key}`} onClick={() => setCurrentMove(move)}>
-                            <pre>{move.key}</pre>
-                        </li>
-                    ))}
-                </ul>
             </div>
-
-            <div className="col-10">
-                {currentMove && <ProcedureMove move={currentMove} />}
+            <div className="row">
+                <div className="col-2">
+                    <ul>
+                        <li key="none"  onClick={() => setCurrentMove(null)}>Hide</li>
+                        {moves && moves.map(move => (
+                            <li key={`move-${move.key}`} onClick={() => setCurrentMove(move)}>
+                                {`${move.key}`}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div className="col-10">
+                    {currentMove && <ProcedureMove move={currentMove} />}
+                </div>
             </div>
-        </div>
+        </>
     )
 
 }

@@ -1,90 +1,44 @@
-import { Organ as OrganClass, ProcedureNomination as ProcedureNominationClass, ProcedureVote as ProcedureVoteClass } from "@organigram/client-js";
 import React from 'react';
 import { useGraph, withGraphProvider } from "../../contexts/graph";
 import Organ from "../organ";
 import Procedure from "../procedure";
+import Contracts from "./contracts";
 export const Graph = props => {
   const {
     graph,
     loading,
-    error,
-    addContracts,
-    removeContracts
+    error
   } = useGraph();
-  const contracts = graph && [...graph.organs.map(({
-    address
-  }) => address), ...graph.procedures.map(({
-    address
-  }) => address)];
   return /*#__PURE__*/React.createElement("div", props, loading && /*#__PURE__*/React.createElement("div", {
     className: "alert alert-info"
   }, "Loading graph..."), error && /*#__PURE__*/React.createElement("div", {
     className: "alert alert-danger"
   }, "Error: ", /*#__PURE__*/React.createElement("pre", null, JSON.stringify(error, null, 2))), graph && /*#__PURE__*/React.createElement("div", {
     className: "graph"
-  }, /*#__PURE__*/React.createElement("h2", null, "Contracts"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("ul", {
-    className: "list-unstyled"
-  }, contracts.map(address => /*#__PURE__*/React.createElement("li", {
-    key: address,
-    className: "list-item"
-  }, address, " ", /*#__PURE__*/React.createElement("span", {
-    onClick: () => removeContracts([address]),
-    className: "text-danger"
-  }, "x")))), /*#__PURE__*/React.createElement("form", {
-    className: "form",
-    onSubmit: e => {
-      e.preventDefault();
-      addContracts([e.currentTarget.address.value]);
-    }
-  }, /*#__PURE__*/React.createElement("input", {
-    type: "text",
-    name: "address",
-    placeholder: "address"
-  }), /*#__PURE__*/React.createElement("button", {
-    type: "submit",
-    className: "btn btn-warning"
-  }, "Add Contract"))), /*#__PURE__*/React.createElement("button", {
-    className: "btn btn-primary",
-    onClick: async () => OrganClass.deploy(EMPTY_CID).then(o => addContracts([o.address])).catch(error => console.error(error.message))
-  }, "Deploy organ"), /*#__PURE__*/React.createElement("button", {
-    className: "btn btn-primary",
-    onClick: async () => ProcedureNominationClass.deploy(EMPTY_CID).then(o => addContracts([o.address])).catch(error => console.error(error.message))
-  }, "Deploy nomination"), /*#__PURE__*/React.createElement("button", {
-    className: "btn btn-primary",
-    onClick: async () => ProcedureVoteClass.deploy(EMPTY_CID).then(o => addContracts([o.address])).catch(error => console.error(error.message))
-  }, "Deploy vote"), /*#__PURE__*/React.createElement("h2", null, "Organs"), /*#__PURE__*/React.createElement("ul", {
-    className: "list-unstyled"
-  }, graph.organs.map(o => /*#__PURE__*/React.createElement("li", {
-    key: o.address,
-    className: "list-item mb-3"
-  }, /*#__PURE__*/React.createElement(Organ, {
-    organ: o
-  })))), /*#__PURE__*/React.createElement("h2", null, "Procedures"), /*#__PURE__*/React.createElement("ul", {
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card card-body bg-secondary"
+  }, /*#__PURE__*/React.createElement(Contracts, null)), /*#__PURE__*/React.createElement("div", {
+    className: "card-group"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card card-body bg-dark"
+  }, /*#__PURE__*/React.createElement("h3", {
+    className: "card-title"
+  }, "Procedures"), /*#__PURE__*/React.createElement("ul", {
     className: "list-unstyled"
   }, graph.procedures.map(p => /*#__PURE__*/React.createElement("li", {
     key: p.address,
-    className: "list-item mb-3"
+    className: "list-item mb-2"
   }, /*#__PURE__*/React.createElement(Procedure, {
     procedure: p
-  }))))));
+  }))))), /*#__PURE__*/React.createElement("div", {
+    className: "card card-body bg-dark"
+  }, /*#__PURE__*/React.createElement("h3", null, "Organs"), /*#__PURE__*/React.createElement("ul", {
+    className: "list-unstyled"
+  }, graph.organs.map(o => /*#__PURE__*/React.createElement("li", {
+    key: o.address,
+    className: "list-item mb-2"
+  }, /*#__PURE__*/React.createElement(Organ, {
+    organ: o
+  }))))))));
 };
 export default withGraphProvider(Graph);
-export const ContractSelector = ({
-  contracts,
-  onSelect
-}) => {
-  const handleChange = event => {
-    const contract = contracts.find(c => c.address === event.target.value);
-    if (contract) onSelect(contract);
-  };
-
-  return /*#__PURE__*/React.createElement("select", {
-    onChange: handleChange,
-    className: "form-control"
-  }, /*#__PURE__*/React.createElement("option", {
-    value: ""
-  }, "-- Select a contract"), contracts.map(c => /*#__PURE__*/React.createElement("option", {
-    key: c.address,
-    value: c.address
-  }, c.address)));
-};

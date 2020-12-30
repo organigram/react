@@ -1,6 +1,7 @@
 import organ from '@organigram/client-js/dist/organ';
 import React, { useState } from 'react';
 import { useOrgan, withOrganProvider } from "../../contexts/organ";
+import Upload from '../vault/upload';
 export const Organ = props => {
   const {
     organ,
@@ -15,16 +16,16 @@ export const Organ = props => {
   const toggleForms = () => setShowForms(sf => !sf);
 
   return /*#__PURE__*/React.createElement("div", props, loading && /*#__PURE__*/React.createElement("p", null, "Loading organ..."), error && /*#__PURE__*/React.createElement("pre", null, "Error: ", JSON.stringify(error, null, 2)), organ && /*#__PURE__*/React.createElement("div", {
-    className: "card"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "card-body"
-  }, /*#__PURE__*/React.createElement("h4", null, organ.address), /*#__PURE__*/React.createElement("h5", null, "Balance"), /*#__PURE__*/React.createElement("p", null, "\u039E ", organ.balance), /*#__PURE__*/React.createElement("h5", null, "Metadata"), /*#__PURE__*/React.createElement("button", {
+    className: "organ card card-body bg-secondary"
+  }, organ.metadata.data.name && /*#__PURE__*/React.createElement("h5", {
+    className: "card-title"
+  }, `${organ.metadata.data.name}`), /*#__PURE__*/React.createElement("strong", null, `${organ.address}`), /*#__PURE__*/React.createElement("u", null, /*#__PURE__*/React.createElement("em", null, "Balance")), /*#__PURE__*/React.createElement("p", null, "\u039E ", organ.balance), /*#__PURE__*/React.createElement("u", null, /*#__PURE__*/React.createElement("em", null, "Metadata")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
     onClick: () => reloadMetadata(),
     className: "btn btn-sm"
   }, "reload"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("code", null, `${organ.metadata.cid}`), " ", /*#__PURE__*/React.createElement("a", {
     href: `https://ipfs.io/ipfs/${organ.metadata.cid}`,
     target: "_blank"
-  }, "view")), /*#__PURE__*/React.createElement("h5", null, "Procedures"), /*#__PURE__*/React.createElement("button", {
+  }, "view"))), /*#__PURE__*/React.createElement("u", null, /*#__PURE__*/React.createElement("em", null, "Procedures")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
     onClick: () => reloadProcedures(),
     className: "btn btn-sm"
   }, "reload"), /*#__PURE__*/React.createElement("ul", {
@@ -34,7 +35,7 @@ export const Organ = props => {
     className: "list-item"
   }, /*#__PURE__*/React.createElement("code", null, op.address), " ", /*#__PURE__*/React.createElement("span", {
     className: "text-info"
-  }, `${op.permissions}`)))), /*#__PURE__*/React.createElement("h5", null, "Entries"), /*#__PURE__*/React.createElement("button", {
+  }, `${op.permissions}`))))), /*#__PURE__*/React.createElement("u", null, /*#__PURE__*/React.createElement("em", null, "Entries")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
     onClick: () => reloadEntries(),
     className: "btn btn-sm"
   }, "reload"), /*#__PURE__*/React.createElement("ul", {
@@ -45,7 +46,9 @@ export const Organ = props => {
   }, /*#__PURE__*/React.createElement("em", null, e.index), " ", /*#__PURE__*/React.createElement("code", null, e.address), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("a", {
     href: `https://ipfs.io/ipfs/${e.cid}`,
     target: "_blank"
-  }, `${e.cid}`)))), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement("button", {
+  }, `${e.cid}`))))), /*#__PURE__*/React.createElement("hr", {
+    className: "mb-1"
+  }), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
     className: "btn btn-sm",
     onClick: () => toggleForms()
   }, "toggle forms"), showForms && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(OrganFormUpdateMetadata, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(OrganFormAddEntries, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(OrganFormRemoveEntries, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(OrganFormReplaceEntry, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(OrganFormAddProcedure, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(OrganFormRemoveProcedure, null), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(OrganFormReplaceProcedure, null)))));
@@ -54,34 +57,28 @@ export default withOrganProvider(Organ);
 export const OrganEntryForm = ({
   onSave
 }) => {
-  return /*#__PURE__*/React.createElement("form", {
-    onSubmit: e => {
-      e.preventDefault();
-      const {
-        address,
-        cid
-      } = e.currentTarget;
-      onSave({
-        address: address.value,
-        cid: cid.value
-      });
-      e.currentTarget.reset();
-    },
-    className: "form"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("input", {
+  const [cid, setCid] = useState();
+  const [address, setAddress] = useState("");
+  React.useEffect(() => {
+    if (address && cid && onSave) onSave({
+      address,
+      cid
+    });
+  }, [cid, address]);
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("input", {
     type: "text",
     name: "address",
     placeholder: "address",
+    defaultValue: address,
+    onChange: e => setAddress(e.target.value),
     className: "form-control"
-  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("input", {
-    type: "text",
-    name: "cid",
-    placeholder: "cid",
-    className: "form-control"
-  })), /*#__PURE__*/React.createElement("button", {
-    type: "submit",
-    className: "btn btn-sm"
-  }, "save"));
+  }), cid && /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("code", null, `${cid}`), "\xA0", /*#__PURE__*/React.createElement("a", {
+    href: `ipfs://${cid}`,
+    target: "_blank"
+  }, "open")), /*#__PURE__*/React.createElement(Upload, {
+    cid: cid,
+    onCID: c => setCid(c)
+  }));
 };
 export const OrganEntrySelector = ({
   entries,
@@ -206,7 +203,9 @@ export const OrganFormAddEntries = () => {
       addEntries(entries).then(() => reloadEntries()).catch(console.error);
     },
     className: "btn btn-primary"
-  }, "Add Entries"));
+  }, "Add Entries"), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(Upload, {
+    onUpload: () => alert("Uploaded.")
+  }));
 };
 export const OrganFormRemoveEntries = () => {
   const {

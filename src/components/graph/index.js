@@ -1,65 +1,38 @@
-import {
-    Organ as OrganClass,
-    ProcedureNomination as ProcedureNominationClass,
-    ProcedureVote as ProcedureVoteClass
-} from "@organigram/client-js"
 import React from 'react'
 import { useGraph, withGraphProvider } from "../../contexts/graph"
 import Organ from "../organ"
 import Procedure from "../procedure"
+import Contracts from "./contracts"
 
 export const Graph = props => {
-    const { graph, loading, error, addContracts, removeContracts } = useGraph()
-    const contracts = graph && [
-        ...graph.organs.map(({ address }) => address),
-        ...graph.procedures.map(({ address }) => address)
-    ]
+    const { graph, loading, error } = useGraph()
     return (
         <div {...props}>
             {loading && <div className="alert alert-info">Loading graph...</div>}
             {error && <div className="alert alert-danger">Error: <pre>{JSON.stringify(error, null, 2)}</pre></div>}
             {graph && (
                 <div className="graph">
-                    <h2>Contracts</h2>
-                    <div>
-                        <ul className="list-unstyled">
-                            {contracts.map(address => (
-                                <li key={address} className="list-item">
-                                    {address} <span onClick={() => removeContracts([address])} className="text-danger">x</span>
-                                </li>
-                            ))}
-                        </ul>
-                        <form className="form" onSubmit={e =>{
-                            e.preventDefault()
-                            addContracts([e.currentTarget.address.value])
-                        }}>
-                            <input type="text" name="address" placeholder="address" />
-                            <button type="submit" className="btn btn-warning">Add Contract</button>
-                        </form>
+                    <div className="card card-body bg-secondary">
+                        <Contracts />
                     </div>
-                    <button className="btn btn-primary" onClick={async () => 
-                        OrganClass.deploy(EMPTY_CID)
-                        .then(o => addContracts([o.address]))
-                        .catch(error => console.error(error.message))
-                    }>Deploy organ</button>
-                    <button className="btn btn-primary" onClick={async () => 
-                        ProcedureNominationClass.deploy(EMPTY_CID)
-                        .then(o => addContracts([o.address]))
-                        .catch(error => console.error(error.message))
-                    }>Deploy nomination</button>
-                    <button className="btn btn-primary" onClick={async () => 
-                        ProcedureVoteClass.deploy(EMPTY_CID)
-                        .then(o => addContracts([o.address]))
-                        .catch(error => console.error(error.message))
-                    }>Deploy vote</button>
-                    <h2>Organs</h2>
-                    <ul className="list-unstyled">
-                        {graph.organs.map(o => <li key={o.address} className="list-item mb-3"><Organ organ={o} /></li>)}
-                    </ul>
-                    <h2>Procedures</h2>
-                    <ul className="list-unstyled">
-                        {graph.procedures.map(p => <li key={p.address} className="list-item mb-3"><Procedure procedure={p} /></li>)}
-                    </ul>
+                    <div className="card-group">
+                        <div className="card card-body bg-dark">
+                            <h3 className="card-title">Procedures</h3>
+                            <ul className="list-unstyled">
+                                {graph.procedures.map(p => (
+                                    <li key={p.address} className="list-item mb-2"><Procedure procedure={p} /></li>
+                                ))}
+                            </ul>
+                        </div>
+                        <div className="card card-body bg-dark">
+                            <h3>Organs</h3>
+                            <ul className="list-unstyled">
+                                {graph.organs.map(o => (
+                                    <li key={o.address} className="list-item mb-2"><Organ organ={o} /></li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>
@@ -67,18 +40,3 @@ export const Graph = props => {
 }
 
 export default withGraphProvider(Graph)
-
-export const ContractSelector = ({ contracts, onSelect }) => {
-    const handleChange = (event) => {
-        const contract = contracts.find(c => c.address === event.target.value)
-        if (contract) onSelect(contract)
-    }
-    return (
-        <select onChange={handleChange} className="form-control">
-            <option value="">-- Select a contract</option>
-            {contracts.map(c =>
-                <option key={c.address} value={c.address}>{c.address}</option>
-            )}
-        </select>
-    )
-}
