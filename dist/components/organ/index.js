@@ -17,7 +17,7 @@ export const Organ = props => {
 
   return /*#__PURE__*/React.createElement("div", props, loading && /*#__PURE__*/React.createElement("p", null, "Loading organ..."), error && /*#__PURE__*/React.createElement("pre", null, "Error: ", JSON.stringify(error, null, 2)), organ && /*#__PURE__*/React.createElement("div", {
     className: "organ card card-body bg-secondary"
-  }, organ.metadata.data.name && /*#__PURE__*/React.createElement("h5", {
+  }, organ.metadata && organ.metadata.data && organ.metadata.data.name && /*#__PURE__*/React.createElement("h5", {
     className: "card-title"
   }, `${organ.metadata.data.name}`), /*#__PURE__*/React.createElement("strong", null, `${organ.address}`), /*#__PURE__*/React.createElement("u", null, /*#__PURE__*/React.createElement("em", null, "Balance")), /*#__PURE__*/React.createElement("p", null, "\u039E ", organ.balance), /*#__PURE__*/React.createElement("u", null, /*#__PURE__*/React.createElement("em", null, "Metadata")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
     onClick: () => reloadMetadata(),

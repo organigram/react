@@ -38,7 +38,7 @@ export const Procedure = props => {
 
   return /*#__PURE__*/React.createElement(React.Fragment, null, loading && /*#__PURE__*/React.createElement("p", null, "Loading."), error && /*#__PURE__*/React.createElement("pre", null, "Error: ", JSON.stringify(error, null, 2)), procedure && procedure.type && ProcedureComponent && /*#__PURE__*/React.createElement("div", {
     className: "procedure card card-body bg-secondary"
-  }, procedure.metadata.data.name && /*#__PURE__*/React.createElement("h5", {
+  }, procedure.metadata && procedure.metadata.data && procedure.metadata.data.name && /*#__PURE__*/React.createElement("h5", {
     className: "card-title"
   }, `${procedure.metadata.data.name}`), /*#__PURE__*/React.createElement("strong", null, `${procedure.address}`), procedure.typename && /*#__PURE__*/React.createElement("p", null, `${procedure.typename}`), /*#__PURE__*/React.createElement("u", null, /*#__PURE__*/React.createElement("em", null, "Metadata")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
     onClick: () => reloadMetadata(),
@@ -119,7 +119,7 @@ export const ProcedureMove = ({
     className: "procedure-move card"
   }, /*#__PURE__*/React.createElement("div", {
     className: "card-body"
-  }, /*#__PURE__*/React.createElement("h5", null, move.key), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
+  }, /*#__PURE__*/React.createElement("strong", null, move.key), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
     onClick: () => reloadMove(move.key),
     className: "btn btn-sm"
   }, "Reload Move"), /*#__PURE__*/React.createElement("br", null), "Creator: ", /*#__PURE__*/React.createElement("code", null, move.creator), /*#__PURE__*/React.createElement("br", null), "Locked? ", /*#__PURE__*/React.createElement("code", null, move.locked ? "true" : "false"), /*#__PURE__*/React.createElement("br", null), "Applied? ", /*#__PURE__*/React.createElement("code", null, move.applied ? "true" : "false"), /*#__PURE__*/React.createElement("br", null), "Processing? ", /*#__PURE__*/React.createElement("code", null, move.processing ? "true" : "false"), /*#__PURE__*/React.createElement("br", null), "Metadata: ", /*#__PURE__*/React.createElement("code", null, `${move.metadata.cid}`), " ", /*#__PURE__*/React.createElement("a", {

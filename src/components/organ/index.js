@@ -13,7 +13,7 @@ export const Organ = props => {
             {error && <pre>Error: {JSON.stringify(error, null, 2)}</pre>}
             {organ && (
                 <div className="organ card card-body bg-secondary">
-                    {organ.metadata.data.name && <h5 className="card-title">{`${organ.metadata.data.name}`}</h5>}
+                    {organ.metadata && organ.metadata.data && organ.metadata.data.name && <h5 className="card-title">{`${organ.metadata.data.name}`}</h5>}
                     <strong>{`${organ.address}`}</strong>
                     <u><em>Balance</em></u>
                     <p>Ξ {organ.balance}</p>

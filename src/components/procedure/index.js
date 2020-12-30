@@ -38,7 +38,7 @@ export const Procedure = props => {
             {error && <pre>Error: {JSON.stringify(error, null, 2)}</pre>}
             {procedure && procedure.type && ProcedureComponent && (
                 <div className="procedure card card-body bg-secondary">
-                    {procedure.metadata.data.name && <h5 className="card-title">{`${procedure.metadata.data.name}`}</h5>}
+                    {procedure.metadata && procedure.metadata.data && procedure.metadata.data.name && <h5 className="card-title">{`${procedure.metadata.data.name}`}</h5>}
                     <strong>{`${procedure.address}`}</strong>
                     {procedure.typename && <p>{`${procedure.typename}`}</p>}
                     <u><em>Metadata</em></u>
@@ -117,7 +117,7 @@ export const ProcedureMove = ({ move }) => {
     return (
         <div className="procedure-move card">
             <div className="card-body">
-                <h5>{move.key}</h5>
+                <strong>{move.key}</strong>
                 <div>
                     <button onClick={() => reloadMove(move.key)} className="btn btn-sm">Reload Move</button><br/>
                     Creator: <code>{move.creator}</code><br/>
