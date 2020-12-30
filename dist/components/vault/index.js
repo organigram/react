@@ -23,12 +23,16 @@ export const Vault = () => {
     getFiles
   } = useVault();
   const [showPins, setShowPins] = React.useState(false);
-
-  const togglePins = () => setShowPins(sp => !sp);
-
   const [cids, setCids] = React.useState([]);
 
   const addCid = c => setCids(cs => cs.find(csc => `${csc}` === `${c}`) ? cs : [...cs, c]);
+
+  const togglePins = () => {
+    if (showPins) setShowPins(false);else _createSignature().then(s => setShowPins(!!s)).catch(error => {
+      console.warn(error.message);
+      setShowPins(false);
+    });
+  };
 
   React.useEffect(() => {
     if (account && keyserver) {
