@@ -22,7 +22,9 @@ export const VaultProvider = ({
     account,
     network
   } = useWeb3();
-  const [keyserver, setKeyserver] = useState(null);
+  const [keyserver, setKeyserver] = useState(null); // @todo : Use state for multiple keyservers.
+  // const [keyservers, setKeyservers] = useState([])
+
   const [keyUploaded, setKeyUploaded] = useState(false);
   const [key, setKey] = useState(null); // Initialize OpenPGP worker.
 
@@ -46,6 +48,13 @@ export const VaultProvider = ({
 
   const _deployKeyserver = async () => {
     return Keyserver.deploy().then(_keyserver => {
+      return Keyserver.save({
+        network: _keyserver.network,
+        address: _keyserver.address
+      }).then(() => _keyserver).catch(error => {
+        console.warning("Unable to save deployed keyserver", error.message);
+        return null;
+      }).then(setKeyserver);
       setKeyserver(_keyserver);
       return _keyserver;
     }).catch(error => {

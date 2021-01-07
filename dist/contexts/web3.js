@@ -4,7 +4,7 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
  * @TODO : Move non-React code to @organigram/client-js.
  */
 import React, { useState } from 'react';
-import { web3, getNetwork, hasLibraries as web3hasLibraries } from '@organigram/client-js';
+import { web3, getNetwork, web3connect, hasLibraries as web3hasLibraries } from '@organigram/client-js';
 export const ETHEREUM_TIMER_DELAY = 2000;
 export const ETHEREUM_UNKNOWN = 'ETHEREUM_UNKNOWN';
 export const ETHEREUM_UNAVAILABLE = 'ETHEREUM_UNAVAILABLE';
@@ -26,7 +26,7 @@ export const Web3Context = /*#__PURE__*/React.createContext({
   ecRecover: null,
   sign: null,
   hasLibraries: false,
-  unlock: () => {}
+  connect: async () => {}
 });
 export const useWeb3 = () => React.useContext(Web3Context);
 export const withWeb3 = ComposedComponent => props => /*#__PURE__*/React.createElement(ComposedComponent, _extends({}, props, {
@@ -105,19 +105,8 @@ export const Web3Provider = ({
       }
     };
   }, [timer, loading, account, network, balance, status, _web3]);
-  const unlock = React.useCallback(async () => {
-    if (_web3.currentProvider.enable) {
-      const accounts = await _web3.eth.getAccounts();
-      if (!accounts) await _web3.currentProvider.enable();
-    }
-  }, [_web3]);
 
-  const reset = value => setAccount(value);
-
-  const enable = () => {
-    reset('');
-    if (typeof window.web3 !== 'undefined') window.web3.currentProvider.enable();
-  };
+  const connect = async () => web3connect().then(setAccount);
 
   return /*#__PURE__*/React.createElement(Web3Context.Provider, {
     value: {
@@ -130,9 +119,7 @@ export const Web3Provider = ({
       status,
       web3: _web3,
       hasLibraries,
-      unlock,
-      reset,
-      enable,
+      connect,
       setSelected
     }
   }, children);
