@@ -21,8 +21,10 @@ import concat from 'uint8arrays/concat'
 export const VaultContext = React.createContext({
     key: null,
     keyUploaded: false,
+    hasSignature: false,
     _deployKeyserver: async () => Promise.reject(new Error('Not implemented.')),
     _createSignature: async () => Promise.reject(new Error('Not implemented.')),
+    _deleteSignature: async () => Promise.reject(new Error('Not implemented.')),
     createKey: async () => Promise.reject(new Error('Not implemented.')),
     emptySignature: async () => Promise.reject(new Error('Not implemented.')),
     emptyKeys: async () => Promise.reject(new Error('Not implemented.')),
@@ -39,6 +41,7 @@ export const VaultProvider = ({ children }) => {
     // const [keyservers, setKeyservers] = useState([])
     const [keyUploaded, setKeyUploaded] = useState(false)
     const [key, setKey] = useState(null)
+    const [hasSignature, setHasSignature] = useState(null)
 
     // Initialize OpenPGP worker.
     useEffect(() => {
@@ -84,11 +87,18 @@ export const VaultProvider = ({ children }) => {
     }
 
     const _createSignature = async () => {
-        const account = await getAccount()
+        const account = await getAccount().then(a => a && a.toLowerCase())
         const signature = await generateSignature()
         // Signature is temporarily stored in session storage.
-        sessionStorage.setItem(`organigram-vault-signature-${account}`.toLowerCase(), signature)
+        sessionStorage.setItem(`organigram-vault-signature-${account}`, signature)
+        setHasSignature(true)
         return signature
+    }
+
+    const _deleteSignature = async () => {
+        const account = await getAccount().then(a => a && a.toLowerCase())
+        sessionStorage.removeItem(`organigram-vault-signature-${account}`)
+        setHasSignature(null)
     }
 
     const createKey = async (_setKey = false) => {
@@ -130,7 +140,7 @@ export const VaultProvider = ({ children }) => {
         })
     }
 
-    const addFile = async file => {
+    const addFile = async (file, recipientsKeys = [], signatureKey = null) => {
         if (!openpgp || !openpgp.message)
             throw new Error("OpenPGP not loaded.")
         if (!key || !key.privateKeyArmored)
@@ -190,7 +200,7 @@ export const VaultProvider = ({ children }) => {
 
         // Encrypt metadata file for current user.
         // @todo : Select file recipients beforehand.
-        const ciphermetadata = await _encryptMessagePGP(JSON.stringify(metadata), [key], [key])
+        const ciphermetadata = await _encryptMessagePGP(JSON.stringify(metadata), [key, ...recipientsKeys], [key])
 
         const metadataCid = await ipfs.add(ciphermetadata)
         .then(result => result.cid)
@@ -325,6 +335,8 @@ export const VaultProvider = ({ children }) => {
             keyUploaded,
             _deployKeyserver,
             _createSignature,
+            _deleteSignature,
+            hasSignature,
             createKey,
             loadKey,
             uploadKey,

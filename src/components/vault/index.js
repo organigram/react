@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useVault } from '../../contexts/vault'
 import { useWeb3 } from '../../contexts/web3'
 import { useIPFS } from '../../contexts/ipfs'
@@ -8,8 +8,9 @@ export const Vault = () => {
     const { account } = useWeb3()
     const { ipfs } = useIPFS()
     const {
-        key, keyserver, keyUploaded,
-        createKey, _deployKeyserver, _createSignature,
+        key, keyserver, keyUploaded, hasSignature,
+        createKey, _deployKeyserver,
+        _createSignature, _deleteSignature,
         loadKey, uploadKey,
         addFile, getFiles
     } = useVault()
@@ -20,6 +21,8 @@ export const Vault = () => {
     const togglePins = () => {
         if (showPins)
             setShowPins(false)
+        else if (hasSignature)
+            setShowPins(true)
         else
             _createSignature()
             .then(s => setShowPins(!!s))
@@ -46,13 +49,22 @@ export const Vault = () => {
                     : <p className="text-warning">Encryption key generated but not uploaded.</p>
             )}
             <div>
-                <button onClick={() => {
-                    _createSignature()
-                    .then(k => k && console.log("Signature generated, encryption key can be unlocked."))
-                    .catch(error => console.warn(error.message))
-                }} className="btn btn-primary mr-1 mb-2">
-                    Unlock key
-                </button>
+                {hasSignature ? (
+                    <button onClick={() => {
+                        _deleteSignature()
+                        .catch(error => console.warn(error.message))
+                    }} className="btn btn-link text-danger mr-1 mb-2">
+                        Lock key
+                    </button>
+                ) : (
+                    <button onClick={() => {
+                        _createSignature()
+                        .then(k => k && console.log("Signature generated, encryption key can be unlocked."))
+                        .catch(error => console.warn(error.message))
+                    }} className="btn btn-link text-primary mr-1 mb-2">
+                        Unlock your key to sign or decrypt data
+                    </button>
+                )}
                 {!keyserver && (
                     <button onClick={() => {
                         _deployKeyserver()
@@ -102,6 +114,7 @@ export const Vault = () => {
                     }}
                 >
                     <div className="col-6">
+                        <WithEncryptionCheckbox />
                         <input type="file" name="file" className="form-control" />
                     </div>
                     <div className="col-auto">
@@ -151,3 +164,21 @@ export const Vault = () => {
 }
 
 export default Vault
+
+export const WithEncryptionCheckbox = () => {
+    const { hasSignature, _createSignature } = useVault()
+    if (typeof hasSignature === "undefined")
+        return <p className="text-info">Loading signature.</p>
+    if (!hasSignature)
+        return (
+            <></>
+        )
+    return hasSignature
+    ? (
+        <button
+            onClick={() => alert("Feature in development")}
+            className="btn btn-link"
+        >set recipients</button>
+    )
+    : <></>
+}

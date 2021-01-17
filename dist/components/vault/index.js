@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useVault } from '../../contexts/vault';
 import { useWeb3 } from '../../contexts/web3';
 import { useIPFS } from '../../contexts/ipfs';
@@ -14,9 +14,11 @@ export const Vault = () => {
     key,
     keyserver,
     keyUploaded,
+    hasSignature,
     createKey,
     _deployKeyserver,
     _createSignature,
+    _deleteSignature,
     loadKey,
     uploadKey,
     addFile,
@@ -28,7 +30,7 @@ export const Vault = () => {
   const addCid = c => setCids(cs => cs.find(csc => `${csc}` === `${c}`) ? cs : [...cs, c]);
 
   const togglePins = () => {
-    if (showPins) setShowPins(false);else _createSignature().then(s => setShowPins(!!s)).catch(error => {
+    if (showPins) setShowPins(false);else if (hasSignature) setShowPins(true);else _createSignature().then(s => setShowPins(!!s)).catch(error => {
       console.warn(error.message);
       setShowPins(false);
     });
@@ -45,12 +47,17 @@ export const Vault = () => {
     className: "text-success"
   }, "Encryption key generated and ready to use.") : /*#__PURE__*/React.createElement("p", {
     className: "text-warning"
-  }, "Encryption key generated but not uploaded.")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
+  }, "Encryption key generated but not uploaded.")), /*#__PURE__*/React.createElement("div", null, hasSignature ? /*#__PURE__*/React.createElement("button", {
+    onClick: () => {
+      _deleteSignature().catch(error => console.warn(error.message));
+    },
+    className: "btn btn-link text-danger mr-1 mb-2"
+  }, "Lock key") : /*#__PURE__*/React.createElement("button", {
     onClick: () => {
       _createSignature().then(k => k && console.log("Signature generated, encryption key can be unlocked.")).catch(error => console.warn(error.message));
     },
-    className: "btn btn-primary mr-1 mb-2"
-  }, "Unlock key"), !keyserver && /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-link text-primary mr-1 mb-2"
+  }, "Unlock your key to sign or decrypt data"), !keyserver && /*#__PURE__*/React.createElement("button", {
     onClick: () => {
       _deployKeyserver().then(k => k && console.log("Keyserver deployed", k.address)).catch(error => console.warn(error.message));
     },
@@ -79,7 +86,7 @@ export const Vault = () => {
     }
   }, /*#__PURE__*/React.createElement("div", {
     className: "col-6"
-  }, /*#__PURE__*/React.createElement("input", {
+  }, /*#__PURE__*/React.createElement(WithEncryptionCheckbox, null), /*#__PURE__*/React.createElement("input", {
     type: "file",
     name: "file",
     className: "form-control"
@@ -127,3 +134,17 @@ export const Vault = () => {
   }, /*#__PURE__*/React.createElement(VaultPins, null)));
 };
 export default Vault;
+export const WithEncryptionCheckbox = () => {
+  const {
+    hasSignature,
+    _createSignature
+  } = useVault();
+  if (typeof hasSignature === "undefined") return /*#__PURE__*/React.createElement("p", {
+    className: "text-info"
+  }, "Loading signature.");
+  if (!hasSignature) return /*#__PURE__*/React.createElement(React.Fragment, null);
+  return hasSignature ? /*#__PURE__*/React.createElement("button", {
+    onClick: () => alert("Feature in development"),
+    className: "btn btn-link"
+  }, "set recipients") : /*#__PURE__*/React.createElement(React.Fragment, null);
+};

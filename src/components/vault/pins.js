@@ -10,13 +10,11 @@ export const VaultPins = () => {
     React.useEffect(() => {
         ;(async () => {
             if (ipfs) {
-                console.log("- Pins load started.")
                 for await (const { cid } of ipfs.pin.ls()) {
-                    console.log("Found cid", `${cid}`)
                     addCid(cid)
                 }
             } else {
-                console.log("No IPFS...")
+                console.error("IPFS not started.")
             }
         })()
     }, [ipfs])
