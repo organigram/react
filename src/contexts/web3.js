@@ -2,7 +2,7 @@
  * @TODO : Move non-React code to @organigram/client-js.
  */
 import React, { useState } from 'react'
-import { web3, getNetwork, web3connect, hasLibraries as web3hasLibraries } from '@organigram/client-js'
+import { web3, getNetwork, getNetworkName, web3connect, hasLibraries as web3hasLibraries } from '@organigram/client-js'
 
 export const ETHEREUM_TIMER_DELAY = 2000
 export const ETHEREUM_UNKNOWN = 'ETHEREUM_UNKNOWN'
@@ -19,6 +19,7 @@ export const ETHEREUM_NETWORK_ID_LOCAL = '1337'
 export const Web3Context = React.createContext({
   account: '',
   network: '',
+  networkName: '',
   networkIsValid: false,
   balance: 'n/a',
   status: ETHEREUM_UNKNOWN,
@@ -51,6 +52,8 @@ export const Web3Provider = ({ children }) => {
         _setNetworkIsValid(_network === 'rinkeby' || _network === 'private') // @TODO : Rinkeby only in production.
         web3hasLibraries().then(setHasLibraries)
     }
+
+    const networkName = React.useMemo(() => getNetworkName(network), [network])
 
     React.useEffect(() => {
         if (timer.current === null) {
@@ -132,6 +135,7 @@ export const Web3Provider = ({ children }) => {
             account,
             selected,
             network,
+            networkName,
             networkIsValid,
             balance,
             status,

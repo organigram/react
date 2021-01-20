@@ -20,18 +20,18 @@ import concat from 'uint8arrays/concat'
 
 export const VaultContext = React.createContext({
     key: null,
+    keyserver: null,
     keyUploaded: false,
     hasSignature: false,
     _deployKeyserver: async () => Promise.reject(new Error('Not implemented.')),
     _createSignature: async () => Promise.reject(new Error('Not implemented.')),
     _deleteSignature: async () => Promise.reject(new Error('Not implemented.')),
     createKey: async () => Promise.reject(new Error('Not implemented.')),
-    emptySignature: async () => Promise.reject(new Error('Not implemented.')),
-    emptyKeys: async () => Promise.reject(new Error('Not implemented.')),
+    loadKey: async () => Promise.reject(new Error('Not implemented.')),
+    uploadKey: async () => Promise.reject(new Error('Not implemented.')),
     addFile: async () => Promise.reject(new Error('Not implemented.')),
     getFiles: async () => Promise.reject(new Error('Not implemented.')),
-    getFilesMetadata: async () => Promise.reject(new Error('Not implemented.')),
-    errors: []
+    getFilesMetadata: async () => Promise.reject(new Error('Not implemented.'))
 })
 
 export const VaultProvider = ({ children }) => {
@@ -43,14 +43,14 @@ export const VaultProvider = ({ children }) => {
     const [key, setKey] = useState(null)
     const [hasSignature, setHasSignature] = useState(null)
 
+    // @todo Fix OpenPGP worker path.
     // Initialize OpenPGP worker.
-    useEffect(() => {
-        // @todo Fix OpenPGP worker path.
-        // openpgp.initWorker({ path: '/openpgp.worker.js', n: 2 })
-        // return async () => {
-        //     await openpgp.destroyWorker()
-        // }
-    }, [])
+    // useEffect(() => {
+    //     openpgp.initWorker({ path: '/openpgp.worker.js', n: 2 })
+    //     return async () => {
+    //         await openpgp.destroyWorker()
+    //     }
+    // }, [])
 
     useEffect(() => {
         if (network) {
@@ -98,7 +98,7 @@ export const VaultProvider = ({ children }) => {
     const _deleteSignature = async () => {
         const account = await getAccount().then(a => a && a.toLowerCase())
         sessionStorage.removeItem(`organigram-vault-signature-${account}`)
-        setHasSignature(null)
+        setHasSignature(false)
     }
 
     const createKey = async (_setKey = false) => {
@@ -333,10 +333,10 @@ export const VaultProvider = ({ children }) => {
             key,
             keyserver,
             keyUploaded,
+            hasSignature,
             _deployKeyserver,
             _createSignature,
             _deleteSignature,
-            hasSignature,
             createKey,
             loadKey,
             uploadKey,

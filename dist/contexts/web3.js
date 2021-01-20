@@ -4,7 +4,7 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
  * @TODO : Move non-React code to @organigram/client-js.
  */
 import React, { useState } from 'react';
-import { web3, getNetwork, web3connect, hasLibraries as web3hasLibraries } from '@organigram/client-js';
+import { web3, getNetwork, getNetworkName, web3connect, hasLibraries as web3hasLibraries } from '@organigram/client-js';
 export const ETHEREUM_TIMER_DELAY = 2000;
 export const ETHEREUM_UNKNOWN = 'ETHEREUM_UNKNOWN';
 export const ETHEREUM_UNAVAILABLE = 'ETHEREUM_UNAVAILABLE';
@@ -19,6 +19,7 @@ export const ETHEREUM_NETWORK_ID_LOCAL = '1337';
 export const Web3Context = /*#__PURE__*/React.createContext({
   account: '',
   network: '',
+  networkName: '',
   networkIsValid: false,
   balance: 'n/a',
   status: ETHEREUM_UNKNOWN,
@@ -55,6 +56,7 @@ export const Web3Provider = ({
     web3hasLibraries().then(setHasLibraries);
   };
 
+  const networkName = React.useMemo(() => getNetworkName(network), [network]);
   React.useEffect(() => {
     if (timer.current === null) {
       timer.current = setInterval(() => {
@@ -114,6 +116,7 @@ export const Web3Provider = ({
       account,
       selected,
       network,
+      networkName,
       networkIsValid,
       balance,
       status,

@@ -17,18 +17,20 @@ export const GraphProvider = ({ contracts, children }) => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
 
-    const load = () => {
+    const load = React.useCallback(() => {
         setError(null)
-        setLoading(true)
-        Graph.load(contracts)
-        .then(data => setGraph(data))
-        .catch(error => {
-            console.error("Error loading graph ", contracts, error.message)
-            setGraph(null)
-            setError(error)
-        })
-        .finally(() => setLoading(false))
-    }
+        if (contracts) {
+            setLoading(true)
+            Graph.load(contracts)
+            .then(data => setGraph(data))
+            .catch(error => {
+                console.error("Error loading graph ", contracts, error.message)
+                setGraph(null)
+                setError(error)
+            })
+            .finally(() => setLoading(false))
+        }
+    }, [contracts])
 
     const addContracts = React.useCallback(async contracts => {
         if (graph)
@@ -51,7 +53,7 @@ export const GraphProvider = ({ contracts, children }) => {
     }, [graph])
 
     // Initial load.
-    React.useEffect(() => { load() }, [network])
+    React.useEffect(() => { load() }, [network, load])
 
     return (
         <GraphContext.Provider value={{
