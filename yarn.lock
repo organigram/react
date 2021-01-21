@@ -1364,7 +1364,7 @@
 
 "@organigram/client-js@git+https://alxmhe:ETwr5WUv3DJEjjJegRG6@bitbucket.org/organigram/client-js.git#master":
   version "1.0.0"
-  resolved "git+https://alxmhe:ETwr5WUv3DJEjjJegRG6@bitbucket.org/organigram/client-js.git#39e3e4839b6202cf2372b3021099a9c8c224a495"
+  resolved "git+https://alxmhe:ETwr5WUv3DJEjjJegRG6@bitbucket.org/organigram/client-js.git#4255fa3db94e47dda46907266c696e96ca2b9172"
   dependencies:
     "@metamask/detect-provider" "^1.2.0"
     "@organigram/contracts" "git+https://alxmhe:ETwr5WUv3DJEjjJegRG6@bitbucket.org/organigram/contracts.git#develop"
