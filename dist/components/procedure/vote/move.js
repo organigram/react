@@ -25,7 +25,7 @@ export const VoteMove = ({
     onClick: () => {
       vote.vote(move.key, true).catch(error => console.error(error.message));
     }
-  }, "Vote YES"), "}", /*#__PURE__*/React.createElement("button", {
+  }, "Vote YES"), /*#__PURE__*/React.createElement("button", {
     className: "btn btn-primary",
     onClick: () => {
       vote.vote(move.key, false).catch(error => console.error(error.message));
@@ -41,7 +41,7 @@ export const VoteMove = ({
       vote.count(move.key).catch(error => {
         console.error(error.message);
         return false;
-      }).then(isYes => alert("Vote result is:", isYes ? "YES" : "NO"));
+      }).then(isYes => alert(`Vote result is: ${isYes ? "YES" : "NO"}`));
     }
   }, "Count"), /*#__PURE__*/React.createElement("button", {
     className: "btn btn-success",

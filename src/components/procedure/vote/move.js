@@ -28,7 +28,7 @@ export const VoteMove = ({ move }) => {
                             .catch(error => console.error(error.message))
                         }}>
                             Vote YES
-                        </button>}
+                        </button>
                         <button className="btn btn-primary" onClick={() => {
                             vote.vote(move.key, false)
                             .catch(error => console.error(error.message))
@@ -48,7 +48,7 @@ export const VoteMove = ({ move }) => {
                             console.error(error.message)
                             return false
                         })
-                        .then(isYes => alert("Vote result is:", isYes ? "YES" : "NO"))
+                        .then(isYes => alert(`Vote result is: ${isYes ? "YES" : "NO"}`))
                     }}>
                         Count
                     </button>
