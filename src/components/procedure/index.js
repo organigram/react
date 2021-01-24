@@ -265,7 +265,7 @@ export const ProcedureMoveFormReplaceEntry = ({ move }) => {
             )}
             <button onClick={() => {
                 if (organ && index && entry)
-                    moveReplaceEntry(move.key, organ.address, index, entry)
+                    moveReplaceEntry(move.key, organ.address, { index, ...entry })
                     .then(() => reloadMove(move.key))
                     .catch(console.error)
             }} className="btn btn-primary">Replace Entry</button>
@@ -320,7 +320,8 @@ export const ProcedureMoveFormRemoveProcedure = ({ move }) => {
 
 export const ProcedureMoveFormReplaceProcedure = ({ move }) => {
     const { graph: { organs } } = useGraph()
-    const { procedure: { moveReplaceProcedure }, reloadMove } = useProcedure()
+    const { procedure, reloadMove } = useProcedure()
+    const { moveReplaceProcedure } = procedure
     const [organ, setOrgan] = useState()
     const [oldProcedure, setOldProcedure] = useState()
     const [newProcedure, setNewProcedure] = useState()

@@ -288,7 +288,10 @@ export const ProcedureMoveFormReplaceEntry = ({
     onSave: e => setEntry(e)
   })), /*#__PURE__*/React.createElement("button", {
     onClick: () => {
-      if (organ && index && entry) moveReplaceEntry(move.key, organ.address, index, entry).then(() => reloadMove(move.key)).catch(console.error);
+      if (organ && index && entry) moveReplaceEntry(move.key, organ.address, {
+        index,
+        ...entry
+      }).then(() => reloadMove(move.key)).catch(console.error);
     },
     className: "btn btn-primary"
   }, "Replace Entry"));
@@ -365,11 +368,12 @@ export const ProcedureMoveFormReplaceProcedure = ({
     }
   } = useGraph();
   const {
-    procedure: {
-      moveReplaceProcedure
-    },
+    procedure,
     reloadMove
   } = useProcedure();
+  const {
+    moveReplaceProcedure
+  } = procedure;
   const [organ, setOrgan] = useState();
   const [oldProcedure, setOldProcedure] = useState();
   const [newProcedure, setNewProcedure] = useState();
