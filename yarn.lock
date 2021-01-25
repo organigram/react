@@ -2924,9 +2924,9 @@ eth-lib@^0.1.26:
     xhr-request-promise "^0.1.2"
 
 ethereum-bloom-filters@^1.0.6:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/ethereum-bloom-filters/-/ethereum-bloom-filters-1.0.7.tgz#b7b80735e385dbb7f944ce6b4533e24511306060"
-  integrity sha512-cDcJJSJ9GMAcURiAWO3DxIEhTL/uWqlQnvgKpuYQzYPrt/izuGU+1ntQmHt0IRq6ADoSYHFnB+aCEFIldjhkMQ==
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/ethereum-bloom-filters/-/ethereum-bloom-filters-1.0.8.tgz#0834ea39e139034b051cd5323355e23b6c76b23d"
+  integrity sha512-cF4B4aVaHQ/R2dgYSI4g1OZHOopi5KDgfGkxhTONlmzh0h+u7H1v0f/TXyzaq9lpfK34pTnOwBo4a1rspTAsxA==
   dependencies:
     js-sha3 "^0.8.0"
 
@@ -5121,9 +5121,9 @@ libp2p-webrtc-peer@^10.0.1:
     readable-stream "^3.4.0"
 
 libp2p-webrtc-star@^0.20.1:
-  version "0.20.6"
-  resolved "https://registry.yarnpkg.com/libp2p-webrtc-star/-/libp2p-webrtc-star-0.20.6.tgz#64fbd4078d2fe513a2a1c58fda06331c2f93d5a6"
-  integrity sha512-XR7h/UYT694IuPj4xM3ik4aH2j2HqzHB4KEOXeE2bpsQ0myVPri3qG0BBrv+vkFCCK7NWu9L4EARGSgqB+qdCw==
+  version "0.20.8"
+  resolved "https://registry.yarnpkg.com/libp2p-webrtc-star/-/libp2p-webrtc-star-0.20.8.tgz#57a599e236704177b709580dcc429ae8f6055c54"
+  integrity sha512-SvcPu4be/EfMXPbR3I+SemIuGNWmQiAAtUsire5M5Bomb2aSp7yeO1DKvl8+rZbhjn3YsSr8GlB+Wk9vRDm7tA==
   dependencies:
     "@hapi/hapi" "^20.0.0"
     "@hapi/inert" "^6.0.3"
@@ -5131,7 +5131,7 @@ libp2p-webrtc-star@^0.20.1:
     class-is "^1.1.0"
     debug "^4.2.0"
     err-code "^2.0.3"
-    ipfs-utils "^5.0.0"
+    ipfs-utils "^6.0.0"
     it-pipe "^1.1.0"
     libp2p-utils "^0.2.1"
     libp2p-webrtc-peer "^10.0.1"
@@ -6185,9 +6185,9 @@ prom-client@^11.5.3:
     tdigest "^0.1.1"
 
 prom-client@^13.0.0:
-  version "13.0.0"
-  resolved "https://registry.yarnpkg.com/prom-client/-/prom-client-13.0.0.tgz#7e883e1c10c2d471258d3acf2d386197ffc819bd"
-  integrity sha512-M7ZNjIO6x+2R/vjSD13yjJPjpoZA8eEwH2Bp2Re0/PvzozD7azikv+SaBtZes4Q1ca/xHjZ4RSCuTag3YZLg1A==
+  version "13.1.0"
+  resolved "https://registry.yarnpkg.com/prom-client/-/prom-client-13.1.0.tgz#1185caffd8691e28d32e373972e662964e3dba45"
+  integrity sha512-jT9VccZCWrJWXdyEtQddCDszYsiuWj5T0ekrPszi/WEegj3IZy6Mm09iOOVM86A4IKMWq8hZkT2dD9MaSe+sng==
   dependencies:
     tdigest "^0.1.1"
 

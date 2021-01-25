@@ -5,7 +5,7 @@ import File from './file'
 export const VaultPins = () => {
     const { ipfs } = useIPFS()
     const [cids, setCids] = React.useState([])
-    const addCid = c => setCids(cs => cs.find(csc => `${csc}` === `${c}`) ? cs : [...cs, c])
+    const addCid = c => setCids(cs => [...new Set([...cs, c])])
 
     React.useEffect(() => {
         ;(async () => {

@@ -45,7 +45,7 @@ export const CIDInput = ({ cid, onSave }) => {
                     onSave(`${e.target.cid.value}`)
             }}
         >
-            <div className="col-6">
+            <div className="col">
                 <input type="text" name="cid" className="form-control" placeholder="IPFS CID..." defaultValue={cid || ""} />
             </div>
             <div className="col-auto">
@@ -83,7 +83,7 @@ export const PinSelect = ({ cid, onSelect }) => {
                     onSelect(`${e.target.cid.value}`)
             }}
         >
-            <div className="col-6">
+            <div className="col">
                 <select name="cid" className="form-control" defaultValue={`${cid}`}>
                     <option value="">-- Select a local pin</option>
                     {
@@ -125,19 +125,19 @@ export const FileUpload = ({ onUpload }) => {
             onSubmit={e => {
                 e.preventDefault()
                 const fileElt = e.target.file
-                if (!!e.target.consent.checked && fileElt.files[0])
+                if (/*!!e.target.consent.checked && */fileElt.files[0])
                     addFile(fileElt.files[0])
                     .catch(error => console.error("Data not uploaded.", error.message))
                     .then(cid => onUpload(cid))
             }}
         >
-            <div className="col-6">
+            <div className="col">
                 <input type="file" name="file" className="form-control" />
-                <div className="form-check">
+                {/* <div className="form-check">
                     <label className="form-check-label">
                         <input type="checkbox" name="consent" className="form-check-input" /> I understand that my file will be encrypted and stored on IPFS, a potentially permanent distributed storage network, and that modern encryption could be broken one day.
                     </label>
-                </div>
+                </div> */}
             </div>
             <div className="col-auto">
                 <button type="submit" className="btn btn-primary">Add file</button>

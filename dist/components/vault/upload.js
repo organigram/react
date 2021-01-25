@@ -55,7 +55,7 @@ export const CIDInput = ({
       if (e.target.cid.value) onSave(`${e.target.cid.value}`);
     }
   }, /*#__PURE__*/React.createElement("div", {
-    className: "col-6"
+    className: "col"
   }, /*#__PURE__*/React.createElement("input", {
     type: "text",
     name: "cid",
@@ -104,7 +104,7 @@ export const PinSelect = ({
       if (e.target.cid.value) onSelect(`${e.target.cid.value}`);
     }
   }, /*#__PURE__*/React.createElement("div", {
-    className: "col-6"
+    className: "col"
   }, /*#__PURE__*/React.createElement("select", {
     name: "cid",
     className: "form-control",
@@ -157,23 +157,17 @@ export const FileUpload = ({
     onSubmit: e => {
       e.preventDefault();
       const fileElt = e.target.file;
-      if (!!e.target.consent.checked && fileElt.files[0]) addFile(fileElt.files[0]).catch(error => console.error("Data not uploaded.", error.message)).then(cid => onUpload(cid));
+      if (
+      /*!!e.target.consent.checked && */
+      fileElt.files[0]) addFile(fileElt.files[0]).catch(error => console.error("Data not uploaded.", error.message)).then(cid => onUpload(cid));
     }
   }, /*#__PURE__*/React.createElement("div", {
-    className: "col-6"
+    className: "col"
   }, /*#__PURE__*/React.createElement("input", {
     type: "file",
     name: "file",
     className: "form-control"
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "form-check"
-  }, /*#__PURE__*/React.createElement("label", {
-    className: "form-check-label"
-  }, /*#__PURE__*/React.createElement("input", {
-    type: "checkbox",
-    name: "consent",
-    className: "form-check-input"
-  }), " I understand that my file will be encrypted and stored on IPFS, a potentially permanent distributed storage network, and that modern encryption could be broken one day."))), /*#__PURE__*/React.createElement("div", {
+  })), /*#__PURE__*/React.createElement("div", {
     className: "col-auto"
   }, /*#__PURE__*/React.createElement("button", {
     type: "submit",
