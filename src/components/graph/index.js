@@ -1,7 +1,7 @@
 import React from 'react'
 import { useGraph, withGraphProvider } from "../../contexts/graph"
 import Organ from "../organ"
-import Procedure from "../procedure"
+import Procedure from "../procedures"
 import Contracts from "./contracts"
 
 export const Graph = props => {
@@ -15,20 +15,24 @@ export const Graph = props => {
                     <div className="card card-body bg-secondary">
                         <Contracts />
                     </div>
-                    <div className="card-group">
+                    <div className="card-stack">
                         <div className="card card-body bg-dark">
-                            <h3 className="card-title">Procedures</h3>
-                            <ul className="list-unstyled">
-                                {graph.procedures.map(p => (
-                                    <li key={p.address} className="list-item mb-2"><Procedure procedure={p} /></li>
+                            <h3>Organs</h3>
+                            <ul className="list-unstyled row">
+                                {graph.organs.map(o => (
+                                    <li key={o.address} className="col-4 mb-2">
+                                        <Organ organ={o} />
+                                    </li>
                                 ))}
                             </ul>
                         </div>
                         <div className="card card-body bg-dark">
-                            <h3>Organs</h3>
+                            <h3 className="card-title">Procedures</h3>
                             <ul className="list-unstyled">
-                                {graph.organs.map(o => (
-                                    <li key={o.address} className="list-item mb-2"><Organ organ={o} /></li>
+                                {graph.procedures.map(p => (
+                                    <li key={p.address} className="list-item mb-2">
+                                        <Procedure procedure={p} />
+                                    </li>
                                 ))}
                             </ul>
                         </div>

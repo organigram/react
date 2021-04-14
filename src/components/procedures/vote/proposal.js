@@ -1,17 +1,17 @@
-import { EMPTY_CID } from '@organigram/client-js/dist/ipfs'
 import React from 'react'
+import { EMPTY_CID } from '@organigram/client-js/dist/ipfs'
 import { useProcedure } from '../../../contexts/procedure'
 
-export const VoteMove = ({ move }) => {
+const Proposal = ({ proposal }) => {
     const { procedure: { data: vote } } = useProcedure()
     if (!vote) return <></>
-    const proposition = vote.propositions && vote.propositions.find(p => p.moveKey && p.moveKey === move.key)
+    const proposition = vote.propositions && vote.propositions.find(p => p.proposalKey && p.proposalKey === proposal.key)
     return (
-        <div className="procedure-move procedure-move-vote">
+        <div className="procedure-proposal procedure-proposal-vote">
             <pre>{JSON.stringify(vote, null, 2)}</pre>
             {!proposition ? (
                 <button className="btn btn-primary" onClick={() => vote.propose(
-                    move.key,
+                    proposal.key,
                     EMPTY_CID,
                     "0",  // quorumSize
                     "0",  // voteDuration
@@ -24,26 +24,26 @@ export const VoteMove = ({ move }) => {
                 <>
                     <div>
                         <button className="btn btn-primary" onClick={() => {
-                            vote.vote(move.key, true)
+                            vote.vote(proposal.key, true)
                             .catch(error => console.error(error.message))
                         }}>
                             Vote YES
                         </button>
                         <button className="btn btn-primary" onClick={() => {
-                            vote.vote(move.key, false)
+                            vote.vote(proposal.key, false)
                             .catch(error => console.error(error.message))
                         }}>
                             Vote NO
                         </button>
                     </div>
                     <button className="btn btn-danger" onClick={() => {
-                        vote.veto(move.key, EMPTY_CID)
+                        vote.veto(proposal.key, EMPTY_CID)
                         .catch(error => console.error(error.message))
                     }}>
                         Veto
                     </button>
                     <button className="btn btn-primary" onClick={() => {
-                        vote.count(move.key)
+                        vote.count(proposal.key)
                         .catch(error => {
                             console.error(error.message)
                             return false
@@ -53,7 +53,7 @@ export const VoteMove = ({ move }) => {
                         Count
                     </button>
                     <button className="btn btn-success" onClick={() => {
-                        vote.enact(move.key)
+                        vote.enact(proposal.key)
                         .catch(error => console.error(error.message))
                     }}>
                         Enact
@@ -64,4 +64,4 @@ export const VoteMove = ({ move }) => {
     )
 }
 
-export default VoteMove
+export default Proposal

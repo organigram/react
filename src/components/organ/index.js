@@ -4,11 +4,11 @@ import { useOrgan, withOrganProvider } from "../../contexts/organ"
 import Upload from '../vault/upload'
 
 export const Organ = props => {
-    const { organ, loading, error, reloadMetadata, reloadEntries, reloadProcedures } = useOrgan()
+    const { organ, loading, error, reloadData, reloadEntries, reloadProcedures } = useOrgan()
     const [showForms, setShowForms] = useState(false)
     const toggleForms = () => setShowForms(sf => !sf)
     return (
-        <div {...props}>
+        <div {...props} id={organ.address && `organ-${organ.address}`}>
             {loading && <p>Loading organ...</p>}
             {error && <pre>Error: {JSON.stringify(error, null, 2)}</pre>}
             {organ && (
@@ -19,15 +19,15 @@ export const Organ = props => {
                     <p>Ξ {organ.balance}</p>
                     <u><em>Metadata</em></u>
                     <div>
-                        <button onClick={() => reloadMetadata()} className="btn btn-sm">reload</button>
-                        <p><code>{`${organ.metadata.cid}`}</code> <a href={`https://ipfs.io/ipfs/${organ.metadata.cid}`} target="_blank">view</a></p>
+                        <button onClick={() => reloadData()} className="btn btn-sm">reload</button>
+                        <p><code>{`${organ.metadata}`}</code> <a href={`ipfs://${organ.metadata}`} target="_blank">view</a></p>
                     </div>
                     <u><em>Procedures</em></u>
                     <div>
                         <button onClick={() => reloadProcedures()} className="btn btn-sm">reload</button>
                         <ul className="list-unstyled mb-1">
-                            {organ.procedures.map((op, i) => (
-                                <li key={op.address} className="list-item">
+                            {organ.procedures.map((op) => (
+                                <li key={`organ-procedure-${op.address}`} className="list-item">
                                     <code>{op.address}</code> <span className="text-info">{`${op.permissions}`}</span>
                                 </li>
                             ))}
@@ -37,11 +37,11 @@ export const Organ = props => {
                     <div>
                         <button onClick={() => reloadEntries()} className="btn btn-sm">reload</button>
                         <ul className="list-unstyled mb-1">
-                            {organ.entries.map((e, i) => (
-                                <li key={e.index} className="list-item">
+                            {organ.entries.map((e) => (
+                                <li key={`entry-${e.index}`} className="list-item">
                                     <em>{e.index}</em>{" "}
                                     <code>{e.address}</code><br/>
-                                    <a href={`https://ipfs.io/ipfs/${e.cid}`} target="_blank">{`${e.cid}`}</a>
+                                    <small><a href={`ipfs://${e.cid}`} target="_blank">{`${e.cid}`}</a></small>
                                 </li>
                             ))}
                         </ul>
@@ -140,7 +140,7 @@ export const OrganProcedureSelector = ({ procedures, onSelect }) => {
 }
 
 export const OrganFormUpdateMetadata = () => {
-    const { organ: { updateMetadata }, reloadMetadata } = useOrgan()
+    const { organ: { updateMetadata }, reloadData } = useOrgan()
     const cidRef = React.useRef()
     return (
         <div className="organ-updateMetadata">
@@ -148,7 +148,7 @@ export const OrganFormUpdateMetadata = () => {
             <button className="btn btn-primary"
                 onClick={() => {
                     updateMetadata(cidRef.current.value)
-                    .then(() => reloadMetadata())
+                    .then(() => reloadData())
                     .catch(console.error)
                 }}
             >Update Metadata</button>

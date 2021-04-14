@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Graph } from '@organigram/client-js'
 import { useWeb3 } from './web3'
+import { useOrganigram } from './organigram'
 
 export const GraphContext = React.createContext({
     graph: null,
@@ -12,58 +13,65 @@ export const GraphContext = React.createContext({
 })
 
 export const GraphProvider = ({ contracts, children }) => {
+    const { organigram } = useOrganigram()
     const { network } = useWeb3()
-    const [graph, setGraph] = useState(null)
+    const [graph, setGraph] = useState(new Graph({ organigram }))
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
 
-    const load = React.useCallback(() => {
+    const load = () => {
         setError(null)
         if (contracts) {
             setLoading(true)
-            Graph.load(contracts)
-            .then(data => setGraph(data))
+            graph.addContracts(contracts)
             .catch(error => {
                 console.error("Error loading graph ", contracts, error.message)
-                setGraph(null)
                 setError(error)
+                return null
             })
+            .then(data => setGraph(data))
             .finally(() => setLoading(false))
         }
-    }, [contracts])
+    }
 
-    const addContracts = React.useCallback(async contracts => {
-        if (graph)
-            graph.addContracts(contracts)
-            .then(ng => setGraph(og => ng))
-            .catch(error => {
-                console.error("Error adding contracts to graph.", contracts, error.message)
-                setError(error.message)
-            })
-    }, [graph])
+    const addContracts = async contracts => {
+        if (!graph)
+            throw new Error("Graph not instantiated.")
+        graph.addContracts(contracts)
+        .catch(error => {
+            console.error("Error adding contracts to graph.", contracts, error.message)
+            setError(error.message)
+            return null
+        })
+        .then(ng => ng && setGraph(ng))
+    }
 
-    const removeContracts = React.useCallback(async contracts => {
-        if (graph)
-            graph.removeContracts(contracts)
-            .then(ng => setGraph(og => ng))
-            .catch(error => {
-                console.error("Error removing contracts from graph.", contracts, error.message)
-                setError(error.message)
-            })
-    }, [graph])
+    const removeContracts = async contracts => {
+        if (!graph)
+            throw new Error("Graph not instantiated.")
+        graph.removeContracts(contracts)
+        .catch(error => {
+            console.error("Error removing contracts from graph.", contracts, error.message)
+            setError(error.message)
+            return null
+        })
+        .then(ng => ng && setGraph(ng))
+    }
 
     // Initial load.
-    React.useEffect(() => { load() }, [network, load])
+    React.useEffect(() => { load() }, [network])
 
     return (
-        <GraphContext.Provider value={{
-            graph,
-            loading,
-            error,
-            load,
-            addContracts,
-            removeContracts
-        }}>
+        <GraphContext.Provider
+            value={{
+                graph,
+                loading,
+                error,
+                load,
+                addContracts,
+                removeContracts
+            }}
+        >
             {children}
         </GraphContext.Provider>
     )

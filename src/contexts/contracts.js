@@ -59,14 +59,16 @@ export const ContractsProvider = ({ children }) => {
     }, [network])
 
     return (
-        <ContractsContext.Provider value={{
-            contracts,
-            libraries,
-            registerLibrary,
-            deployLibrary,
-            deployOrgan,
-            deployProcedure
-        }}>
+        <ContractsContext.Provider
+            value={{
+                contracts,
+                libraries,
+                registerLibrary,
+                deployLibrary,
+                deployOrgan,
+                deployProcedure
+            }}
+        >
             {children}
         </ContractsContext.Provider>
     )

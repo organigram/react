@@ -2,7 +2,7 @@
  * @TODO : Move non-React code to @organigram/client-js.
  */
 import React, { useState } from 'react'
-import { web3, getNetwork, getNetworkName, web3connect, hasLibraries as web3hasLibraries } from '@organigram/client-js'
+import { web3, getNetwork, getNetworkName, web3connect } from '@organigram/client-js'
 
 export const ETHEREUM_TIMER_DELAY = 2000
 export const ETHEREUM_UNKNOWN = 'ETHEREUM_UNKNOWN'
@@ -26,7 +26,6 @@ export const Web3Context = React.createContext({
   web3,
   ecRecover: null,
   sign: null,
-  hasLibraries: false,
   connect: async () => {}
 })
 
@@ -44,13 +43,11 @@ export const Web3Provider = ({ children }) => {
     const [balance, setBalance] = useState(null)
     const [loading, setLoading] = useState(true)
     const [status, setStatus] = useState(ETHEREUM_UNKNOWN)
-    const [hasLibraries, setHasLibraries] = useState(false)
     const _web3 = web3
 
     const setNetwork = _network => {
         _setNetwork(_network)
         _setNetworkIsValid(_network === 'rinkeby' || _network === 'private') // @TODO : Rinkeby only in production.
-        web3hasLibraries().then(setHasLibraries)
     }
 
     const networkName = React.useMemo(() => getNetworkName(network), [network])
@@ -130,20 +127,21 @@ export const Web3Provider = ({ children }) => {
     const connect = async () => web3connect().then(setAccount)
 
     return (
-        <Web3Context.Provider value={{
-            loading,
-            account,
-            selected,
-            network,
-            networkName,
-            networkIsValid,
-            balance,
-            status,
-            web3: _web3,
-            hasLibraries,
-            connect,
-            setSelected
-        }}>
+        <Web3Context.Provider
+            value={{
+                loading,
+                account,
+                selected,
+                network,
+                networkName,
+                networkIsValid,
+                balance,
+                status,
+                web3: _web3,
+                connect,
+                setSelected
+            }}
+        >
             {children}
         </Web3Context.Provider>
     )

@@ -329,21 +329,23 @@ export const VaultProvider = ({ children }) => {
   
 
     return (
-        <VaultContext.Provider value={{
-            key,
-            keyserver,
-            keyUploaded,
-            hasSignature,
-            _deployKeyserver,
-            _createSignature,
-            _deleteSignature,
-            createKey,
-            loadKey,
-            uploadKey,
-            addFile,
-            getFiles,
-            getFilesMetadata
-        }}>
+        <VaultContext.Provider
+            value={{
+                key,
+                keyserver,
+                keyUploaded,
+                hasSignature,
+                _deployKeyserver,
+                _createSignature,
+                _deleteSignature,
+                createKey,
+                loadKey,
+                uploadKey,
+                addFile,
+                getFiles,
+                getFilesMetadata
+            }}
+        >
             {children}
         </VaultContext.Provider>
     )

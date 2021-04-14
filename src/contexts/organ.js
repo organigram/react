@@ -1,5 +1,5 @@
 import React from 'react'
-import { Organ } from '@organigram/client-js'
+import { Organigram } from '@organigram/client-js'
 
 export const OrganContext = React.createContext({
     address: null,
@@ -9,7 +9,7 @@ export const OrganContext = React.createContext({
     load: () => {},
     reloadEntries: async () => {},
     reloadProcedures: async () => {},
-    reloadMetadata: async () => {}
+    reloadData: async () => {}
 })
 
 export const OrganProvider = ({ organ, address, children }) => {
@@ -22,7 +22,7 @@ export const OrganProvider = ({ organ, address, children }) => {
         if (address || organ.address) {
             setError(null)
             setLoading(true)
-            Organ.load(address)
+            Organigram.getOrgan(address)
             .then(data => setOrgan(data))
             .catch(error => {
                 console.error("Error loading organ ", address, error.message)
@@ -33,15 +33,15 @@ export const OrganProvider = ({ organ, address, children }) => {
         }
     }
 
-    const reloadEntries = React.useCallback(async () => {
-        if (_organ.address && _organ.reloadEntries)
-            _organ.reloadEntries()
+    const reloadData = React.useCallback(async () => {
+        if (_organ.address && _organ.reloadMetadata)
+            _organ.reloadData()
             .then(o => setOrgan(_prev => o))
     }, [_organ])
 
-    const reloadMetadata = React.useCallback(async () => {
-        if (_organ.address && _organ.reloadMetadata)
-            _organ.reloadMetadata()
+    const reloadEntries = React.useCallback(async () => {
+        if (_organ.address && _organ.reloadEntries)
+            _organ.reloadEntries()
             .then(o => setOrgan(_prev => o))
     }, [_organ])
 
@@ -64,9 +64,9 @@ export const OrganProvider = ({ organ, address, children }) => {
             loading,
             error,
             load,
+            reloadData,
             reloadEntries,
-            reloadProcedures,
-            reloadMetadata
+            reloadProcedures
         }}>
             {children}
         </OrganContext.Provider>
