@@ -350,6 +350,11 @@ export const ProposalOperationFormFunction = ({ functionSelector, defaultTarget,
     const { graph } = useGraph()
     const [target, setTarget] = useState(defaultTarget)
     const [params, setParams] = useState(defaultParams || [])
+    const { procedure } = useProcedure()
+    const targetOrgans = React.useMemo(
+        () => graph.organs.filter(o => o.procedures.find(op => op.address === procedure.address)),
+        [graph.organs, procedure.address]
+    )
 
     if (!operationFunction)
         return <p className="text-danger">Operation not found.</p>
@@ -370,7 +375,7 @@ export const ProposalOperationFormFunction = ({ functionSelector, defaultTarget,
 
     // @todo Target can be another procedure, or Token Contract ...
     const targets = operationFunction.target === "organ"
-        ? graph.organs
+        ? targetOrgans
         : operationFunction.target === "procedure"
         ? graph.procedures
         : [...graph.organs, ...graph.procedures]

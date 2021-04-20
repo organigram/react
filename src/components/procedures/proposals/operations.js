@@ -124,9 +124,11 @@ export const ProposalOperationParams = ({ operation }) => (
 export const ProposalOperation = ({ proposal, operation }) => {
     return (
         <>
-            <pre>{JSON.stringify(operation, null, 2)}</pre>
+            {["addProcedure", "addEntries"].indexOf(operation.function.key) < 0 &&
+                <pre>{JSON.stringify(operation, null, 2)}</pre>
+            }
             {operation.functionSelector ?
-                <strong>{operation.index} - {operation.label} on organ {operation.organ}</strong>
+                <strong>{operation.index} - <code>{operation.function.label}</code> on organ <code>{operation.organ}</code></strong>
                 : <span className="text-danger">Operation not recognized.</span>
             }
             {operation.params && <ProposalOperationParams operation={operation} />}
@@ -139,7 +141,10 @@ export const ProposalOperations = ({ proposal }) => {
     return (
         <div className="proposal-operations list-group my-1">
             {proposal.operations.map(po => po && (
-                <div className="proposal-operation list-group-item" key={`proposal-operation-${po.index}`}>
+                <div
+                    className={`proposal-operation list-group-item`}
+                    key={`proposal-operation-${po.index}`}
+                >
                     <ProposalOperation proposal={proposal} operation={po} />
                 </div>
             ))}

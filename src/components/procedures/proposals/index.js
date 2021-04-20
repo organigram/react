@@ -33,14 +33,19 @@ export const Proposal = ({ proposal }) => {
     }, [type])
 
     return (
-        <div className="procedure-proposal">
-            <strong>{proposal.key}</strong>
+        <div className={`procedure-proposal`}>
+            <div className="row">
+                <div className="col"><h5 className="text-muted">{proposal.key}</h5></div>
+                <div className="col text-center">{proposal.applied && <strong>Enacted</strong>}</div>
+                <div className="col text-right">
+                    <button onClick={() => reloadProposal(proposal.key)} className="btn btn-sm">reload</button>
+                </div>
+            </div>
             <div>
-                <button onClick={() => reloadProposal(proposal.key)} className="btn btn-sm">Reload Proposal</button><br/>
                 Creator: <code>{proposal.creator}</code><br/>
                 Presented? <code>{proposal.presented ? "true" : "false"}</code><br/>
                 Adopted? <code>{proposal.adopted ? "true" : "false"}</code><br/>
-                Applied? <code>{proposal.applied ? "true" : "false"}</code><br/>
+                Enacted? <code>{proposal.applied ? "true" : "false"}</code><br/>
                 Metadata: <code>{`${proposal.metadata}`}</code> <a href={`ipfs://${proposal.metadata}`} target="_blank">view</a><br/>
                 <ProposalOperations proposal={proposal} />
             </div>
@@ -88,7 +93,7 @@ export const Proposals = () => {
                 </ul>
             </div>
             <div className="col-10">
-                <div className="card card-body">
+                <div className={`card card-body ${currentProposal && currentProposal.applied && "bg-success"}`}>
                     {currentProposal ?
                         <Proposal proposal={currentProposal} />
                         : <ProposalFormCreate />

@@ -9,7 +9,7 @@ export const OrganigramClientProvider = ({ children }) => {
     return (
         <Web3Provider>
             <IPFSProvider>
-                <OrganigramProvider address={"0x410A0A26EB521739B034Af716351C3C7a5204BD9"}>
+                <OrganigramProvider address={"0xAE49EE4B38155348F9f6B8CD823d905Ccfe13109"}>
                     <ContractsProvider>
                         <VaultProvider>
                                 {children}

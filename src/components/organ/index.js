@@ -217,6 +217,7 @@ export const OrganFormReplaceEntry = () => {
     const { organ: { entries: organEntries, replaceEntry }, reloadEntries } = useOrgan()
     const [index, setIndex] = useState()
     const [entry, setEntry] = useState()
+    console.log("Entries", entries)
     return (
         <div className="organ-replaceEntry">
             <OrganEntrySelector entries={organEntries} onSelect={e => e && setIndex(e.index)} />
