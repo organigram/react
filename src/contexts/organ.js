@@ -1,5 +1,5 @@
 import React from 'react'
-import { Organigram } from '@organigram/client-js'
+import { usePlatform } from './platform'
 
 export const OrganContext = React.createContext({
     address: null,
@@ -14,6 +14,7 @@ export const OrganContext = React.createContext({
 
 export const OrganProvider = ({ organ, address, children }) => {
     // @todo Use a cache stored in useOrganigramClient (required) for organs & procedures sync.
+    const { manager } = usePlatform()
     const [_organ, setOrgan] = React.useState(organ || null)
     const [loading, setLoading] = React.useState(false)
     const [error, setError] = React.useState(null)
@@ -22,7 +23,7 @@ export const OrganProvider = ({ organ, address, children }) => {
         if (address || organ.address) {
             setError(null)
             setLoading(true)
-            Organigram.getOrgan(address)
+            manager.getOrgan(address)
             .then(data => setOrgan(data))
             .catch(error => {
                 console.error("Error loading organ ", address, error.message)

@@ -13,13 +13,13 @@ import {
 } from './forms'
 
 export const Proposal = ({ proposal }) => {
-    const { procedure: { type }, reloadProposal } = useProcedure()
+    const { procedure, reloadProposal } = useProcedure()
     const [showForms, setShowForms] = React.useState(false)
     const toggleForms = () => setShowForms(sf => !sf)
     const [ProposalComponent, setProposalComponent] = React.useState()
     React.useEffect(async () => {
-        if (type)
-            switch(type) {
+        if (procedure.type)
+            switch(procedure.type) {
                 case '0xc5f28e49': // Nomination.
                     setProposalComponent(React.lazy(() => import('../nomination/proposal')))
                     break
@@ -30,47 +30,63 @@ export const Proposal = ({ proposal }) => {
                     setProposalComponent()
                     break
             }
-    }, [type])
+    }, [procedure.type])
 
     return (
         <div className={`procedure-proposal`}>
             <div className="row">
-                <div className="col"><h5 className="text-muted">{proposal.key}</h5></div>
+                <div className="col"><h5 className="text-muted">Proposal {proposal.key}</h5></div>
                 <div className="col text-center">{proposal.applied && <strong>Enacted</strong>}</div>
                 <div className="col text-right">
                     <button onClick={() => reloadProposal(proposal.key)} className="btn btn-sm">reload</button>
                 </div>
             </div>
-            <div>
-                Creator: <code>{proposal.creator}</code><br/>
-                Presented? <code>{proposal.presented ? "true" : "false"}</code><br/>
-                Adopted? <code>{proposal.adopted ? "true" : "false"}</code><br/>
-                Enacted? <code>{proposal.applied ? "true" : "false"}</code><br/>
-                Metadata: <code>{`${proposal.metadata}`}</code> <a href={`ipfs://${proposal.metadata}`} target="_blank">view</a><br/>
-                <ProposalOperations proposal={proposal} />
+            <div className="row">
+                <div className="col-12">
+                    Creator: <code>{proposal.creator}</code>
+                </div>
+                <div className="col-4">
+                    Presented? <code>{proposal.presented ? "true" : "false"}</code>
+                </div>
+                <div className="col-4">
+                    Adopted? <code>{proposal.adopted ? "true" : "false"}</code>
+                </div>
+                <div className="col-4">
+                    Enacted? <code>{proposal.applied ? "true" : "false"}</code>
+                </div>
+                <div className="col-12">
+                    Metadata: <code>{`${proposal.metadata}`}</code> <a href={`ipfs://${proposal.metadata}`} target="_blank">view</a>
+                </div>
             </div>
-            {proposal.locked && (
+            <ProposalOperations proposal={proposal} />
+            {proposal && (
                 <React.Suspense fallback={<p>Loading...</p>}>
                     {ProposalComponent && <ProposalComponent proposal={proposal} />}
                 </React.Suspense>
             )}
             <hr/>
-            <button className="btn btn-sm" onClick={() => toggleForms()}>toggle forms</button>
-            {showForms && (
+            {!proposal.presented && (
                 <>
-                    <ProposalFormAddEntries proposal={proposal} />
-                    <hr/>
-                    <ProposalFormRemoveEntry proposal={proposal} />
-                    <hr/>
-                    <ProposalFormReplaceEntry proposal={proposal} />
-                    <hr/>
-                    <ProposalFormAddProcedure proposal={proposal} />
-                    <hr/>
-                    <ProposalFormRemoveProcedure proposal={proposal} />
-                    <hr/>
-                    <ProposalFormReplaceProcedure proposal={proposal} />
-                    <hr/>
-                    <ProposalFormCall proposal={proposal} />
+                    <button onClick={() => procedure.presentProposal(proposal.key)} className="btn btn-primary">Present proposal</button>
+                    <hr />
+                    <button className="btn btn-sm" onClick={() => toggleForms()}>toggle forms</button>
+                    {showForms && (
+                        <>
+                            <ProposalFormAddEntries proposal={proposal} />
+                            <hr/>
+                            <ProposalFormRemoveEntry proposal={proposal} />
+                            <hr/>
+                            <ProposalFormReplaceEntry proposal={proposal} />
+                            <hr/>
+                            <ProposalFormAddProcedure proposal={proposal} />
+                            <hr/>
+                            <ProposalFormRemoveProcedure proposal={proposal} />
+                            <hr/>
+                            <ProposalFormReplaceProcedure proposal={proposal} />
+                            <hr/>
+                            <ProposalFormCall proposal={proposal} />
+                        </>
+                    )}
                 </>
             )}
         </div>

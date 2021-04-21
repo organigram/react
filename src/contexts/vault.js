@@ -23,7 +23,6 @@ export const VaultContext = React.createContext({
     keyserver: null,
     keyUploaded: false,
     hasSignature: false,
-    _deployKeyserver: async () => Promise.reject(new Error('Not implemented.')),
     _createSignature: async () => Promise.reject(new Error('Not implemented.')),
     _deleteSignature: async () => Promise.reject(new Error('Not implemented.')),
     createKey: async () => Promise.reject(new Error('Not implemented.')),
@@ -34,9 +33,8 @@ export const VaultContext = React.createContext({
     getFilesMetadata: async () => Promise.reject(new Error('Not implemented.'))
 })
 
-export const VaultProvider = ({ children }) => {
+export const VaultProvider = ({ children, keyserver }) => {
     const { account, network } = useWeb3()
-    const [keyserver, setKeyserver] = useState(null)
     // @todo : Use state for multiple keyservers.
     // const [keyservers, setKeyservers] = useState([])
     const [keyUploaded, setKeyUploaded] = useState(false)
@@ -53,38 +51,9 @@ export const VaultProvider = ({ children }) => {
     // }, [])
 
     useEffect(() => {
-        if (network) {
-            Keyserver.detect()
-            .catch(error => {
-                console.error("Keyserver detection error.", error.message)
-                return null
-            })
-            .then(_keyserver => setKeyserver(_keyserver))
-        }
-    }, [network])
-
-    useEffect(() => {
         if (account && keyserver)
             loadKey(true)
     }, [account, keyserver])
-
-    const _deployKeyserver = async () => {
-        return Keyserver.deploy()
-        .then(_keyserver => {
-            return Keyserver.save({ network: _keyserver.network, address: _keyserver.address })
-            .then(() => _keyserver)
-            .catch(error => {
-                console.warning("Unable to save deployed keyserver", error.message)
-                return null
-            })
-            .then(setKeyserver)
-            setKeyserver(_keyserver)
-            return _keyserver
-        })
-        .catch(error => {
-            console.error("Keyserver deployment failed.", error.message)
-        })
-    }
 
     const _createSignature = async () => {
         const account = await getAccount().then(a => a && a.toLowerCase())
@@ -335,7 +304,6 @@ export const VaultProvider = ({ children }) => {
                 keyserver,
                 keyUploaded,
                 hasSignature,
-                _deployKeyserver,
                 _createSignature,
                 _deleteSignature,
                 createKey,

@@ -2,6 +2,7 @@ import { CID, Procedure } from '@organigram/client-js'
 import graph from '@organigram/client-js/dist/graph'
 import React, { useState } from 'react'
 import { useGraph } from '../../../contexts/graph'
+import { useOrgan, withOrganProvider } from '../../../contexts/organ'
 import { useProcedure } from '../../../contexts/procedure'
 import { ContractSelector } from '../../graph/contracts'
 import { OrganEntryForm, OrganEntrySelector, OrganProcedureForm, OrganProcedureSelector } from '../../organ'
@@ -335,43 +336,85 @@ export const ProposalOperationFormFunctionParam = ({ param, type, ...props }) =>
             return type === 'select' ?
                 <OrganProcedureSelector {...props} onSelect={props.onChange} />
                 : <OrganProcedureForm {...props} />
+        case 'index':
+            return type === 'select' ?
+                <OrganEntrySelector {...props} onSelect={props.onChange} />
+                : <input type="text" placeholder="Entry index" />
+        case 'indexes':
+            return type === 'select' ?
+                <OrganEntrySelector multiple {...props} onSelect={props.onChange} />
+                : <input type="text" placeholder="Entry index" />
         case 'permissions':
         case 'address':
         case 'addresses':
-        case 'index':
-        case 'indexes':
         default:
             return <>{param}</>
     }
 }
 
+export const ProposalOperationFormFunctionParameters = withOrganProvider(
+    ({ operationFunction, defaultParams, onSave }) => {
+        const { organ } = useOrgan()
+        const [params, setParams] = useState(defaultParams || [])
+        // Forms' components default to inputs, some are selectors.
+        const hasModeSelector = React.useMemo(() => [
+            'removeEntries',
+            'replaceEntry',
+            'removeProcedure',
+            'replaceProcedure'
+        ].indexOf(operationFunction.key) >= 0, [operationFunction.key])
+
+        if (!organ)
+            return <p>Loading organ...</p>
+
+        const handleParamChange = i => v => {
+            const _params = [...params]
+            _params[i] = v
+            setParams(_params)
+        }
+
+        return (
+            <>
+                <div className="operation-parameters">
+                    {operationFunction && operationFunction.params && operationFunction.params.map((param,i) => (
+                        <div key={`${operationFunction.key}-param-${param}`}>
+                            {params && params[i] ? (
+                                <pre>{JSON.stringify(params[i], null, 2)}</pre>
+                            ) : (
+                                <ProposalOperationFormFunctionParam
+                                    param={param}
+                                    type={hasModeSelector&&i===0?'select':'input'}
+                                    defaultValue={params && params[i]}
+                                    onChange={handleParamChange(i)}
+                                />
+                            )}
+                        </div>
+                    ))}
+                </div>
+                <hr />
+                <button onClick={() => {
+                    onSave(params)
+                    setParams([])
+                }} className="btn btn-primary">Save</button>
+            </>
+        )
+    }
+)
+
 export const ProposalOperationFormFunction = ({ functionSelector, defaultTarget, defaultParams, onSave }) => {
-    const operationFunction = Procedure.OPERATIONS_FUNCTIONS.find(pof => pof.funcSig === functionSelector)
     const { graph } = useGraph()
-    const [target, setTarget] = useState(defaultTarget)
-    const [params, setParams] = useState(defaultParams || [])
     const { procedure } = useProcedure()
     const targetOrgans = React.useMemo(
         () => graph.organs.filter(o => o.procedures.find(op => op.address === procedure.address)),
         [graph.organs, procedure.address]
     )
+    const [target, setTarget] = useState(defaultTarget)
 
+    const operationFunction = Procedure.OPERATIONS_FUNCTIONS.find(pof => pof.funcSig === functionSelector)
     if (!operationFunction)
         return <p className="text-danger">Operation not found.</p>
-
-    const handleParamChange = i => v => {
-        const _params = [...params]
-        _params[i] = v
-        setParams(_params)
-    }
-
-    // Forms' components default to inputs, some are selectors.
-    const hasModeSelector = [
-        'removeEntries',
-        'replaceEntry',
-        'removeProcedure',
-        'replaceProcedure'
-    ].indexOf(operationFunction.key) >= 0
+    else if (!operationFunction.target)
+        return <p className="text-danger">Operation not supported.</p>
 
     // @todo Target can be another procedure, or Token Contract ...
     const targets = operationFunction.target === "organ"
@@ -381,35 +424,22 @@ export const ProposalOperationFormFunction = ({ functionSelector, defaultTarget,
         : [...graph.organs, ...graph.procedures]
 
     // @todo : Handle other kinds of target : chainable procedures, token contracts...
-    return operationFunction.target ? (
+    return (
         <>
             <ContractSelector contracts={targets} onSelect={o => o && setTarget(o)} />
-            <div className="operation-parameters">
-                {operationFunction && operationFunction.params && operationFunction.params.map((param,i) => (
-                    <div key={`${operationFunction.key}-param-${param}`}>
-                        {params && params[i] ? (
-                            <pre>{JSON.stringify(params[i].toString())}</pre>
-                        ) : (
-                            <ProposalOperationFormFunctionParam
-                                param={param}
-                                type={hasModeSelector&&i===0?'select':'input'}
-                                defaultValue={params && params[i]}
-                                onChange={handleParamChange(i)}
-                            />
-                        )}
-                    </div>
-                ))}
-            </div>
-            <hr />
-            <div>
-                <button onClick={() => {
-                    onSave({ target, params })
-                    setTarget(null)
-                    setParams([])
-                }} className="btn btn-primary">Save</button>
-            </div>
+            {target && target.address && (
+                <ProposalOperationFormFunctionParameters
+                    operationFunction={operationFunction}
+                    defaultParams={defaultParams}
+                    organ={target}
+                    onSave={params => {
+                        onSave({ target, params })
+                        setTarget(null)
+                    }}
+                />
+            )}
         </>
-    ) : <p className="text-danger">Operation not supported.</p>
+    )
 }
 
 export const ProposalOperationForm = ({ onSave }) => {
@@ -435,7 +465,7 @@ export const ProposalOperationForm = ({ onSave }) => {
                             <label>Target</label>&nbsp;{values.target.address}<br/>
                             {values.params.map((param, i) => (
                                 <div key={i}>
-                                    <pre>{JSON.stringify(param.toString())}</pre>
+                                    <pre>{JSON.stringify(param, null, 2)}</pre>
                                 </div>
                             ))}
                         </>
@@ -477,7 +507,6 @@ export const ProposalFormCreate = ({ onCreate }) => {
             <div><ProposalOperations proposal={{ operations }} /></div>
             <div>
                 <button onClick={() => {
-                    console.log("Procedure", procedure)
                     procedure.propose(metadata, operations)
                     .catch(console.error)
                 }} className="btn btn-primary">Create</button>

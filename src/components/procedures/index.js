@@ -51,6 +51,7 @@ export const Procedure = props => {
                         <div>Proposers: <a href={`#organ-${procedure.proposers}`}>{procedure.proposers}</a></div>
                         <div>Moderators: <a href={`#organ-${procedure.moderators}`}>{procedure.moderators}</a></div>
                         <div>Deciders: <a href={`#organ-${procedure.deciders}`}>{procedure.deciders}</a></div>
+                        <div>Moderation: {procedure.withModeration.toString()}</div>
                         <div>
                             Target organs:
                             <ul>

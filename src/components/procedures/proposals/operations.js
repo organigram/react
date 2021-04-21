@@ -124,7 +124,9 @@ export const ProposalOperationParams = ({ operation }) => (
 export const ProposalOperation = ({ proposal, operation }) => {
     return (
         <>
-            {["addProcedure", "addEntries"].indexOf(operation.function.key) < 0 &&
+            {
+                operation && operation.function && operation.function.key &&
+                ["addProcedure", "addEntries"].indexOf(operation.function.key) < 0 &&
                 <pre>{JSON.stringify(operation, null, 2)}</pre>
             }
             {operation.functionSelector ?

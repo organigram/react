@@ -1,5 +1,6 @@
 import React from 'react'
 import { Organigram } from '@organigram/client-js'
+import { usePlatform } from './platform'
 
 export const ProcedureContext = React.createContext({
     procedure: null,
@@ -13,6 +14,7 @@ export const ProcedureContext = React.createContext({
 })
 
 export const ProcedureProvider = ({ address, procedure, procedureType, children }) => {
+    const { manager } = usePlatform()
     const [_procedure, setProcedure] = React.useState(procedure || null)
     const [_procedureType, setProcedureType] = React.useState(procedureType || _procedure.type || null)
     const [loading, setLoading] = React.useState(false)
@@ -23,8 +25,8 @@ export const ProcedureProvider = ({ address, procedure, procedureType, children 
             setError(null)
             setLoading(true)
             Promise.all([
-                Organigram.getProcedure(address),
-                Organigram.getProcedureType(address)
+                manager.getProcedure(address),
+                manager.getProcedureType(address)
             ])
             .catch(error => {
                 console.error("Error loading procedure ", address, error.message)

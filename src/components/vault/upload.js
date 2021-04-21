@@ -105,7 +105,7 @@ export const PinSelect = ({ cid, onSelect }) => {
  * @param {(cid:CID|null) => void} onUpload 
  */
 export const FileUpload = ({ onUpload }) => {
-    const { key, keyUploaded, addFile, generateKey } = useVault()
+    const { key, keyUploaded, addFile, createKey } = useVault()
     if (!key || !keyUploaded) {
         return (
             <button onClick={() => {
@@ -113,7 +113,7 @@ export const FileUpload = ({ onUpload }) => {
                     let _key = key
                     let _keyUploaded = keyUploaded
                     if (!_key && confirm("An encryption key is necessary before any upload. Would you like to generate it now?"))
-                        _key = await generateKey()
+                        _key = await createKey(true)
                     if (_key && !_keyUploaded && confirm("To be able to decrypt your own files after your current session, or share these files securely with other accounts, you need to upload your encryption keys. Would you like to upload your keys to our keyserver contract now?"))
                         _keyUploaded = await deployKey(_key)
                 })()
