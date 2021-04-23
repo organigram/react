@@ -23,8 +23,7 @@ export const PlatformContext = React.createContext({
 export const PlatformProvider = ({ platforms, ...props }) => {
     const { network: web3Network } = useWeb3()
     // Default platform is rinkeby.
-    const defaultPlatform = React.useMemo(() => platforms && platforms.find(p => p.network === "rinkeby"), [platforms])
-    const [platform, setPlatform] = React.useState()
+    const [platform, setPlatform] = React.useState(platforms && platforms[0])
     const network = React.useMemo(() => ({
         key: platform?.network,
         isConnected: web3Network && platform?.network && web3Network === platform.network
@@ -33,14 +32,16 @@ export const PlatformProvider = ({ platforms, ...props }) => {
     const [keyserver, setKeyserver] = React.useState()
     // Load organigram manager.
     React.useEffect(() => {
-        if (network.isConnected) {
+        if (platform?.manager && network?.isConnected) {
             // manager is an Organigram object.
             Organigram.load(platform.manager)
             .catch(error => {
                 console.error("Error while loading contracts manager.", error.message)
                 return null
             })
-            .then(data => setManager(data))
+            .then(data => {
+                setManager(data)
+            })
         }
     }, [platform?.manager, network?.isConnected])
     // Load keyserver organ.
@@ -90,9 +91,8 @@ export const PlatformProvider = ({ platforms, ...props }) => {
 
     const detectNetworkPlatform = async () => {
         // When switching network, find an appropriate configuration.
-        let _platform = null
         // If current web3 network is not the same as the current platform.
-        if (web3Network && web3Network !== network) {
+        if (web3Network && web3Network !== platform?.network) {
             // @todo : Allow matching platform by hash of (network, manager, keyserver).
             const match = platforms.find(p => p.network === web3Network)
             if (match) {
