@@ -97,7 +97,7 @@ export const OrganEntryForm = ({ onSave }) => {
 export const OrganEntrySelector = ({ onSelect }) => {
     const { organ: { entries } } = useOrgan()
     const handleChange = (event) => {
-        const entry = entries.find(e => e.index === event.target.value)
+        const entry = entries && entries.find(e => e.index === event.target.value)
         onSelect(entry)
     }
     return (
@@ -115,8 +115,10 @@ export const OrganProcedureForm = ({ onSave }) => {
         <form onSubmit={e => {
             e.preventDefault()
             const { address, permissions } = e.currentTarget
-            onSave({ address: address.value, permissions: permissions.value })
-            e.currentTarget.reset()
+            if (onSave) {
+                onSave({ address: address.value, permissions: permissions.value })
+                e.currentTarget.reset()
+            }
         }} className="form">
             <div><input type="text" name="address" placeholder="address" className="form-control" /></div>
             <div><input type="text" name="permissions" placeholder="permissions" className="form-control" /></div>
@@ -238,9 +240,11 @@ export const OrganFormAddProcedure = () => {
         <div className="organ-addProcedure">
             <OrganProcedureForm onSave={p => p && setProcedure(p)} />
             <button onClick={() => {
-                addProcedure(procedure)
-                .then(() => reloadProcedures())
-                .catch(console.error)
+                if (procedure) {
+                    addProcedure(procedure)
+                    .then(() => reloadProcedures())
+                    .catch(console.error)
+                }
             }} className="btn btn-primary">Add Procedure</button>
         </div>
     )
