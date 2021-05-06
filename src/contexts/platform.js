@@ -94,7 +94,7 @@ export const PlatformProvider = ({ platforms, ...props }) => {
         // If current web3 network is not the same as the current platform.
         if (web3Network && web3Network !== platform?.network) {
             // @todo : Allow matching platform by hash of (network, manager, keyserver).
-            const match = platforms.find(p => p.network === web3Network)
+            const match = platforms && platforms.find(p => p.network === web3Network)
             if (match) {
                 // Switch platform to 
                 setPlatform(match)
