@@ -1,15 +1,14 @@
 import React from 'react'
 import { Web3Provider } from './web3'
 import { IPFSProvider } from './ipfs'
-import { ContractsProvider } from './contracts'
 import { PlatformProvider } from './platform'
 import { VaultProvider } from './vault'
 
-export const OrganigramClientProvider = ({ children, defaultPlatforms }) => {
+export const OrganigramClientProvider = ({ children, platforms }) => {
     return (
         <Web3Provider>
             <IPFSProvider>
-                <PlatformProvider platforms={defaultPlatforms}>
+                <PlatformProvider platforms={platforms}>
                     <VaultProvider>
                         {children}
                     </VaultProvider>
@@ -19,11 +18,11 @@ export const OrganigramClientProvider = ({ children, defaultPlatforms }) => {
     )
 }
 
-// Usage: `export default withOrganigramClientProvider(platforms)(MyApp)`
-export const withOrganigramClientProvider = defaultPlatforms =>
+// Usage: `export default withOrganigramClientProvider({ platforms })(MyApp)`
+export const withOrganigramClientProvider = ({ platforms }) =>
     ComposedComponent => 
         props => (
-            <OrganigramClientProvider defaultPlatforms={defaultPlatforms}>
+            <OrganigramClientProvider platforms={platforms || []}>
                 <ComposedComponent {...props} />
             </OrganigramClientProvider>
         )
