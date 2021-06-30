@@ -72,7 +72,7 @@ export const PlatformProvider = ({
     if (!manager) throw new Error("Organigram not loaded.");
     const account = await getAccount();
     if (!account) throw new Error("Not connected to Ethereum.");
-    return await manager.createOrgan(metadata_cid);
+    return manager.createOrgan(metadata_cid);
   };
 
   const createProcedure = async (type, metadata_cid, proposers, moderations, deciders, withModeration, ...args) => {
@@ -107,7 +107,7 @@ export const PlatformProvider = ({
       network,
       manager,
       keyserver,
-      isConnected: network?.isConnected && manager?.address,
+      isConnected: !!(network?.isConnected && manager?.address),
       setPlatform,
       detectNetworkPlatform,
       createKeyserver,
