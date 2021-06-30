@@ -26,8 +26,8 @@ export const Organ = props => {
   }, `${organ.metadata.data.name}`), /*#__PURE__*/React.createElement("strong", null, `${organ.address}`), /*#__PURE__*/React.createElement("u", null, /*#__PURE__*/React.createElement("em", null, "Balance")), /*#__PURE__*/React.createElement("p", null, "\u039E ", organ.balance), /*#__PURE__*/React.createElement("u", null, /*#__PURE__*/React.createElement("em", null, "Metadata")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
     onClick: () => reloadData(),
     className: "btn btn-sm"
-  }, "reload"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("code", null, `${organ.metadata}`), " ", /*#__PURE__*/React.createElement("a", {
-    href: `ipfs://${organ.metadata}`,
+  }, "reload"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("code", null, `${organ.metadata?.cid?.toString()}`), " ", /*#__PURE__*/React.createElement("a", {
+    href: `ipfs://${organ.metadata?.cid?.toString()}`,
     target: "_blank"
   }, "view"))), /*#__PURE__*/React.createElement("u", null, /*#__PURE__*/React.createElement("em", null, "Procedures")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
     onClick: () => reloadProcedures(),

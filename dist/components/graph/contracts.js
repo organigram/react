@@ -1,13 +1,18 @@
 import React from 'react';
-import { Organ as OrganClass, ProcedureNomination as ProcedureNominationClass, ProcedureVote as ProcedureVoteClass } from "@organigram/client-js";
-import { useGraph } from "../../contexts/graph";
-import { EMPTY_CID } from '@organigram/client-js/dist/ipfs';
+import { Organ as OrganClass, ProcedureNomination as ProcedureNominationClass, ProcedureVote as ProcedureVoteClass, EMPTY_CID } from '@organigram/client-js';
+import { useGraph } from '../../contexts/graph';
+import { usePlatform } from '../../contexts/platform';
 export const GraphContracts = () => {
   const {
     graph,
     addContracts,
     removeContracts
   } = useGraph();
+  const {
+    manager,
+    createOrgan,
+    createProcedure
+  } = usePlatform();
   const contracts = !graph ? [] : [...graph.organs.map(({
     address
   }) => address), ...graph.procedures.map(({
@@ -15,7 +20,7 @@ export const GraphContracts = () => {
   }) => address)];
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h3", null, "Contracts"), contracts && contracts.length > 0 && /*#__PURE__*/React.createElement("ul", {
     className: "list-unstyled mb-2"
-  }, contracts.map(address => /*#__PURE__*/React.createElement("li", {
+  }, [...new Set(contracts)].map(address => /*#__PURE__*/React.createElement("li", {
     key: address,
     className: "list-item"
   }, address, " ", /*#__PURE__*/React.createElement("span", {
@@ -43,11 +48,15 @@ export const GraphContracts = () => {
     className: "alert alert-dark mt-2 mb-0"
   }, /*#__PURE__*/React.createElement("button", {
     className: "btn btn-primary mr-1",
-    onClick: async () => OrganClass.deploy(EMPTY_CID).then(o => addContracts([o.address])).catch(error => console.error(error.message))
-  }, "Deploy organ"), /*#__PURE__*/React.createElement("button", {
+    onClick: async () => createOrgan(EMPTY_CID).then(o => addContracts([o.address])).catch(error => console.error(error.message))
+  }, "Create organ"), manager?.procedureTypes?.map(procedureType => /*#__PURE__*/React.createElement("button", {
+    key: procedureType.key,
     className: "btn btn-primary mx-1",
-    onClick: async () => ProcedureNominationClass.deploy(EMPTY_CID).then(o => addContracts([o.address])).catch(error => console.error(error.message))
-  }, "Deploy nomination"), /*#__PURE__*/React.createElement("button", {
+    onClick: async () => manager?.createProcedure(procedureType.address, EMPTY_CID, manager.organs && manager.organs[0], manager.organs && manager.organs[0], manager.organs && manager.organs[0], false, ...(procedureType.key === 'vote' ? ["1", // quorumSize: string,
+    "8", // voteDuration: string,
+    "1" // majoritySize: string
+    ] : [])).then(o => addContracts([o.address])).catch(error => console.error(error.message))
+  }, "Create ", procedureType.label)), /*#__PURE__*/React.createElement("button", {
     className: "btn btn-primary ml-1",
     onClick: async () => ProcedureVoteClass.deploy(EMPTY_CID).then(o => addContracts([o.address])).catch(error => console.error(error.message))
   }, "Deploy vote")));
