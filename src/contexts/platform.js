@@ -79,9 +79,9 @@ export const PlatformProvider = ({ platforms, ...props }) => {
     }
 
     const createProcedure = async (type, metadata_cid, proposers, moderations, deciders, withModeration, ...args) => {
-      if (!manager?.proceduresTypes)
+      if (!manager)
         throw new Error("Organigram not loaded.")
-      if (manager.proceduresTypes && manager.proceduresTypes.findIndex(pt => pt.address === type) >= 0)
+      if (manager.proceduresTypes?.find(pt => pt.address === type))
         throw new Error("Procedure type not registered.")
       const account = await getAccount()
       if (!account)
