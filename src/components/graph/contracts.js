@@ -49,9 +49,9 @@ export const GraphContracts = () => {
                 manager?.createProcedure(
                   procedureType.address,
                   EMPTY_CID,
-                  manager.organs && manager.organs[0],
-                  manager.organs && manager.organs[0],
-                  manager.organs && manager.organs[0],
+                  manager.organs && manager.organs[0].address,
+                  manager.organs && manager.organs[0].address,
+                  manager.organs && manager.organs[0].address,
                   false,
                   ...(procedureType.key === 'vote' ? [
                     "1", // quorumSize: string,

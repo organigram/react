@@ -86,7 +86,15 @@ export const PlatformProvider = ({ platforms, ...props }) => {
       const account = await getAccount()
       if (!account)
         throw new Error("Not connected to Ethereum.")
-      return await manager.createProcedure(type, metadata_cid, proposers, moderations, deciders, withModeration, ...args)
+      return await manager.createProcedure(
+        type,
+        metadata_cid,
+        proposers,
+        moderations,
+        deciders,
+        withModeration,
+        ...args
+      )
     }
 
     const detectNetworkPlatform = async () => {
