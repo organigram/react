@@ -1,8 +1,8 @@
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
+import React from 'react';
 import { EMPTY_CID, Organ, Organigram, web3 } from '@organigram/client-js';
 import { getAccount } from '@organigram/client-js/dist/web3';
-import React from 'react';
 import { useWeb3 } from './web3';
 export const PlatformContext = /*#__PURE__*/React.createContext({
   platform: {
@@ -76,7 +76,7 @@ export const PlatformProvider = ({
   };
 
   const createProcedure = async (type, metadata_cid, proposers, moderations, deciders, withModeration, ...args) => {
-    if (!manager || !manager.proceduresTypes) throw new Error("Organigram not loaded.");
+    if (!manager?.proceduresTypes) throw new Error("Organigram not loaded.");
     if (manager.proceduresTypes && manager.proceduresTypes.findIndex(pt => pt.address === type) >= 0) throw new Error("Procedure type not registered.");
     const account = await getAccount();
     if (!account) throw new Error("Not connected to Ethereum.");

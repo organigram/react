@@ -20,57 +20,57 @@ export const OrganProvider = ({ organ, address, children }) => {
     const [error, setError] = React.useState(null)
 
     const load = () => {
-        if (address || organ.address) {
-            setError(null)
-            setLoading(true)
-            manager.getOrgan(address)
-            .then(data => setOrgan(data))
-            .catch(error => {
-                console.error("Error loading organ ", address, error.message)
-                setOrgan(null)
-                setError(error)
-            })
-            .finally(() => setLoading(false))
-        }
+      if (address || organ.address) {
+        setError(null)
+        setLoading(true)
+        manager.getOrgan(address)
+          .then(data => setOrgan(data))
+          .catch(error => {
+              console.error("Error loading organ ", address, error.message)
+              setOrgan(null)
+              setError(error)
+          })
+          .finally(() => setLoading(false))
+      }
     }
 
     const reloadData = React.useCallback(async () => {
-        if (_organ.address && _organ.reloadMetadata)
-            _organ.reloadData()
-            .then(o => setOrgan(_prev => o))
+      if (_organ.address && _organ.reloadMetadata)
+        _organ.reloadData()
+          .then(o => setOrgan(_prev => o))
     }, [_organ])
 
     const reloadEntries = React.useCallback(async () => {
-        if (_organ.address && _organ.reloadEntries)
-            _organ.reloadEntries()
-            .then(o => setOrgan(_prev => o))
+      if (_organ.address && _organ.reloadEntries)
+        _organ.reloadEntries()
+          .then(o => setOrgan(_prev => o))
     }, [_organ])
 
     const reloadProcedures = React.useCallback(async () => {
-        if (_organ.address && _organ.reloadProcedures)
-            _organ.reloadProcedures()
-            .then(o => setOrgan(_prev => o))
+      if (_organ.address && _organ.reloadProcedures)
+        _organ.reloadProcedures()
+          .then(o => setOrgan(_prev => o))
     }, [_organ])
 
     // Initial load.
     React.useEffect(() => {
-        if (!organ && address)
-            load()
+      if (!organ && address)
+        load()
     }, [])
 
     return (
-        <OrganContext.Provider value={{
-            address,
-            organ: _organ,
-            loading,
-            error,
-            load,
-            reloadData,
-            reloadEntries,
-            reloadProcedures
-        }}>
-            {children}
-        </OrganContext.Provider>
+      <OrganContext.Provider value={{
+        address,
+        organ: _organ,
+        loading,
+        error,
+        load,
+        reloadData,
+        reloadEntries,
+        reloadProcedures
+      }}>
+        {children}
+      </OrganContext.Provider>
     )
 }
 
