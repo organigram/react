@@ -59,15 +59,14 @@ export const GraphContracts = () => {
                     "1"  // majoritySize: string
                   ] : [])
                 )
-                  .then(o => addContracts([o.address]))
+                  .then(i => {
+                    console.log("procedure", i)
+                    return i
+                  })
+                  .then(i => addContracts([i.address]))
                   .catch(error => console.error(error.message))
               }>Create {procedureType.label}</button>
             ))}
-            <button className="btn btn-primary ml-1" onClick={async () => 
-              ProcedureVoteClass.deploy(EMPTY_CID)
-                .then(o => addContracts([o.address]))
-                .catch(error => console.error(error.message))
-            }>Deploy vote</button>
           </div>
         </>
     )

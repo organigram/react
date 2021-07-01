@@ -81,13 +81,14 @@ export const PlatformProvider = ({ platforms, ...props }) => {
     const createProcedure = async (type, metadata_cid, proposers, moderations, deciders, withModeration, ...args) => {
       if (!manager)
         throw new Error("Organigram not loaded.")
-      if (manager.procedureTypes?.find(pt => pt.key === type))
+      const procedureType = manager.procedureTypes?.find(pt => pt.key === type)
+      if (!procedureType?.address)
         throw new Error("Procedure type not registered.")
       const account = await getAccount()
       if (!account)
         throw new Error("Not connected to Ethereum.")
       return await manager.createProcedure(
-        type,
+        procedureType.address,
         metadata_cid,
         proposers,
         moderations,

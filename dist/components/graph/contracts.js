@@ -55,11 +55,11 @@ export const GraphContracts = () => {
     onClick: async () => manager?.createProcedure(procedureType.address, EMPTY_CID, manager.organs && manager.organs[0].address, manager.organs && manager.organs[0].address, manager.organs && manager.organs[0].address, false, ...(procedureType.key === 'vote' ? ["1", // quorumSize: string,
     "8", // voteDuration: string,
     "1" // majoritySize: string
-    ] : [])).then(o => addContracts([o.address])).catch(error => console.error(error.message))
-  }, "Create ", procedureType.label)), /*#__PURE__*/React.createElement("button", {
-    className: "btn btn-primary ml-1",
-    onClick: async () => ProcedureVoteClass.deploy(EMPTY_CID).then(o => addContracts([o.address])).catch(error => console.error(error.message))
-  }, "Deploy vote")));
+    ] : [])).then(i => {
+      console.log("procedure", i);
+      return i;
+    }).then(i => addContracts([i.address])).catch(error => console.error(error.message))
+  }, "Create ", procedureType.label))));
 };
 export default GraphContracts;
 export const ContractSelector = ({
