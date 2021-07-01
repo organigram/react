@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { ProcedureNomination, ProcedureVote } from '@organigram/client-js';
 import { OrganEntryForm, OrganEntrySelector, OrganProcedureForm, OrganProcedureSelector } from '../organ';
 import { useProcedure, withProcedureProvider } from "../../contexts/procedure";
 import { useGraph } from "../../contexts/graph";
@@ -20,7 +19,18 @@ export const Procedure = props => {
   } = useProcedure();
   const [ProcedureComponent, setProcedureComponent] = useState();
   React.useEffect(async () => {
-    if (procedure) if (procedure instanceof ProcedureNomination) setProcedureComponent( /*#__PURE__*/React.lazy(() => import('./nomination/procedure')));else if (procedure instanceof ProcedureVote) setProcedureComponent( /*#__PURE__*/React.lazy(() => import('./vote/procedure')));else setProcedureComponent();
+    if (procedure?.type?.key) {
+      switch (procedure.type.key) {
+        case 'nomination':
+        case 'vote':
+        case 'erc20vote':
+          setProcedureComponent( /*#__PURE__*/React.lazy(() => import(`@organigram/procedures/dist/${procedure.type.key}/procedureComponent`)));
+          break;
+
+        default:
+          setProcedureComponent();
+      }
+    }
   }, [procedure]); // @todo : Explain this.
 
   if (!procedure) {

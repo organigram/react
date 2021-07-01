@@ -52,13 +52,10 @@ export const GraphContracts = () => {
   }, "Create organ"), manager?.procedureTypes?.map(procedureType => /*#__PURE__*/React.createElement("button", {
     key: procedureType.key,
     className: "btn btn-primary mx-1",
-    onClick: async () => manager?.createProcedure(procedureType.address, EMPTY_CID, manager.organs && manager.organs[0].address, manager.organs && manager.organs[0].address, manager.organs && manager.organs[0].address, false, ...(procedureType.key === 'vote' ? ["1", // quorumSize: string,
+    onClick: async () => createProcedure(procedureType.key, EMPTY_CID, manager.organs && manager.organs[0].address, manager.organs && manager.organs[0].address, manager.organs && manager.organs[0].address, false, ...(procedureType.key === 'vote' ? ["1", // quorumSize: string,
     "8", // voteDuration: string,
     "1" // majoritySize: string
-    ] : [])).then(i => {
-      console.log("procedure", i);
-      return i;
-    }).then(i => addContracts([i.address])).catch(error => console.error(error.message))
+    ] : [])).then(i => addContracts([i.address])).catch(error => console.error(error.message))
   }, "Create ", procedureType.label))));
 };
 export default GraphContracts;

@@ -15,20 +15,17 @@ export const Proposal = ({
 
   const [ProposalComponent, setProposalComponent] = React.useState();
   React.useEffect(async () => {
-    if (procedure.type) switch (procedure.type) {
-      case '0xc5f28e49':
-        // Nomination.
-        setProposalComponent( /*#__PURE__*/React.lazy(() => import('../nomination/proposal')));
-        break;
+    if (procedure?.type?.key) {
+      switch (procedure.type.key) {
+        case 'nomination':
+        case 'vote':
+        case 'erc20vote':
+          setProposalComponent( /*#__PURE__*/React.lazy(() => import(`@organigram/procedures/dist/${procedure.type.key}/proposalComponent`)));
+          break;
 
-      case '0xc9d27afe':
-        // Vote.
-        setProposalComponent( /*#__PURE__*/React.lazy(() => import('../vote/proposal')));
-        break;
-
-      default:
-        setProposalComponent();
-        break;
+        default:
+          setProposalComponent();
+      }
     }
   }, [procedure.type]);
   return /*#__PURE__*/React.createElement("div", {

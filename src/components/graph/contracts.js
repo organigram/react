@@ -46,8 +46,8 @@ export const GraphContracts = () => {
             }>Create organ</button>
             {manager?.procedureTypes?.map(procedureType => (
               <button key={procedureType.key} className="btn btn-primary mx-1" onClick={async () => 
-                manager?.createProcedure(
-                  procedureType.address,
+                createProcedure(
+                  procedureType.key,
                   EMPTY_CID,
                   manager.organs && manager.organs[0].address,
                   manager.organs && manager.organs[0].address,
@@ -59,10 +59,6 @@ export const GraphContracts = () => {
                     "1"  // majoritySize: string
                   ] : [])
                 )
-                  .then(i => {
-                    console.log("procedure", i)
-                    return i
-                  })
                   .then(i => addContracts([i.address]))
                   .catch(error => console.error(error.message))
               }>Create {procedureType.label}</button>
