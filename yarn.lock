@@ -1466,7 +1466,7 @@
 
 "@organigram/client-js@git+https://alxmhe:ETwr5WUv3DJEjjJegRG6@bitbucket.org/organigram/client-js.git#refactoring":
   version "1.0.0"
-  resolved "git+https://alxmhe:ETwr5WUv3DJEjjJegRG6@bitbucket.org/organigram/client-js.git#11844e5d9c02baad21cb5da1afc69e70df2ebb98"
+  resolved "git+https://alxmhe:ETwr5WUv3DJEjjJegRG6@bitbucket.org/organigram/client-js.git#2275732ef566ace6eb7b016362e9d822f7c742ee"
   dependencies:
     "@metamask/detect-provider" "^1.2.0"
     "@organigram/contracts" "git+https://alxmhe:ETwr5WUv3DJEjjJegRG6@bitbucket.org/organigram/contracts.git#refactoring"
@@ -1480,13 +1480,13 @@
 
 "@organigram/contracts@git+https://alxmhe:ETwr5WUv3DJEjjJegRG6@bitbucket.org/organigram/contracts.git#refactoring":
   version "0.1.3"
-  resolved "git+https://alxmhe:ETwr5WUv3DJEjjJegRG6@bitbucket.org/organigram/contracts.git#396daf63ce801b102bfcedf87e75f427eb41b400"
+  resolved "git+https://alxmhe:ETwr5WUv3DJEjjJegRG6@bitbucket.org/organigram/contracts.git#63e8a2e86c94294212bf5560548852755e928a05"
   dependencies:
     "@openzeppelin/contracts" "^4.2.0"
 
 "@organigram/procedures@git+https://alxmhe:ETwr5WUv3DJEjjJegRG6@bitbucket.org/organigram/procedures.git#master":
   version "1.0.0"
-  resolved "git+https://alxmhe:ETwr5WUv3DJEjjJegRG6@bitbucket.org/organigram/procedures.git#d6e03f7dfb43c44f2b0cef1187f72e7c93cd4d4f"
+  resolved "git+https://alxmhe:ETwr5WUv3DJEjjJegRG6@bitbucket.org/organigram/procedures.git#c89d5ac490cbf8a15b4bbc976ef74fa40c7fe876"
 
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"
