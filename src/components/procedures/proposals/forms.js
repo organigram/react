@@ -34,7 +34,7 @@ export const EntriesSelector = ({ defaultValue, onSelect }) => {
                         <li key={key}>
                             <div className="row">
                                 {entry.addr && <div className="col"><code>{entry.addr}</code></div>}
-                                {entry.doc && <div className="col"><a href={`ipfs://${entry.doc}`}>{entry.doc}</a></div>}
+                                {entry.doc && <div className="col"><a href={`https://dweb.link/ipfs/${entry.doc}`}>{entry.doc}</a></div>}
                                 <div className="col col-2">
                                     <span
                                         className="text-danger text-link"
@@ -68,7 +68,7 @@ export const ProposalFormAddEntries = ({ proposal }) => {
                 {entries.map((e,i) => (
                     <li key={i} className="list-item">
                         <code>{e.address}</code><br/>
-                        <a href={`ipfs://${e.cid}`} target="_blank">
+                        <a href={`https://dweb.link/ipfs/${e.cid}`} target="_blank">
                             {`${e.cid}`}
                         </a><br />
                         <button
@@ -105,7 +105,7 @@ export const ProposalFormRemoveEntry = ({ proposal }) => {
                         {entries.map((e,i) => (
                             <li key={i} className="list-item">
                                 <code>{e.address}</code><br/>
-                                <a href={`ipfs://${e.cid}`} target="_blank">
+                                <a href={`https://dweb.link/ipfs/${e.cid}`} target="_blank">
                                     {`${e.cid}`}
                                 </a><br />
                                 <button
@@ -499,7 +499,7 @@ export const ProposalFormCreate = ({ onCreate }) => {
             <div>
                 {!metadata
                     ? <MetadataForm defaultValue={metadata} onChange={setMetadata} />
-                    : <a href={`ipfs://${metadata}`} target="_blank">{`${metadata}`}</a>
+                    : <a href={`https://dweb.link/ipfs/${metadata}`} target="_blank">{`${metadata}`}</a>
                 }
             </div>
             <strong>Operations</strong>

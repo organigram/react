@@ -73,7 +73,7 @@ export const Procedure = props => {
           <u><em>Metadata</em></u>
           <div>
             <button onClick={() => reloadData()} className="btn btn-sm">reload</button>
-            <p><code>{`${procedure.metadata}`}</code> <a href={`ipfs://${procedure.metadata}`} target="_blank">view</a></p>
+            <p><code>{`${procedure.metadata}`}</code> <a href={`https://dweb.link/ipfs/${procedure.metadata}`} target="_blank">view</a></p>
           </div>
           <u><em>Proposals</em></u>
           <div>

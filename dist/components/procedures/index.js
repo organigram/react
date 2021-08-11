@@ -64,7 +64,7 @@ export const Procedure = props => {
     onClick: () => reloadData(),
     className: "btn btn-sm"
   }, "reload"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("code", null, `${procedure.metadata}`), " ", /*#__PURE__*/React.createElement("a", {
-    href: `ipfs://${procedure.metadata}`,
+    href: `https://dweb.link/ipfs/${procedure.metadata}`,
     target: "_blank"
   }, "view"))), /*#__PURE__*/React.createElement("u", null, /*#__PURE__*/React.createElement("em", null, "Proposals")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
     onClick: () => reloadProposals(),

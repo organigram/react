@@ -27,7 +27,7 @@ export const Organ = props => {
     onClick: () => reloadData(),
     className: "btn btn-sm"
   }, "reload"), /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("code", null, `${organ.metadata?.cid?.toString()}`), " ", /*#__PURE__*/React.createElement("a", {
-    href: `ipfs://${organ.metadata?.cid?.toString()}`,
+    href: `https://dweb.link/ipfs/${organ.metadata?.cid?.toString()}`,
     target: "_blank"
   }, "view"))), /*#__PURE__*/React.createElement("u", null, /*#__PURE__*/React.createElement("em", null, "Procedures")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
     onClick: () => reloadProcedures(),
@@ -48,7 +48,7 @@ export const Organ = props => {
     key: `entry-${e.index}`,
     className: "list-item"
   }, /*#__PURE__*/React.createElement("em", null, e.index), " ", /*#__PURE__*/React.createElement("code", null, e.address), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("small", null, /*#__PURE__*/React.createElement("a", {
-    href: `ipfs://${e.cid}`,
+    href: `https://dweb.link/ipfs/${e.cid}`,
     target: "_blank"
   }, `${e.cid}`)))))), /*#__PURE__*/React.createElement("hr", {
     className: "mb-1"
@@ -77,7 +77,7 @@ export const OrganEntryForm = ({
     onChange: e => setAddress(e.target.value),
     className: "form-control"
   }), cid && /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("code", null, `${cid}`), "\xA0", /*#__PURE__*/React.createElement("a", {
-    href: `ipfs://${cid}`,
+    href: `https://dweb.link/ipfs/${cid}`,
     target: "_blank"
   }, "open")), /*#__PURE__*/React.createElement(Upload, {
     cid: cid,

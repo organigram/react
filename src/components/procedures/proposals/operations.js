@@ -6,7 +6,7 @@ export const ProposalOperationParam = ({ param }) => {
             return (
                 <>
                     Metadata&nbsp;
-                    <a href={`ipfs://${param.value.toString()}`} target="_blank">{param.value.toString()}</a>
+                    <a href={`https://dweb.link/ipfs/${param.value.toString()}`} target="_blank">{param.value.toString()}</a>
                 </>
             )
         case 'entries':
@@ -21,7 +21,7 @@ export const ProposalOperationParam = ({ param }) => {
                                 {entry.doc && (
                                     <>
                                         Doc&nbsp;
-                                        <a href={`ipfs://${entry.doc}`} target="_blank">{entry.doc.toString()}</a>
+                                        <a href={`https://dweb.link/ipfs/${entry.doc}`} target="_blank">{entry.doc.toString()}</a>
                                     </>
                                 )}
                             </li>
@@ -38,7 +38,7 @@ export const ProposalOperationParam = ({ param }) => {
                     {param.value.doc && (
                         <>
                             Doc&nbsp;
-                            <a href={`ipfs://${param.value.doc}`} target="_blank">{param.value.doc.toString()}</a>
+                            <a href={`https://dweb.link/ipfs/${param.value.doc}`} target="_blank">{param.value.doc.toString()}</a>
                         </>
                     )}
                 </>

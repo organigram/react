@@ -20,7 +20,7 @@ export const Organ = props => {
           <u><em>Metadata</em></u>
           <div>
             <button onClick={() => reloadData()} className="btn btn-sm">reload</button>
-            <p><code>{`${organ.metadata?.cid?.toString()}`}</code> <a href={`ipfs://${organ.metadata?.cid?.toString()}`} target="_blank">view</a></p>
+            <p><code>{`${organ.metadata?.cid?.toString()}`}</code> <a href={`https://dweb.link/ipfs/${organ.metadata?.cid?.toString()}`} target="_blank">view</a></p>
           </div>
           <u><em>Procedures</em></u>
           <div>
@@ -41,7 +41,7 @@ export const Organ = props => {
                 <li key={`entry-${e.index}`} className="list-item">
                   <em>{e.index}</em>{" "}
                   <code>{e.address}</code><br />
-                  <small><a href={`ipfs://${e.cid}`} target="_blank">{`${e.cid}`}</a></small>
+                  <small><a href={`https://dweb.link/ipfs/${e.cid}`} target="_blank">{`${e.cid}`}</a></small>
                 </li>
               ))}
             </ul>
@@ -88,7 +88,7 @@ export const OrganEntryForm = ({ onSave }) => {
   return (
     <>
       <input type="text" name="address" placeholder="address" defaultValue={address} onChange={e => setAddress(e.target.value)} className="form-control" />
-      {cid && <p><code>{`${cid}`}</code>&nbsp;<a href={`ipfs://${cid}`} target="_blank">open</a></p>}
+      {cid && <p><code>{`${cid}`}</code>&nbsp;<a href={`https://dweb.link/ipfs/${cid}`} target="_blank">open</a></p>}
       <Upload cid={cid} onCID={c => setCid(c)} />
     </>
   )

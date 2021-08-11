@@ -5,7 +5,7 @@ export const ProposalOperationParam = ({
   switch (param.type) {
     case 'metadata':
       return /*#__PURE__*/React.createElement(React.Fragment, null, "Metadata\xA0", /*#__PURE__*/React.createElement("a", {
-        href: `ipfs://${param.value.toString()}`,
+        href: `https://dweb.link/ipfs/${param.value.toString()}`,
         target: "_blank"
       }, param.value.toString()));
 
@@ -14,13 +14,13 @@ export const ProposalOperationParam = ({
         className: "list-item",
         key: `entry-${entry.addr}-${entry.doc.toString()}`
       }, entry.addr && /*#__PURE__*/React.createElement("code", null, entry.addr), entry.addr && entry.doc && /*#__PURE__*/React.createElement("br", null), entry.doc && /*#__PURE__*/React.createElement(React.Fragment, null, "Doc\xA0", /*#__PURE__*/React.createElement("a", {
-        href: `ipfs://${entry.doc}`,
+        href: `https://dweb.link/ipfs/${entry.doc}`,
         target: "_blank"
       }, entry.doc.toString()))))));
 
     case 'entry':
       return /*#__PURE__*/React.createElement(React.Fragment, null, "Entry", /*#__PURE__*/React.createElement("br", null), param.value.addr && /*#__PURE__*/React.createElement("code", null, param.value.addr), param.value.addr && param.value.doc && /*#__PURE__*/React.createElement("br", null), param.value.doc && /*#__PURE__*/React.createElement(React.Fragment, null, "Doc\xA0", /*#__PURE__*/React.createElement("a", {
-        href: `ipfs://${param.value.doc}`,
+        href: `https://dweb.link/ipfs/${param.value.doc}`,
         target: "_blank"
       }, param.value.doc.toString())));
 

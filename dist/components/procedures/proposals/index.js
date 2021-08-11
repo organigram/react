@@ -56,7 +56,7 @@ export const Proposal = ({
   }, "Enacted? ", /*#__PURE__*/React.createElement("code", null, proposal.applied ? "true" : "false")), /*#__PURE__*/React.createElement("div", {
     className: "col-12"
   }, "Metadata: ", /*#__PURE__*/React.createElement("code", null, `${proposal.metadata}`), " ", /*#__PURE__*/React.createElement("a", {
-    href: `ipfs://${proposal.metadata}`,
+    href: `https://dweb.link/ipfs/${proposal.metadata}`,
     target: "_blank"
   }, "view"))), /*#__PURE__*/React.createElement(ProposalOperations, {
     proposal: proposal

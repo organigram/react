@@ -45,7 +45,7 @@ export const EntriesSelector = ({
     }, /*#__PURE__*/React.createElement("code", null, entry.addr)), entry.doc && /*#__PURE__*/React.createElement("div", {
       className: "col"
     }, /*#__PURE__*/React.createElement("a", {
-      href: `ipfs://${entry.doc}`
+      href: `https://dweb.link/ipfs/${entry.doc}`
     }, entry.doc)), /*#__PURE__*/React.createElement("div", {
       className: "col col-2"
     }, /*#__PURE__*/React.createElement("span", {
@@ -85,7 +85,7 @@ export const ProposalFormAddEntries = ({
     key: i,
     className: "list-item"
   }, /*#__PURE__*/React.createElement("code", null, e.address), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("a", {
-    href: `ipfs://${e.cid}`,
+    href: `https://dweb.link/ipfs/${e.cid}`,
     target: "_blank"
   }, `${e.cid}`), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("button", {
     className: "btn btn-sm btn-danger",
@@ -129,7 +129,7 @@ export const ProposalFormRemoveEntry = ({
     key: i,
     className: "list-item"
   }, /*#__PURE__*/React.createElement("code", null, e.address), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("a", {
-    href: `ipfs://${e.cid}`,
+    href: `https://dweb.link/ipfs/${e.cid}`,
     target: "_blank"
   }, `${e.cid}`), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("button", {
     className: "btn btn-sm btn-danger",
@@ -579,7 +579,7 @@ export const ProposalFormCreate = ({
     defaultValue: metadata,
     onChange: setMetadata
   }) : /*#__PURE__*/React.createElement("a", {
-    href: `ipfs://${metadata}`,
+    href: `https://dweb.link/ipfs/${metadata}`,
     target: "_blank"
   }, `${metadata}`)), /*#__PURE__*/React.createElement("strong", null, "Operations"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(ProposalOperationForm, {
     onSave: op => {

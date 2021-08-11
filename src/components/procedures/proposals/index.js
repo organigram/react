@@ -56,7 +56,7 @@ export const Proposal = ({ proposal }) => {
           Enacted? <code>{proposal.applied ? "true" : "false"}</code>
         </div>
         <div className="col-12">
-          Metadata: <code>{`${proposal.metadata}`}</code> <a href={`ipfs://${proposal.metadata}`} target="_blank">view</a>
+          Metadata: <code>{`${proposal.metadata}`}</code> <a href={`https://dweb.link/ipfs/${proposal.metadata}`} target="_blank">view</a>
         </div>
       </div>
       <ProposalOperations proposal={proposal} />
