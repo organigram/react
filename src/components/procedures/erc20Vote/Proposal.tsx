@@ -1,12 +1,11 @@
 import React from 'react'
-import { ProcedureProposal } from '@organigram/js'
+import { ProcedureProposal, ERC20Vote } from '@organigram/js'
 import { TransactionOptions } from '@organigram/js/types/types'
 
-import ERC20VoteProcedure from './class'
 import ElectionComponent from '../Election'
 
 export interface ERC20VoteProposalProps {
-  procedure: ERC20VoteProcedure
+  procedure: ERC20Vote
   proposal: ProcedureProposal
   accountInOrgans: {
     proposers?: boolean

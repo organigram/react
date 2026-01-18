@@ -1,12 +1,12 @@
 import React from 'react'
-import ERC20VoteProcedure from './class'
+import { ERC20Vote } from '@organigram/js'
 import { secondsToHms } from '..'
 import { useTranslation } from 'react-i18next'
 
 const ERC20VoteProcedureComponent = ({
   procedure
 }: {
-  procedure: ERC20VoteProcedure
+  procedure: ERC20Vote
 }) => {
   const { t } = useTranslation()
   const [erc20Balance, setErc20Balance] = React.useState<string>('0')

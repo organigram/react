@@ -1,12 +1,11 @@
 import React from 'react'
-import { ProcedureProposal } from '@organigram/js'
+import { ProcedureProposal, Vote } from '@organigram/js'
 import { TransactionOptions } from '@organigram/js/types/types'
 
-import VoteProcedure from './class'
 import ElectionComponent from '../Election'
 
 export interface VoteProposalProps {
-  procedure: VoteProcedure
+  procedure: Vote
   proposal: ProcedureProposal
   accountInOrgans: {
     proposers?: boolean
