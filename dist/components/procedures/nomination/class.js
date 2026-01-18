@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const ethers_1 = require("ethers");
 const js_1 = require("@organigram/js");
-const NominationProcedure_json_1 = __importDefault(require("@organigram/contracts/abi/NominationProcedure.json"));
+const NominationProcedure_json_1 = __importDefault(require("@organigram/protocol/abi/NominationProcedure.json"));
 class NominationProcedure extends js_1.Procedure {
     static INTERFACE = '0xc5f28e49'; // nominate() signature.
     contract;
