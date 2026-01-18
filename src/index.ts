@@ -1,1 +1,1 @@
-export * from './components/mui'
+export * from './components/ui'
