@@ -1,0 +1,5 @@
+export { theme } from './theme/theme'
+export * as components from './theme/components'
+export { palette } from './theme/palette'
+export { typography } from './theme/typography'
+export { breakpoints } from './theme/breakpoints'
