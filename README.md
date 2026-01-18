@@ -10,7 +10,7 @@ version 1.0
         // Logic hooks.
         useWeb3,    // Access Web3, account, network...
         useIPFS,    // Pin, cat, add files to IPFS.
-        usePlatform,// Switch platform manager or keyserver.
+        useOrganigramClient,// Switch platform client or keyserver.
         useVault,   // Encrypt and share files on IPFS.
         // Provide data to UI components
         // Also see its HOC withGraphProvider(MyGraph).
@@ -23,7 +23,7 @@ version 1.0
     } from '@organigram/client-react'
     ...
     const MyApp = () => {
-        const { isConnected } = usePlatform()
+        const { isConnected } = useOrganigramClient()
         if (!isConnected)
             return <p>Loading...</p>
         return (
@@ -45,7 +45,7 @@ version 1.0
         platforms: [
             {
                 network: "rinkeby",
-                manager: "0x8a6b760EA52D8E00c5253C56CF2aC0D439209cFb",
+                client: "0x8a6b760EA52D8E00c5253C56CF2aC0D439209cFb",
                 keyserver: "0x726071aF315f099baa7ee2A51b0049645648d016"
             },
         ]
@@ -56,4 +56,4 @@ version 1.0
         ...
     }
 ```
-See also @organigram/client-react/src/components for more examples.
+See also @organigram/react/src/components for more examples.
