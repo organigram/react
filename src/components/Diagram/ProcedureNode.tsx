@@ -8,8 +8,8 @@ import Card from '@mui/material/Card'
 import TuneIcon from '@mui/icons-material/Tune'
 
 import { makeTestId } from '../../utils'
-import { filterProposals, useDeployedProcedure } from '../../hooks/procedure'
-import DiagramNode from './Node'
+import { filterProposals, useDeployedProcedure } from '../../hooks/procedures'
+import { DiagramNode } from './Node'
 import ProcedureIcon from '../../assets/svg/procedure.svg'
 import { palette } from '../../ui'
 import { DiagramProcedure, OrganigramDiagram } from '.'
@@ -25,7 +25,7 @@ export interface ProcedureNodeProps {
   organigram: OrganigramDiagram
 }
 
-const ProcedureNode: React.FC<ProcedureNodeProps> = ({
+export const ProcedureNode: React.FC<ProcedureNodeProps> = ({
   data: { procedure },
   sourcePosition,
   targetPosition,
@@ -142,5 +142,3 @@ const ProcedureNode: React.FC<ProcedureNodeProps> = ({
     </>
   )
 }
-
-export default ProcedureNode

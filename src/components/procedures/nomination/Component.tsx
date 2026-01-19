@@ -1,12 +1,10 @@
 import React from 'react'
-import { Nomination } from '@organigram/js'
+import { NominationProcedure } from '@organigram/js'
 
-const NominationProcedureComponent = ({
+export const NominationProcedureComponent = ({
   procedure
 }: {
-  procedure: Nomination
+  procedure: NominationProcedure
 }) => {
   return <></>
 }
-
-export default NominationProcedureComponent

@@ -1,8 +1,10 @@
-import Token from '../../assets/svg/token.svg'
+import React from 'react'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import { Handle, Position } from 'react-flow-renderer'
-import DiagramNode from './Node'
+import { DiagramNode } from './Node'
+import { palette } from '@/src/ui'
+import Token from '@/src/ui/assets/svg/token.svg'
 
 export interface Asset {
   address: string
@@ -17,7 +19,7 @@ export interface AssetNodeProps {
   onClick: (asset: Asset) => void
 }
 
-const AssetNode: React.FC<AssetNodeProps> = ({
+export const AssetNode: React.FC<AssetNodeProps> = ({
   data: { asset },
   sourcePosition,
   targetPosition,
@@ -30,7 +32,7 @@ const AssetNode: React.FC<AssetNodeProps> = ({
         borderRadius: '16px',
         backgroundColor:
           asset.address != null && asset.address !== '' ? '' : 'transparent',
-        border: ({ palette }) =>
+        border:
           asset.address != null && asset.address !== ''
             ? ''
             : `dashed 1px ${palette.violet.light3 as string}`,
@@ -80,5 +82,3 @@ const AssetNode: React.FC<AssetNodeProps> = ({
     )}
   </>
 )
-
-export default AssetNode

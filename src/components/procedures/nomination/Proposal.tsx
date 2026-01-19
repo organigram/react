@@ -1,12 +1,14 @@
 import React from 'react'
-import { ProcedureProposal, Nomination } from '@organigram/js'
-import { TransactionOptions } from '@organigram/js/types/types'
+import {
+  ProcedureProposal,
+  NominationProcedure,
+  type TransactionOptions
+} from '@organigram/js'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
-import { ImportedReactNode } from '..'
 
 export interface NominationProposalProps {
-  procedure: Nomination
+  procedure: NominationProcedure
   proposal: ProcedureProposal
   accountInOrgans?: {
     proposers?: boolean
@@ -32,36 +34,35 @@ const NominationProposalComponent = ({
   }
   return (
     <Grid container justifyContent='space-between' mt={3}>
-      {accountInOrgans?.deciders &&
-        ((
-          <>
-            <Button
-              sx={{ width: '48%' }}
-              variant='contained'
-              className='approve-proposal'
-              onClick={() =>
-                procedure.nominate(proposal.key, {
-                  onTransaction: wrapTransaction
-                })
-              }
-            >
-              {t('Approve')}
-            </Button>
-            <Button
-              sx={{ width: '48%' }}
-              variant='contained'
-              color='secondary'
-              className='reject-proposal'
-              onClick={() =>
-                procedure.blockProposal(proposal.key, '', {
-                  onTransaction: wrapTransaction
-                })
-              }
-            >
-              {t('Reject')}
-            </Button>
-          </>
-        ) as ImportedReactNode)}
+      {accountInOrgans?.deciders && (
+        <>
+          <Button
+            sx={{ width: '48%' }}
+            variant='contained'
+            className='approve-proposal'
+            onClick={() =>
+              procedure.nominate(proposal.key, {
+                onTransaction: wrapTransaction
+              })
+            }
+          >
+            {t('Approve')}
+          </Button>
+          <Button
+            sx={{ width: '48%' }}
+            variant='contained'
+            color='secondary'
+            className='reject-proposal'
+            onClick={() =>
+              procedure.blockProposal(proposal.key, '', {
+                onTransaction: wrapTransaction
+              })
+            }
+          >
+            {t('Reject')}
+          </Button>
+        </>
+      )}
     </Grid>
   )
 }

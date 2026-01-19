@@ -5,7 +5,7 @@ import { VetoProposal } from './Veto'
 import { DecidersActions } from './DecidersActions'
 import { VoteEnded } from './Enact'
 
-const ElectionComponent = ({
+export const ElectionComponent = ({
   procedure,
   proposal,
   accountInOrgans,
@@ -53,5 +53,3 @@ const ElectionComponent = ({
     </Grid>
   )
 }
-
-export default ElectionComponent

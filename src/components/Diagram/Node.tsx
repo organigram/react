@@ -1,9 +1,10 @@
+import React from 'react'
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 
-const DiagramNode: React.FC<{
+export const DiagramNode: React.FC<{
   onClick?: () => void
   label: string
   id?: string
@@ -44,5 +45,3 @@ const DiagramNode: React.FC<{
     </Grid>
   </Grid>
 )
-
-export default DiagramNode

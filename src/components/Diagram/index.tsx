@@ -118,7 +118,7 @@ const autodistribute: (
   return nodes
 }
 
-const Diagram: React.FC<DiagramProps> = ({
+export const Diagram: React.FC<DiagramProps> = ({
   direction,
   nodeTypes,
   organigram,
@@ -377,5 +377,3 @@ const Diagram: React.FC<DiagramProps> = ({
     </ReactFlow>
   )
 }
-
-export default Diagram

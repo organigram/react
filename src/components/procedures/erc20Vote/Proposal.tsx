@@ -5,7 +5,7 @@ import {
   type TransactionOptions
 } from '@organigram/js'
 
-import ElectionComponent from '../Election'
+import { ElectionComponent } from '../Election'
 
 export interface ERC20VoteProposalProps {
   procedure: ERC20VoteProcedure
@@ -18,8 +18,6 @@ export interface ERC20VoteProposalProps {
   wrapTransaction: TransactionOptions['onTransaction']
 }
 
-const ERC20VoteProposalComponent = (props: ERC20VoteProposalProps) => (
+export const ERC20VoteProposalComponent = (props: ERC20VoteProposalProps) => (
   <ElectionComponent {...props} />
 )
-
-export default ERC20VoteProposalComponent

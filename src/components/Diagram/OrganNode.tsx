@@ -1,3 +1,4 @@
+import React from 'react'
 import { Handle, Position } from 'react-flow-renderer'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
@@ -8,11 +9,21 @@ import { DiagramOrgan } from '.'
 import { makeTestId } from '../../utils'
 import { useTranslation } from 'react-i18next'
 import { useDeployedOrgan } from '../../hooks/organs'
-import DiagramNode from './Node'
-import SummitIcon from '../../assets/svg/summit.svg'
+import { DiagramNode } from './Node'
+import SummitIcon from '../../ui/assets/svg/summit.svg'
 import { Signer } from 'ethers'
+import { palette } from '@/src/ui'
 
-const EntryCount: React.FC<{ organ: DiagramOrgan; signer: Signer }> = ({
+export interface OrganNodeProps {
+  data: { organ: DiagramOrgan; position?: { x: number; y: number } }
+  sourcePosition?: Position
+  targetPosition?: Position
+  hideHandles?: boolean
+  signer: Signer
+  onClick?: () => void
+}
+
+export const EntryCount: React.FC<{ organ: DiagramOrgan; signer: Signer }> = ({
   organ: dbOrgan,
   signer
 }) => {
@@ -36,7 +47,7 @@ const EntryCount: React.FC<{ organ: DiagramOrgan; signer: Signer }> = ({
   )
 }
 
-const OrganNode: React.FC<OrganNodeProps> = ({
+export const OrganNode: React.FC<OrganNodeProps> = ({
   data,
   sourcePosition,
   targetPosition,
@@ -63,27 +74,26 @@ const OrganNode: React.FC<OrganNodeProps> = ({
             : isMaster
               ? 'violet.light3'
               : 'text.primary',
-          border: ({ palette }) =>
-            isDeployed ? 'none' : `dashed 1px ${palette.grey.light2 as string}`,
+          border: isDeployed
+            ? 'none'
+            : `dashed 1px ${palette.grey.light2 as string}`,
           minWidth: '240px'
         }}
       >
         <Box
           sx={{
-            background: ({ palette }) =>
-              !isDeployed
-                ? 'transparent'
-                : isMaster
-                  ? palette.background.secondary
-                  : palette.background.default,
+            background: !isDeployed
+              ? 'transparent'
+              : isMaster
+                ? palette.background.secondary
+                : palette.background.default,
             // border:
             //   data.organ?.address != null && data.organ.address !== ''
             //     ? 'none'
             //     : 'solid 1px',
-            borderBottom: ({ palette }) =>
-              `solid 0.5px ${
-                isMaster ? palette.grey.main : palette.grey.light2
-              }`
+            borderBottom: `solid 0.5px ${
+              isMaster ? palette.grey : palette.grey.light2
+            }`
 
             // height: '48px',
           }}
@@ -128,15 +138,4 @@ const OrganNode: React.FC<OrganNodeProps> = ({
       )}
     </>
   )
-}
-
-export default OrganNode
-
-interface OrganNodeProps {
-  data: { organ: DiagramOrgan; position?: { x: number; y: number } }
-  sourcePosition?: Position
-  targetPosition?: Position
-  hideHandles?: boolean
-  signer: Signer
-  onClick?: () => void
 }
