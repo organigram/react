@@ -16,18 +16,22 @@
     "registry": "https://npm.pkg.github.com"
   },
   "main": "dist/index.js",
-  "types": "src/index.d.ts",
+  "type": "module",
   "peerDependencies": {
+    "@mui/icons-material": "^5.18.0",
     "@mui/material": "^5.15.4",
     "@organigram/js": "^0.1.0",
     "@organigram/protocol": "^0.1.0",
     "ethers": "^5.6.1",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
-    "react-i18next": "^11.0.0"
+    "react-i18next": "^11.0.0",
+    "recoil": "^0.7.7"
   },
   "dependencies": {
-    "@organigram/js": "workspace:^"
+    "@organigram/js": "workspace:^",
+    "dagre": "^0.8.5",
+    "react-flow-renderer": "^10.3.17"
   },
   "scripts": {
     "build": "tsc --pretty",
@@ -36,13 +40,16 @@
     "test": "jest"
   },
   "devDependencies": {
+    "@mui/icons-material": "^5.18.0",
     "@organigram/js": "workspace:^",
     "@organigram/protocol": "workspace:^",
+    "@types/dagre": "^0.7.53",
     "@types/react": "^18.3.3",
     "ethers": "^6.13.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-i18next": "^15.0.0",
+    "recoil": "^0.7.7",
     "typescript": "^5.5.4"
   }
 }

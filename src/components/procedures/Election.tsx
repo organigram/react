@@ -4,7 +4,6 @@ import Alert from '@mui/material/Alert'
 import { VetoProposal } from './Veto'
 import { DecidersActions } from './DecidersActions'
 import { VoteEnded } from './Enact'
-import { ImportedReactNode } from '.'
 
 const ElectionComponent = ({
   procedure,
@@ -38,22 +37,19 @@ const ElectionComponent = ({
       mt={3}
       className='procedure-proposal procedure-proposal-vote'
     >
-      {
-        (!election || !election.start ? ( // Election does not exist or not started, or block cannot be fetched.
-          <></>
-        ) : now < parseInt(election.start) ? ( // Election is started. Vote is not started.
-          <VetoProposal
-            {...{ procedure, proposal, accountInOrgans, wrapTransaction }}
-          />
-        ) : now <
-          parseInt(election.start) + parseInt(procedure.voteDuration) ? ( // Vote is started. Vote is not ended.
-            <DecidersActions
-              {...{ procedure, proposal, accountInOrgans, wrapTransaction }}
-            />
-        ) : (
-          <VoteEnded {...{ procedure, proposal, wrapTransaction }} />
-        )) as ImportedReactNode
-      }
+      {!election || !election.start ? ( // Election does not exist or not started, or block cannot be fetched.
+        <></>
+      ) : now < parseInt(election.start) ? ( // Election is started. Vote is not started.
+        <VetoProposal
+          {...{ procedure, proposal, accountInOrgans, wrapTransaction }}
+        />
+      ) : now < parseInt(election.start) + parseInt(procedure.voteDuration) ? ( // Vote is started. Vote is not ended.
+        <DecidersActions
+          {...{ procedure, proposal, accountInOrgans, wrapTransaction }}
+        />
+      ) : (
+        <VoteEnded {...{ procedure, proposal, wrapTransaction }} />
+      )}
     </Grid>
   )
 }

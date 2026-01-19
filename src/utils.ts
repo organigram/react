@@ -1,21 +1,3 @@
-import NominationComponent from './nomination/Component'
-import NominationProposal from './nomination/Proposal'
-import VoteComponent from './vote/Component'
-import VoteProposal from './vote/Proposal'
-import ERC20VoteComponent from './erc20Vote/Component'
-import ERC20VoteProposal from './erc20Vote/Proposal'
-
-export type ImportedReactNode = import('react').ReactNode
-
-export {
-  VoteComponent,
-  VoteProposal,
-  NominationComponent,
-  NominationProposal,
-  ERC20VoteComponent,
-  ERC20VoteProposal
-}
-
 export const secondsToHms = (d: number): string => {
   const days = Math.floor(d / 86400)
   const hours = Math.floor((d % 86400) / 3600)
@@ -36,3 +18,10 @@ export const secondsToHms = (d: number): string => {
       : ''
   return dDisplay + hDisplay + mDisplay + sDisplay
 }
+
+export const makeTestId: (id: string) => string = id => id
+// process.env.REACT_APP_CI != null
+//   ? id
+//   : Math.random()
+//     .toString(36)
+//     .substr(2, 9)
