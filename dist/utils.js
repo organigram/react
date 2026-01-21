@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.makeTestId = exports.secondsToHms = void 0;
-const secondsToHms = (d) => {
+export const secondsToHms = (d) => {
     const days = Math.floor(d / 86400);
     const hours = Math.floor((d % 86400) / 3600);
     const minutes = Math.floor((d % 3600) / 60);
@@ -16,11 +13,4 @@ const secondsToHms = (d) => {
         : '';
     return dDisplay + hDisplay + mDisplay + sDisplay;
 };
-exports.secondsToHms = secondsToHms;
-const makeTestId = id => id;
-exports.makeTestId = makeTestId;
-// process.env.REACT_APP_CI != null
-//   ? id
-//   : Math.random()
-//     .toString(36)
-//     .substr(2, 9)
+export const makeTestId = id => id;

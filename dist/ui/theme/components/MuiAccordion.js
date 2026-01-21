@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.MuiAccordion = void 0;
-exports.MuiAccordion = {
+export const MuiAccordion = {
     styleOverrides: {
         root: {
             '&.Mui-expanded': { margin: '0px' },

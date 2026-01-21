@@ -1,14 +1,8 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.TimeLeft = void 0;
-const react_1 = __importDefault(require("react"));
-const Alert_1 = __importDefault(require("@mui/material/Alert"));
-const react_i18next_1 = require("react-i18next");
-const TimeLeft = ({ election, procedure }) => {
-    const { t } = (0, react_i18next_1.useTranslation)();
+import { jsxs as _jsxs } from "react/jsx-runtime";
+import Alert from '@mui/material/Alert';
+import { useTranslation } from 'react-i18next';
+export const TimeLeft = ({ election, procedure }) => {
+    const { t } = useTranslation();
     const now = Date.now() / 1000;
     let timeLeft = '';
     if (election?.start) {
@@ -28,9 +22,5 @@ const TimeLeft = ({ election, procedure }) => {
                     's';
         }
     }
-    return timeLeft !== '' ? (react_1.default.createElement(Alert_1.default, { variant: 'filled', sx: { width: '100%', mb: 2 }, severity: 'info' },
-        t('Time left:'),
-        " ",
-        timeLeft)) : null;
+    return timeLeft !== '' ? (_jsxs(Alert, { variant: 'filled', sx: { width: '100%', mb: 2 }, severity: 'info', children: [t('Time left:'), " ", timeLeft] })) : null;
 };
-exports.TimeLeft = TimeLeft;

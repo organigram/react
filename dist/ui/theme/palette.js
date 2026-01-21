@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.palette = void 0;
-exports.palette = {
+export const palette = {
     primary: {
         main: '#3E85DE',
         light: '#659DE5',

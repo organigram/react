@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.MuiTextField = void 0;
-const palette_1 = require("../palette");
-exports.MuiTextField = {
+import { palette } from '../palette';
+export const MuiTextField = {
     defaultProps: {
         variant: 'standard',
         InputLabelProps: {
@@ -13,7 +10,7 @@ exports.MuiTextField = {
     styleOverrides: {
         root: {
             '.MuiOutlinedInput-root': {
-                background: palette_1.palette.background.default
+                background: palette.background.default
             }
         }
     }

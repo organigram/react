@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.MuiModal = void 0;
-exports.MuiModal = {
+export const MuiModal = {
     styleOverrides: {
         root: {
             zIndex: 1600

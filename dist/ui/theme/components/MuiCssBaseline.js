@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.MuiCssBaseline = void 0;
-exports.MuiCssBaseline = {
+export const MuiCssBaseline = {
     styleOverrides: `
     .react-flow__attribution {
       display: none;

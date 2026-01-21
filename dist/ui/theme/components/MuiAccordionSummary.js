@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.MuiAccordionSummary = void 0;
-exports.MuiAccordionSummary = {
+export const MuiAccordionSummary = {
     styleOverrides: {
         root: {
             '&.MuiButtonBase-root': {

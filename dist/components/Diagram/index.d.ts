@@ -13,6 +13,7 @@ export type TargetOrgan = SourceOrgan & {
 export type DiagramOrgan = {
     id: string;
     name: string;
+    description: string;
     entries: OrganEntry[];
     address?: string;
     deployed?: Organ;
@@ -27,7 +28,7 @@ export type DiagramProcedure = Procedure & {
     targetOrgans: TargetOrgan[];
     deployed?: EnhancedProcedure;
 };
-export interface OrganigramDiagram {
+export interface DiagramOrganigram {
     organs: DiagramOrgan[];
     procedures: DiagramProcedure[];
     assets: DiagramAsset[];
@@ -35,11 +36,11 @@ export interface OrganigramDiagram {
 export interface DiagramProps {
     direction: string;
     nodeTypes: NodeTypes;
-    organigram: OrganigramDiagram | null;
+    organigram: DiagramOrganigram | null;
     style?: Record<string, unknown>;
     controls?: boolean;
     options?: ReactFlowProps;
-    signer: Signer;
+    signer?: Signer | null;
+    isTabletOrAbove?: boolean;
 }
-declare const Diagram: React.FC<DiagramProps>;
-export default Diagram;
+export declare const Diagram: React.FC<DiagramProps>;

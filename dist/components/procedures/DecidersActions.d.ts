@@ -1,6 +1,10 @@
-export declare const DecidersActions: ({ procedure, accountInOrgans, proposal, wrapTransaction }: {
-    procedure: any;
-    accountInOrgans: any;
-    proposal: any;
-    wrapTransaction: any;
-}) => any;
+import React from 'react';
+import { AccountInOrgans, ERC20VoteProcedure, ProcedureProposal, VoteProcedure } from '@organigram/js';
+import { ElectionComponentProps } from './Election';
+export interface DecidersActionsProps {
+    procedure: ERC20VoteProcedure | VoteProcedure;
+    accountInOrgans: AccountInOrgans;
+    proposal: ProcedureProposal;
+    wrapTransaction: () => void;
+}
+export declare const DecidersActions: React.FC<ElectionComponentProps>;

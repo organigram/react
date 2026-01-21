@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.MuiTooltip = void 0;
-exports.MuiTooltip = {
+export const MuiTooltip = {
     defaultProps: {
         PopperProps: {
             sx: {

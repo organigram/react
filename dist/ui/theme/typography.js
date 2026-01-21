@@ -1,10 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.typography = void 0;
-const palette_1 = require("./palette");
-// import { mediaQueries } from './breakpoints'
-exports.typography = {
-    color: palette_1.palette.text.primary,
+import { palette } from './palette';
+export const typography = {
+    color: palette.text.primary,
     fontFamily: 'RobotoRegular',
     lineHeight: '132%',
     h1: {
@@ -12,9 +8,6 @@ exports.typography = {
         lineHeight: '100%',
         fontSize: '60px',
         letterSpacing: '-1.2px'
-        // [mediaQueries.smUp]: {
-        //   fontSize: '210px'
-        // }
     },
     h2: {
         fontSize: '40px',
@@ -34,7 +27,7 @@ exports.typography = {
         lineHeight: '25px',
         letterSpacing: '0.08em',
         textTransform: 'uppercase',
-        color: palette_1.palette.primary.main
+        color: palette.primary.main
     },
     button: {
         textTransform: 'none',

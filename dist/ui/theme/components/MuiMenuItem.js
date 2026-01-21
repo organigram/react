@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.MuiMenuItem = void 0;
-exports.MuiMenuItem = {
+export const MuiMenuItem = {
     styleOverrides: {
         root: {
             borderRadius: '8px',

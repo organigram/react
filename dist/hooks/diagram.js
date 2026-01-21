@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.useLayers = exports.layersState = void 0;
-const recoil_1 = require("recoil");
-exports.layersState = (0, recoil_1.atom)({
+import { atom, useRecoilState } from 'recoil';
+export const layersState = atom({
     key: 'layers',
     default: [
         {
@@ -17,5 +14,4 @@ exports.layersState = (0, recoil_1.atom)({
         }
     ]
 });
-const useLayers = () => (0, recoil_1.useRecoilState)(exports.layersState);
-exports.useLayers = useLayers;
+export const useLayers = () => useRecoilState(layersState);

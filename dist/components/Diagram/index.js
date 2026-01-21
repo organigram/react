@@ -1,47 +1,10 @@
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const react_1 = __importStar(require("react"));
-const js_1 = require("@organigram/js");
-const dagre_1 = __importDefault(require("dagre"));
-const react_flow_renderer_1 = __importStar(require("react-flow-renderer"));
-const diagram_1 = require("../../hooks/diagram");
-const ui_1 = require("../../ui");
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { getPermissionsSet } from '@organigram/js';
+import dagre from 'dagre';
+import ReactFlow, { Controls, applyEdgeChanges, applyNodeChanges, addEdge, Background } from 'react-flow-renderer';
+import { useLayers } from '../../hooks/diagram';
+import { mobileNavHeight } from '../../ui';
 const nodeWidth = 256;
 const procedureNodeHeight = 48;
 const organNodeHeight = 104;
@@ -49,7 +12,7 @@ const gridUnitSize = 16;
 const snapGrid = [gridUnitSize, gridUnitSize];
 const autodistribute = (nodes, edges, direction) => {
     const isHorizontal = direction === 'LR';
-    const dagreGraph = new dagre_1.default.graphlib.Graph();
+    const dagreGraph = new dagre.graphlib.Graph();
     dagreGraph.setDefaultEdgeLabel(() => ({}));
     dagreGraph.setGraph({ rankdir: direction });
     nodes.forEach((node) => {
@@ -62,7 +25,7 @@ const autodistribute = (nodes, edges, direction) => {
         if (edge != null)
             dagreGraph.setEdge(edge.source, edge.target);
     });
-    dagre_1.default.layout(dagreGraph);
+    dagre.layout(dagreGraph);
     nodes.forEach((node) => {
         const nodeWithPosition = dagreGraph.node(node.id);
         node.targetPosition = (isHorizontal ? 'left' : 'top');
@@ -80,52 +43,49 @@ const autodistribute = (nodes, edges, direction) => {
     });
     return nodes;
 };
-const Diagram = ({ direction, nodeTypes, organigram, style, controls, options, signer }) => {
-    const isTabletOrAbove = (0, ui_1.useBreakpoint)('sm');
-    const [layers] = (0, diagram_1.useLayers)();
-    const organsNodes = (0, react_1.useMemo)(() => organigram?.organs?.map((organ, index) => ({
+export const Diagram = ({ direction, nodeTypes, organigram, style, controls, options, signer, isTabletOrAbove }) => {
+    const [layers] = useLayers();
+    const organsNodes = useMemo(() => organigram?.organs?.map((organ, index) => ({
         id: `organ-${index}`,
         type: 'organ',
         position: { x: 0, y: 0 },
         data: { organ }
     })) ?? [], [organigram?.organs]);
-    const proceduresNodes = (0, react_1.useMemo)(() => organigram?.procedures?.map((procedure, index) => ({
+    const proceduresNodes = useMemo(() => organigram?.procedures?.map((procedure, index) => ({
         id: `procedure-${index}`,
         type: 'procedure',
         position: { x: 0, y: 0 },
         data: { procedure }
     })) ?? [], [organigram?.procedures]);
-    const assetsNodes = (0, react_1.useMemo)(() => organigram?.assets?.map((asset, index) => ({
+    const assetsNodes = useMemo(() => organigram?.assets?.map((asset, index) => ({
         id: `asset-${index}`,
         type: 'asset',
         position: { x: 0, y: 0 },
         data: { asset }
     })) ?? [], [organigram?.assets]);
-    const initialEdges = (0, react_1.useMemo)(() => proceduresNodes
+    const initialEdges = useMemo(() => proceduresNodes
         ?.map((procedureNode, index) => {
         const procedure = procedureNode.data.procedure;
         if (procedure == null) {
             return null;
         }
         const procedureSources = procedure.sourceOrgans
-            ?.filter(sourceOrgan => 
-        // layers[0].showAdminPermissions &&
-        sourceOrgan.organId != null &&
-            procedure.targetOrgans.find((targetOrgan) => (0, js_1.getPermissionsSet)(targetOrgan.permissions).findIndex(i => [
+            ?.filter(sourceOrgan => sourceOrgan.organId != null &&
+            procedure.targetOrgans.find((targetOrgan) => getPermissionsSet(targetOrgan.permissions).findIndex(i => [
                 'ALL_PROCEDURES',
                 'ADD_PROCEDURES',
                 'REMOVE_PROCEDURES'
             ].includes(i)) >= 0) != null
             ? true
             : layers[0].showEntriesPermissions &&
-                procedure.targetOrgans.find((targetOrgan) => (0, js_1.getPermissionsSet)(targetOrgan.permissions).findIndex(i => [
+                procedure.targetOrgans.find((targetOrgan) => getPermissionsSet(targetOrgan.permissions).findIndex(i => [
                     'ALL_ENTRIES',
                     'ADD_ENTRIES',
                     'REMOVE_ENTRIES'
                 ].includes(i)) >= 0) != null
                 ? true
                 : layers[0].showAssetsPermissions &&
-                    procedure.targetOrgans.find((targetOrgan) => (0, js_1.getPermissionsSet)(targetOrgan.permissions).findIndex(i => [
+                    procedure.targetOrgans.find((targetOrgan) => getPermissionsSet(targetOrgan.permissions).findIndex(i => [
                         'DEPOSIT_ETHER',
                         'WITHDRAW_ETHER',
                         'DEPOSIT_COINS',
@@ -157,20 +117,20 @@ const Diagram = ({ direction, nodeTypes, organigram, style, controls, options, s
             ];
         const procedureDestinations = procedure.targetOrgans
             ?.filter((targetOrgan) => layers[0].showAdminPermissions &&
-            (0, js_1.getPermissionsSet)(targetOrgan.permissions).findIndex(i => [
+            getPermissionsSet(targetOrgan.permissions).findIndex(i => [
                 'ALL_PROCEDURES',
                 'ADD_PROCEDURES',
                 'REMOVE_PROCEDURES'
             ].includes(i)) >= 0
             ? true
             : layers[0].showEntriesPermissions &&
-                (0, js_1.getPermissionsSet)(targetOrgan.permissions).findIndex(i => [
+                getPermissionsSet(targetOrgan.permissions).findIndex(i => [
                     'ALL_ENTRIES',
                     'ADD_ENTRIES',
                     'REMOVE_ENTRIES'
                 ].includes(i)) >= 0
                 ? true
-                : (0, js_1.getPermissionsSet)(targetOrgan.permissions).findIndex(i => [
+                : getPermissionsSet(targetOrgan.permissions).findIndex(i => [
                     'DEPOSIT_ETHER',
                     'WITHDRAW_ETHER',
                     'DEPOSIT_COINS',
@@ -194,23 +154,23 @@ const Diagram = ({ direction, nodeTypes, organigram, style, controls, options, s
     })
         .flat() ?? [], [layers, organsNodes, proceduresNodes, assetsNodes]);
     const distributedNodes = autodistribute([...organsNodes, ...proceduresNodes, ...assetsNodes], [...initialEdges], direction);
-    const [nodes, setNodes] = (0, react_1.useState)(distributedNodes);
-    const [edges, setEdges] = (0, react_1.useState)(initialEdges);
-    const onNodesChange = (0, react_1.useCallback)((changes) => {
-        setNodes((nds) => (0, react_flow_renderer_1.applyNodeChanges)(changes.filter(c => c != null), nds));
+    const [nodes, setNodes] = useState(distributedNodes);
+    const [edges, setEdges] = useState(initialEdges);
+    const onNodesChange = useCallback((changes) => {
+        setNodes((nds) => applyNodeChanges(changes.filter(c => c != null), nds));
     }, [setNodes]);
-    const onEdgesChange = (0, react_1.useCallback)((changes) => {
-        setEdges((eds) => (0, react_flow_renderer_1.applyEdgeChanges)(changes, eds));
+    const onEdgesChange = useCallback((changes) => {
+        setEdges((eds) => applyEdgeChanges(changes, eds));
     }, [setEdges]);
-    const onConnect = (0, react_1.useCallback)((connection) => {
-        setEdges((eds) => (0, react_flow_renderer_1.addEdge)(connection, eds));
+    const onConnect = useCallback((connection) => {
+        setEdges((eds) => addEdge(connection, eds));
     }, [setEdges]);
-    (0, react_1.useEffect)(() => {
+    useEffect(() => {
         const distributedNodes = autodistribute([...organsNodes, ...proceduresNodes, ...assetsNodes], initialEdges, direction);
         setNodes([...distributedNodes]);
         setEdges(initialEdges);
     }, [direction, initialEdges, organsNodes, proceduresNodes, assetsNodes]);
-    return (react_1.default.createElement(react_flow_renderer_1.default, { nodes: nodes.map(n => ({
+    return (_jsxs(ReactFlow, { nodes: nodes.map(n => ({
             ...n,
             data: { ...n.data, position: n.position }
         })),
@@ -224,15 +184,12 @@ const Diagram = ({ direction, nodeTypes, organigram, style, controls, options, s
         minZoom: 0.1,
         style,
         fitView: true,
-        ...options },
-        react_1.default.createElement(react_flow_renderer_1.Background, { gap: 16 }),
-        controls === true && (react_1.default.createElement(react_flow_renderer_1.Controls, { showInteractive: false, style: {
-                top: isTabletOrAbove
-                    ? '24px'
-                    : `calc(24px + ${ui_1.mobileNavHeight.toString()}px)`,
-                right: isTabletOrAbove ? '48px' : '4vw',
-                left: 'unset',
-                height: '81px'
-            } }))));
+        ...options, children: [_jsx(Background, { gap: 16 }), controls === true && (_jsx(Controls, { showInteractive: false, style: {
+                    top: isTabletOrAbove
+                        ? '24px'
+                        : `calc(24px + ${mobileNavHeight.toString()}px)`,
+                    right: isTabletOrAbove ? '48px' : '4vw',
+                    left: 'unset',
+                    height: '81px'
+                } }))] }));
 };
-exports.default = Diagram;
