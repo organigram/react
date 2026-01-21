@@ -1,20 +1,25 @@
 {
   "compilerOptions": {
+    "lib": ["ESNext"],
     "target": "ESNext",
-    "module": "commonjs",
-    "jsx": "react",
+    "jsx": "react-jsx",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "forceConsistentCasingInFileNames": true,
     "rootDir": "src",
     "outDir": "dist",
     "declaration": true,
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "noImplicitAny": false,
-    "paths": {
-      "@/*": ["./*"]
-    }
+    "isolatedModules": true,
+    "sourceMap": false,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "allowArbitraryExtensions": true
   },
   "include": ["src/**/*.ts", "index.d.ts"],
   "ignore": ["./jest.config.ts"]

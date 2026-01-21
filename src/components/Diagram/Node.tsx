@@ -6,7 +6,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 
 export const DiagramNode: React.FC<{
   onClick?: () => void
-  label: string
+  label?: string
   id?: string
   icon: React.ReactNode
 }> = ({ onClick, label, id, icon }) => (

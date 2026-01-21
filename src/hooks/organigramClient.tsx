@@ -1,15 +1,13 @@
 import { useState, useEffect, useMemo } from 'react'
 import {
+  TransactionOptions,
   OrganigramClient,
   type ProcedureType,
   type Organ,
   type Procedure
 } from '@organigram/js'
-
-import { TransactionOptions } from '@organigram/js'
+import { ethers, Signer } from 'ethers'
 import { atom } from 'recoil'
-
-import { Signer } from 'ethers'
 
 export const organigramIdState = atom({
   key: 'organigramId',
@@ -33,7 +31,7 @@ export type CreateProcedure = (
   ...args: unknown[]
 ) => Promise<Procedure & { type: ProcedureType }>
 
-export interface UseOrganigramClient {
+export interface OrganigramClientContext {
   organigramClient: OrganigramClient | null
   createOrgan: CreateOrgan
   createProcedure: CreateProcedure
@@ -42,9 +40,12 @@ export interface UseOrganigramClient {
 }
 
 export const useOrganigramClient = (
-  signer: Signer,
-  handleTransaction?: () => void
-): UseOrganigramClient => {
+  signer?: Signer | null,
+  handleTransaction?: (
+    tx: ethers.TransactionResponse,
+    description: string
+  ) => void
+): OrganigramClientContext => {
   const [organigramClient, setOrganigramClient] =
     useState<OrganigramClient | null>(null)
   const [isLoading, setLoading] = useState(false)
@@ -53,7 +54,9 @@ export const useOrganigramClient = (
       if (signer?.provider == null || signer == null) return
       const chainId = (await signer.provider?.getNetwork())?.chainId?.toString()
       const {
-        'OrganigramClientModule#OrganigramClient': organigramClientAddress
+        default: {
+          'OrganigramClientModule#OrganigramClient': organigramClientAddress
+        }
       } = await import(
         `@organigram/protocol/ignition/deployments/chain-${chainId}/deployed_addresses.json`
       )
@@ -63,7 +66,7 @@ export const useOrganigramClient = (
         signer.provider,
         signer
       ).catch((error: Error) => {
-        console.error('Error loading organigram client:', error.message)
+        console.error('Error loading Organigram client:', error.message)
       })
       if (_client != null) {
         setOrganigramClient(_client)
@@ -83,14 +86,11 @@ export const useOrganigramClient = (
       if (walletNonce != null && index != null) {
         transactionNonce = walletNonce + index
       }
-      return await organigramClient.createOrgan(
-        metadataCid,
-        (await signer?.getAddress()) as string,
-        {
-          nonce: transactionNonce,
-          onTransaction: handleTransaction
-        }
-      )
+      const signerAddress = (await signer?.getAddress()) as string
+      return await organigramClient.createOrgan(metadataCid, signerAddress, {
+        nonce: transactionNonce,
+        onTransaction: handleTransaction
+      })
     }
 
     const createProcedure: CreateProcedure = async (

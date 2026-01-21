@@ -10,22 +10,23 @@ import TuneIcon from '@mui/icons-material/Tune'
 import { makeTestId } from '../../utils'
 import { filterProposals, useDeployedProcedure } from '../../hooks/procedures'
 import { DiagramNode } from './Node'
-import ProcedureIcon from '../../assets/svg/procedure.svg'
 import { palette } from '../../ui'
-import { DiagramProcedure, OrganigramDiagram } from '.'
+import { DiagramProcedure, DiagramOrganigram } from '.'
 import { Signer } from 'ethers'
 
 export interface ProcedureNodeProps {
+  ProcedureIcon: React.FC<{ style: any }>
   data: { procedure: DiagramProcedure }
   sourcePosition?: Position
   targetPosition?: Position
   hideHandles?: boolean
   onClick?: () => void
-  signer: Signer
-  organigram: OrganigramDiagram
+  signer?: Signer | null
+  organigram: DiagramOrganigram
 }
 
 export const ProcedureNode: React.FC<ProcedureNodeProps> = ({
+  ProcedureIcon,
   data: { procedure },
   sourcePosition,
   targetPosition,

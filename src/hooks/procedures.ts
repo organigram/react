@@ -12,7 +12,7 @@ import { Signer } from 'ethers'
 import {
   DiagramOrgan,
   DiagramProcedure,
-  OrganigramDiagram
+  DiagramOrganigram
 } from '../components/Diagram'
 
 export type ProposalFilter = 'current' | 'drafts' | 'passed' | 'blocked' | ''
@@ -40,8 +40,8 @@ export const filterProposals: (
 
 export const useDeployedProcedure: (options: {
   procedure?: DiagramProcedure
-  organigram: OrganigramDiagram
-  signer: Signer
+  organigram: DiagramOrganigram
+  signer?: Signer | null
 }) => DiagramProcedure | undefined = ({ organigram, procedure, signer }) => {
   const { organigramClient } = useOrganigramClient(signer)
   const deployedOrgans = useDeployedOrgans({ organigram, signer })
@@ -60,7 +60,7 @@ export const useDeployedProcedure: (options: {
         try {
           deployed = await organigramClient
             ?.getProcedure(procedure.address)
-            .catch(e => {
+            .catch((e: Error) => {
               console.error(e)
               return undefined
             })

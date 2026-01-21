@@ -3,8 +3,7 @@ import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import { Handle, Position } from 'react-flow-renderer'
 import { DiagramNode } from './Node'
-import { palette } from '@/src/ui'
-import Token from '@/src/ui/assets/svg/token.svg'
+import { palette } from '../../../src/ui'
 
 export interface Asset {
   address: string
@@ -12,6 +11,7 @@ export interface Asset {
 }
 
 export interface AssetNodeProps {
+  Token: React.FC<{ style: any }>
   data: { asset: Asset }
   sourcePosition?: Position
   targetPosition?: Position
@@ -20,6 +20,7 @@ export interface AssetNodeProps {
 }
 
 export const AssetNode: React.FC<AssetNodeProps> = ({
+  Token,
   data: { asset },
   sourcePosition,
   targetPosition,

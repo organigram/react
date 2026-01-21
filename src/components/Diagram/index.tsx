@@ -25,7 +25,7 @@ import ReactFlow, {
 } from 'react-flow-renderer'
 
 import { useLayers } from '../../hooks/diagram'
-import { useBreakpoint, mobileNavHeight } from '../../ui'
+import { mobileNavHeight } from '../../ui'
 import { Signer } from 'ethers'
 
 export type SourceOrgan = {
@@ -37,6 +37,7 @@ export type TargetOrgan = SourceOrgan & { permissions: number }
 export type DiagramOrgan = {
   id: string
   name: string
+  description: string
   entries: OrganEntry[]
   address?: string
   deployed?: Organ
@@ -44,13 +45,13 @@ export type DiagramOrgan = {
 export type DiagramAsset = Asset & { id: string }
 export type DiagramProcedure = Procedure & {
   id: string
-  name: string,
+  name: string
   sourceOrgans: SourceOrgan[]
   targetOrgans: TargetOrgan[]
   deployed?: EnhancedProcedure
 }
 
-export interface OrganigramDiagram {
+export interface DiagramOrganigram {
   organs: DiagramOrgan[]
   procedures: DiagramProcedure[]
   assets: DiagramAsset[]
@@ -59,11 +60,12 @@ export interface OrganigramDiagram {
 export interface DiagramProps {
   direction: string
   nodeTypes: NodeTypes
-  organigram: OrganigramDiagram | null
+  organigram: DiagramOrganigram | null
   style?: Record<string, unknown>
   controls?: boolean
   options?: ReactFlowProps
-  signer: Signer
+  signer?: Signer | null
+  isTabletOrAbove?: boolean
 }
 
 const nodeWidth = 256
@@ -125,9 +127,9 @@ export const Diagram: React.FC<DiagramProps> = ({
   style,
   controls,
   options,
-  signer
+  signer,
+  isTabletOrAbove
 }) => {
-  const isTabletOrAbove = useBreakpoint('sm')
   const [layers] = useLayers()
   const organsNodes = useMemo(
     () =>

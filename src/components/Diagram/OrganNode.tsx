@@ -1,4 +1,5 @@
 import React from 'react'
+import { Signer } from 'ethers'
 import { Handle, Position } from 'react-flow-renderer'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
@@ -10,23 +11,22 @@ import { makeTestId } from '../../utils'
 import { useTranslation } from 'react-i18next'
 import { useDeployedOrgan } from '../../hooks/organs'
 import { DiagramNode } from './Node'
-import SummitIcon from '../../ui/assets/svg/summit.svg'
-import { Signer } from 'ethers'
-import { palette } from '@/src/ui'
+import { palette } from '../../../src/ui'
 
 export interface OrganNodeProps {
+  SummitIcon: React.FC<{ style: any }>
   data: { organ: DiagramOrgan; position?: { x: number; y: number } }
   sourcePosition?: Position
   targetPosition?: Position
   hideHandles?: boolean
-  signer: Signer
+  signer?: Signer | null
   onClick?: () => void
 }
 
-export const EntryCount: React.FC<{ organ: DiagramOrgan; signer: Signer }> = ({
-  organ: dbOrgan,
-  signer
-}) => {
+export const EntryCount: React.FC<{
+  organ: DiagramOrgan
+  signer?: Signer | null
+}> = ({ organ: dbOrgan, signer }) => {
   const { t } = useTranslation()
   const organ = useDeployedOrgan({ organ: dbOrgan, signer })
   const count = (
@@ -48,6 +48,7 @@ export const EntryCount: React.FC<{ organ: DiagramOrgan; signer: Signer }> = ({
 }
 
 export const OrganNode: React.FC<OrganNodeProps> = ({
+  SummitIcon,
   data,
   sourcePosition,
   targetPosition,

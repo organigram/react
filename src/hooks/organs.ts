@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { type Organ, OrganigramClient } from '@organigram/js'
 import { useOrganigramClient } from './organigramClient'
-import { DiagramOrgan } from '../components/Diagram'
+import { DiagramOrgan, DiagramOrganigram } from '../components/Diagram'
 import { Signer } from 'ethers'
 
 export const getDeployedOrganData = async (
@@ -22,7 +22,7 @@ export const useDeployedOrgan = ({
   signer
 }: {
   organ?: DiagramOrgan | null
-  signer: Signer
+  signer?: Signer | null
 }): DiagramOrgan | undefined => {
   // const deployed = useRecoilValue(deployedOrganState(organ?.address))
   const [deployedState, setDeployedState] = useState(organ)
@@ -44,10 +44,13 @@ export const useDeployedOrgan = ({
   return deployedState ?? undefined
 }
 
-export const useDeployedOrgans: ({ organigram, signer }) => DiagramOrgan[] = ({
+export const useDeployedOrgans = ({
   organigram,
   signer
-}) => {
+}: {
+  organigram: DiagramOrganigram
+  signer?: Signer | null
+}): DiagramOrgan[] => {
   const [deployedOrgans, setDeployedOrgans] = useState<DiagramOrgan[]>([])
   const { organigramClient } = useOrganigramClient(signer)
   useEffect(() => {
