@@ -1,32 +1,46 @@
 import React from 'react'
-import { ProcedureProposal, getPermissionsSet } from '@organigram/js'
-import { Handle, Position } from 'react-flow-renderer'
+import {
+  EnhancedProcedure,
+  Procedure,
+  ProcedureProposal,
+  getPermissionsSet
+} from '@organigram/js'
+import { Signer } from 'ethers'
+import { Handle, NodeProps, Position } from 'react-flow-renderer'
 import Badge from '@mui/material/Badge'
 import Grid from '@mui/material/Grid'
-import CircularProgress from '@mui/material/CircularProgress'
 import Card from '@mui/material/Card'
-import TuneIcon from '@mui/icons-material/Tune'
 
 import { makeTestId } from '../../utils'
 import { filterProposals, useDeployedProcedure } from '../../hooks/procedures'
 import { DiagramNode } from './Node'
 import { palette } from '../../ui'
-import { DiagramProcedure, DiagramOrganigram } from '.'
-import { Signer } from 'ethers'
+import { DiagramOrganigram, SourceOrgan, TargetOrgan } from '.'
+import ProcedureIcon from '../../ui/icons/Procedure'
+import { CircularProgress } from '@mui/material'
+import { Tune } from '@mui/icons-material'
+
+export type DiagramProcedure = Procedure & {
+  id: string
+  name: string
+  sourceOrgans: SourceOrgan[]
+  targetOrgans: TargetOrgan[]
+  deployed?: EnhancedProcedure
+}
 
 export interface ProcedureNodeProps {
-  ProcedureIcon: React.FC<{ style: any }>
-  data: { procedure: DiagramProcedure }
-  sourcePosition?: Position
-  targetPosition?: Position
   hideHandles?: boolean
   onClick?: () => void
   signer?: Signer | null
   organigram: DiagramOrganigram
 }
 
-export const ProcedureNode: React.FC<ProcedureNodeProps> = ({
-  ProcedureIcon,
+export const ProcedureNode: React.FC<
+  NodeProps<{
+    procedure: DiagramProcedure
+  }> &
+    ProcedureNodeProps
+> = ({
   data: { procedure },
   sourcePosition,
   targetPosition,
@@ -117,7 +131,7 @@ export const ProcedureNode: React.FC<ProcedureNodeProps> = ({
                     ) ||
                     getPermissionsSet(to.permissions).includes('ALL')
                 ) ? (
-                  <TuneIcon
+                  <Tune
                     style={{
                       width: '15px',
                       height: '15px',

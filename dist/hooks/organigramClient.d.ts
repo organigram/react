@@ -1,5 +1,4 @@
-import { OrganigramClient, type ProcedureType, type Organ, type Procedure } from '@organigram/js';
-import { TransactionOptions } from '@organigram/js';
+import { TransactionOptions, OrganigramClient, type ProcedureType, type Organ, type Procedure } from '@organigram/js';
 import { ethers, Signer } from 'ethers';
 export declare const organigramIdState: import("recoil").RecoilState<string>;
 export type CreateOrgan = (metadataCid: string, index?: number) => Promise<Organ>;

@@ -3,8 +3,9 @@ import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import { Handle, Position } from 'react-flow-renderer';
 import { DiagramNode } from './Node';
-import { palette } from '../../../src/ui';
-export const AssetNode = ({ Token, data: { asset }, sourcePosition, targetPosition, hideHandles, onClick }) => (_jsxs(_Fragment, { children: [_jsx(Card, { sx: {
+import { palette } from '../../ui';
+import TokenIcon from '../../ui/icons/Token';
+export const AssetNode = ({ data: { asset }, sourcePosition, targetPosition, hideHandles, onClick }) => (_jsxs(_Fragment, { children: [_jsx(Card, { sx: {
                 borderRadius: '16px',
                 backgroundColor: asset.address != null && asset.address !== '' ? '' : 'transparent',
                 border: asset.address != null && asset.address !== ''
@@ -20,7 +21,7 @@ export const AssetNode = ({ Token, data: { asset }, sourcePosition, targetPositi
                         width: 3 * 8,
                         height: 3 * 8,
                         backgroundColor: 'secondary.light2'
-                    }, children: _jsx(Token, { style: {
+                    }, children: _jsx(TokenIcon, { style: {
                             width: '14px',
                             height: '24px',
                             fill: 'none',

@@ -3,12 +3,13 @@ import { Handle, Position } from 'react-flow-renderer';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
-import PeopleAltRoundedIcon from '@mui/icons-material/PeopleAltRounded';
 import { makeTestId } from '../../utils';
 import { useTranslation } from 'react-i18next';
 import { useDeployedOrgan } from '../../hooks/organs';
 import { DiagramNode } from './Node';
-import { palette } from '../../../src/ui';
+import { palette } from '../../ui';
+import SummitIcon from '../../ui/icons/Summit';
+import { PeopleAltRounded } from '@mui/icons-material';
 export const EntryCount = ({ organ: dbOrgan, signer }) => {
     const { t } = useTranslation();
     const organ = useDeployedOrgan({ organ: dbOrgan, signer });
@@ -22,7 +23,7 @@ export const EntryCount = ({ organ: dbOrgan, signer }) => {
         : 'entry';
     return (_jsxs("span", { id: makeTestId(`organ-${organ?.name}-entry-count`), children: [count, " ", t(singularOrPlural)] }));
 };
-export const OrganNode = ({ SummitIcon, data, sourcePosition, targetPosition, hideHandles, onClick, signer }) => {
+export const OrganNode = ({ data, sourcePosition, targetPosition, hideHandles, onClick, signer }) => {
     const isMaster = data?.position?.y === 0;
     const isDeployed = data?.organ?.address != null && data?.organ.address !== '';
     return (_jsxs(_Fragment, { children: [_jsxs(Card, { sx: {
@@ -54,5 +55,5 @@ export const OrganNode = ({ SummitIcon, data, sourcePosition, targetPosition, hi
                                     width: 3 * 8,
                                     height: 3 * 8,
                                     backgroundColor: isMaster ? 'violet.light3' : 'primary.light4'
-                                }, children: isMaster ? (_jsx(SummitIcon, { style: { width: '15px', height: '15px' } })) : (_jsx(PeopleAltRoundedIcon, { style: { width: '15px', height: '15px' } })) }), label: data.organ?.name, id: makeTestId(`expand-organ-${data.organ?.name}`) }) }), _jsx(Grid, { container: true, justifyContent: 'flex-start', alignItems: 'center', pt: 1, children: _jsx(EntryCount, { organ: data.organ, signer: signer }) })] }), hideHandles !== true && (_jsxs(_Fragment, { children: [_jsx(Handle, { type: 'source', position: sourcePosition ?? Position.Top }), _jsx(Handle, { type: 'target', position: targetPosition ?? Position.Bottom })] }))] }));
+                                }, children: isMaster ? (_jsx(SummitIcon, { style: { width: '15px', height: '15px' } })) : (_jsx(PeopleAltRounded, { style: { width: '15px', height: '15px' } })) }), label: data.organ?.name, id: makeTestId(`expand-organ-${data.organ?.name}`) }) }), _jsx(Grid, { container: true, justifyContent: 'flex-start', alignItems: 'center', pt: 1, children: _jsx(EntryCount, { organ: data.organ, signer: signer }) })] }), hideHandles !== true && (_jsxs(_Fragment, { children: [_jsx(Handle, { type: 'source', position: sourcePosition ?? Position.Top }), _jsx(Handle, { type: 'target', position: targetPosition ?? Position.Bottom })] }))] }));
 };

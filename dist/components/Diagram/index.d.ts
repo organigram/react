@@ -1,7 +1,9 @@
 import React from 'react';
-import { EnhancedProcedure, Organ, OrganEntry, type Asset, type Procedure } from '@organigram/js';
-import { type NodeTypes, type ReactFlowProps } from 'react-flow-renderer';
 import { Signer } from 'ethers';
+import { type ReactFlowProps } from 'react-flow-renderer';
+import { DiagramProcedure } from './ProcedureNode';
+import { DiagramOrgan } from './OrganNode';
+import { DiagramAsset } from './AssetNode';
 export type SourceOrgan = {
     organId: string;
     procedureId: string;
@@ -10,24 +12,6 @@ export type SourceOrgan = {
 export type TargetOrgan = SourceOrgan & {
     permissions: number;
 };
-export type DiagramOrgan = {
-    id: string;
-    name: string;
-    description: string;
-    entries: OrganEntry[];
-    address?: string;
-    deployed?: Organ;
-};
-export type DiagramAsset = Asset & {
-    id: string;
-};
-export type DiagramProcedure = Procedure & {
-    id: string;
-    name: string;
-    sourceOrgans: SourceOrgan[];
-    targetOrgans: TargetOrgan[];
-    deployed?: EnhancedProcedure;
-};
 export interface DiagramOrganigram {
     organs: DiagramOrgan[];
     procedures: DiagramProcedure[];
@@ -35,7 +19,6 @@ export interface DiagramOrganigram {
 }
 export interface DiagramProps {
     direction: string;
-    nodeTypes: NodeTypes;
     organigram: DiagramOrganigram | null;
     style?: Record<string, unknown>;
     controls?: boolean;

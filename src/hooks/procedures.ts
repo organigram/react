@@ -9,11 +9,9 @@ import {
 import { useDeployedOrgans } from './organs'
 import { useOrganigramClient } from './organigramClient'
 import { Signer } from 'ethers'
-import {
-  DiagramOrgan,
-  DiagramProcedure,
-  DiagramOrganigram
-} from '../components/Diagram'
+import { DiagramOrganigram } from '../components/Diagram'
+import { DiagramProcedure } from '../components/Diagram/ProcedureNode'
+import { DiagramOrgan } from '../components/Diagram/OrganNode'
 
 export type ProposalFilter = 'current' | 'drafts' | 'passed' | 'blocked' | ''
 

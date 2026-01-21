@@ -1,19 +1,12 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
-import {
-  EnhancedProcedure,
-  getPermissionsSet,
-  Organ,
-  OrganEntry,
-  type Asset,
-  type Procedure
-} from '@organigram/js'
+import { getPermissionsSet, type Asset } from '@organigram/js'
+import { Signer } from 'ethers'
 import dagre from 'dagre'
 import ReactFlow, {
   Controls,
   applyEdgeChanges,
   applyNodeChanges,
   addEdge,
-  type NodeTypes,
   type Node,
   type Edge,
   type Position,
@@ -21,12 +14,16 @@ import ReactFlow, {
   type ReactFlowProps,
   type NodeChange,
   type Connection,
-  type EdgeChange
+  type EdgeChange,
+  NodeProps
 } from 'react-flow-renderer'
+import { NoSsr } from '@mui/material'
 
 import { useLayers } from '../../hooks/diagram'
 import { mobileNavHeight } from '../../ui'
-import { Signer } from 'ethers'
+import { DiagramProcedure, ProcedureNode } from './ProcedureNode'
+import { DiagramOrgan, OrganNode } from './OrganNode'
+import { DiagramAsset, AssetNode } from './AssetNode'
 
 export type SourceOrgan = {
   organId: string
@@ -34,22 +31,6 @@ export type SourceOrgan = {
   assetId: string
 }
 export type TargetOrgan = SourceOrgan & { permissions: number }
-export type DiagramOrgan = {
-  id: string
-  name: string
-  description: string
-  entries: OrganEntry[]
-  address?: string
-  deployed?: Organ
-}
-export type DiagramAsset = Asset & { id: string }
-export type DiagramProcedure = Procedure & {
-  id: string
-  name: string
-  sourceOrgans: SourceOrgan[]
-  targetOrgans: TargetOrgan[]
-  deployed?: EnhancedProcedure
-}
 
 export interface DiagramOrganigram {
   organs: DiagramOrgan[]
@@ -59,7 +40,6 @@ export interface DiagramOrganigram {
 
 export interface DiagramProps {
   direction: string
-  nodeTypes: NodeTypes
   organigram: DiagramOrganigram | null
   style?: Record<string, unknown>
   controls?: boolean
@@ -68,6 +48,13 @@ export interface DiagramProps {
   isTabletOrAbove?: boolean
 }
 
+const nodeTypes = {
+  procedure: ProcedureNode as React.FC<
+    NodeProps<{ procedure: DiagramProcedure }>
+  >,
+  organ: OrganNode as React.FC<NodeProps<{ organ: DiagramOrgan }>>,
+  asset: AssetNode as React.FC<NodeProps<{ asset: Asset }>>
+}
 const nodeWidth = 256
 const procedureNodeHeight = 48
 const organNodeHeight = 104
@@ -122,7 +109,6 @@ const autodistribute: (
 
 export const Diagram: React.FC<DiagramProps> = ({
   direction,
-  nodeTypes,
   organigram,
   style,
   controls,
@@ -343,39 +329,41 @@ export const Diagram: React.FC<DiagramProps> = ({
   }, [direction, initialEdges, organsNodes, proceduresNodes, assetsNodes])
 
   return (
-    <ReactFlow
-      {...{
-        nodes: nodes.map(n => ({
-          ...n,
-          data: { ...n.data, position: n.position }
-        })),
-        edges,
-        onNodesChange,
-        onEdgesChange,
-        onConnect,
-        nodeTypes,
-        snapGrid,
-        snapToGrid: true,
-        minZoom: 0.1,
-        style,
-        fitView: true,
-        ...options
-      }}
-    >
-      <Background gap={16} />
-      {controls === true && (
-        <Controls
-          showInteractive={false}
-          style={{
-            top: isTabletOrAbove
-              ? '24px'
-              : `calc(24px + ${mobileNavHeight.toString()}px)`,
-            right: isTabletOrAbove ? '48px' : '4vw',
-            left: 'unset',
-            height: '81px'
-          }}
-        />
-      )}
-    </ReactFlow>
+    <NoSsr>
+      <ReactFlow
+        {...{
+          nodes: nodes.map(n => ({
+            ...n,
+            data: { ...n.data, position: n.position }
+          })),
+          edges,
+          onNodesChange,
+          onEdgesChange,
+          onConnect,
+          nodeTypes,
+          snapGrid,
+          snapToGrid: true,
+          minZoom: 0.1,
+          style,
+          fitView: true,
+          ...options
+        }}
+      >
+        <Background gap={16} />
+        {controls === true && (
+          <Controls
+            showInteractive={false}
+            style={{
+              top: isTabletOrAbove
+                ? '24px'
+                : `calc(24px + ${mobileNavHeight.toString()}px)`,
+              right: isTabletOrAbove ? '48px' : '4vw',
+              left: 'unset',
+              height: '81px'
+            }}
+          />
+        )}
+      </ReactFlow>
+    </NoSsr>
   )
 }

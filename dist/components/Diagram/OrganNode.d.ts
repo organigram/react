@@ -1,11 +1,16 @@
 import React from 'react';
+import { Organ, OrganEntry } from '@organigram/js';
 import { Signer } from 'ethers';
-import { Position } from 'react-flow-renderer';
-import { DiagramOrgan } from '.';
+import { NodeProps } from 'react-flow-renderer';
+export type DiagramOrgan = {
+    id: string;
+    name: string;
+    description: string;
+    entries: OrganEntry[];
+    address?: string;
+    deployed?: Organ;
+};
 export interface OrganNodeProps {
-    SummitIcon: React.FC<{
-        style: any;
-    }>;
     data: {
         organ: DiagramOrgan;
         position?: {
@@ -13,8 +18,6 @@ export interface OrganNodeProps {
             y: number;
         };
     };
-    sourcePosition?: Position;
-    targetPosition?: Position;
     hideHandles?: boolean;
     signer?: Signer | null;
     onClick?: () => void;
@@ -23,4 +26,4 @@ export declare const EntryCount: React.FC<{
     organ: DiagramOrgan;
     signer?: Signer | null;
 }>;
-export declare const OrganNode: React.FC<OrganNodeProps>;
+export declare const OrganNode: React.FC<NodeProps & OrganNodeProps>;

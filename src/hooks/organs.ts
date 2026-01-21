@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { type Organ, OrganigramClient } from '@organigram/js'
 import { useOrganigramClient } from './organigramClient'
-import { DiagramOrgan, DiagramOrganigram } from '../components/Diagram'
+import { DiagramOrganigram } from '../components/Diagram'
 import { Signer } from 'ethers'
+import { DiagramOrgan } from '../components/Diagram/OrganNode'
 
 export const getDeployedOrganData = async (
   organAddress?: string | null,

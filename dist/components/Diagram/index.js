@@ -3,8 +3,17 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { getPermissionsSet } from '@organigram/js';
 import dagre from 'dagre';
 import ReactFlow, { Controls, applyEdgeChanges, applyNodeChanges, addEdge, Background } from 'react-flow-renderer';
+import { NoSsr } from '@mui/material';
 import { useLayers } from '../../hooks/diagram';
 import { mobileNavHeight } from '../../ui';
+import { ProcedureNode } from './ProcedureNode';
+import { OrganNode } from './OrganNode';
+import { AssetNode } from './AssetNode';
+const nodeTypes = {
+    procedure: ProcedureNode,
+    organ: OrganNode,
+    asset: AssetNode
+};
 const nodeWidth = 256;
 const procedureNodeHeight = 48;
 const organNodeHeight = 104;
@@ -43,7 +52,7 @@ const autodistribute = (nodes, edges, direction) => {
     });
     return nodes;
 };
-export const Diagram = ({ direction, nodeTypes, organigram, style, controls, options, signer, isTabletOrAbove }) => {
+export const Diagram = ({ direction, organigram, style, controls, options, signer, isTabletOrAbove }) => {
     const [layers] = useLayers();
     const organsNodes = useMemo(() => organigram?.organs?.map((organ, index) => ({
         id: `organ-${index}`,
@@ -170,26 +179,26 @@ export const Diagram = ({ direction, nodeTypes, organigram, style, controls, opt
         setNodes([...distributedNodes]);
         setEdges(initialEdges);
     }, [direction, initialEdges, organsNodes, proceduresNodes, assetsNodes]);
-    return (_jsxs(ReactFlow, { nodes: nodes.map(n => ({
-            ...n,
-            data: { ...n.data, position: n.position }
-        })),
-        edges,
-        onNodesChange,
-        onEdgesChange,
-        onConnect,
-        nodeTypes,
-        snapGrid,
-        snapToGrid: true,
-        minZoom: 0.1,
-        style,
-        fitView: true,
-        ...options, children: [_jsx(Background, { gap: 16 }), controls === true && (_jsx(Controls, { showInteractive: false, style: {
-                    top: isTabletOrAbove
-                        ? '24px'
-                        : `calc(24px + ${mobileNavHeight.toString()}px)`,
-                    right: isTabletOrAbove ? '48px' : '4vw',
-                    left: 'unset',
-                    height: '81px'
-                } }))] }));
+    return (_jsx(NoSsr, { children: _jsxs(ReactFlow, { nodes: nodes.map(n => ({
+                ...n,
+                data: { ...n.data, position: n.position }
+            })),
+            edges,
+            onNodesChange,
+            onEdgesChange,
+            onConnect,
+            nodeTypes,
+            snapGrid,
+            snapToGrid: true,
+            minZoom: 0.1,
+            style,
+            fitView: true,
+            ...options, children: [_jsx(Background, { gap: 16 }), controls === true && (_jsx(Controls, { showInteractive: false, style: {
+                        top: isTabletOrAbove
+                            ? '24px'
+                            : `calc(24px + ${mobileNavHeight.toString()}px)`,
+                        right: isTabletOrAbove ? '48px' : '4vw',
+                        left: 'unset',
+                        height: '81px'
+                    } }))] }) }));
 };

@@ -1,23 +1,33 @@
 import React from 'react'
+import { Organ, OrganEntry } from '@organigram/js'
 import { Signer } from 'ethers'
-import { Handle, Position } from 'react-flow-renderer'
+import { Handle, NodeProps, Position } from 'react-flow-renderer'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
-import PeopleAltRoundedIcon from '@mui/icons-material/PeopleAltRounded'
 
-import { DiagramOrgan } from '.'
 import { makeTestId } from '../../utils'
 import { useTranslation } from 'react-i18next'
 import { useDeployedOrgan } from '../../hooks/organs'
 import { DiagramNode } from './Node'
-import { palette } from '../../../src/ui'
+import { palette } from '../../ui'
+import SummitIcon from '../../ui/icons/Summit'
+import { PeopleAltRounded } from '@mui/icons-material'
+
+export type DiagramOrgan = {
+  id: string
+  name: string
+  description: string
+  entries: OrganEntry[]
+  address?: string
+  deployed?: Organ
+}
 
 export interface OrganNodeProps {
-  SummitIcon: React.FC<{ style: any }>
-  data: { organ: DiagramOrgan; position?: { x: number; y: number } }
-  sourcePosition?: Position
-  targetPosition?: Position
+  data: {
+    organ: DiagramOrgan
+    position?: { x: number; y: number }
+  }
   hideHandles?: boolean
   signer?: Signer | null
   onClick?: () => void
@@ -47,8 +57,7 @@ export const EntryCount: React.FC<{
   )
 }
 
-export const OrganNode: React.FC<OrganNodeProps> = ({
-  SummitIcon,
+export const OrganNode: React.FC<NodeProps & OrganNodeProps> = ({
   data,
   sourcePosition,
   targetPosition,
@@ -117,7 +126,7 @@ export const OrganNode: React.FC<OrganNodeProps> = ({
                 {isMaster ? (
                   <SummitIcon style={{ width: '15px', height: '15px' }} />
                 ) : (
-                  <PeopleAltRoundedIcon
+                  <PeopleAltRounded
                     style={{ width: '15px', height: '15px' }}
                   />
                 )}

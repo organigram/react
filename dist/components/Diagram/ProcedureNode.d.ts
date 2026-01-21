@@ -1,19 +1,21 @@
 import React from 'react';
-import { Position } from 'react-flow-renderer';
-import { DiagramProcedure, DiagramOrganigram } from '.';
+import { EnhancedProcedure, Procedure } from '@organigram/js';
 import { Signer } from 'ethers';
+import { NodeProps } from 'react-flow-renderer';
+import { DiagramOrganigram, SourceOrgan, TargetOrgan } from '.';
+export type DiagramProcedure = Procedure & {
+    id: string;
+    name: string;
+    sourceOrgans: SourceOrgan[];
+    targetOrgans: TargetOrgan[];
+    deployed?: EnhancedProcedure;
+};
 export interface ProcedureNodeProps {
-    ProcedureIcon: React.FC<{
-        style: any;
-    }>;
-    data: {
-        procedure: DiagramProcedure;
-    };
-    sourcePosition?: Position;
-    targetPosition?: Position;
     hideHandles?: boolean;
     onClick?: () => void;
     signer?: Signer | null;
     organigram: DiagramOrganigram;
 }
-export declare const ProcedureNode: React.FC<ProcedureNodeProps>;
+export declare const ProcedureNode: React.FC<NodeProps<{
+    procedure: DiagramProcedure;
+}> & ProcedureNodeProps>;

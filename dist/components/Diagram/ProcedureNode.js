@@ -3,14 +3,15 @@ import { getPermissionsSet } from '@organigram/js';
 import { Handle, Position } from 'react-flow-renderer';
 import Badge from '@mui/material/Badge';
 import Grid from '@mui/material/Grid';
-import CircularProgress from '@mui/material/CircularProgress';
 import Card from '@mui/material/Card';
-import TuneIcon from '@mui/icons-material/Tune';
 import { makeTestId } from '../../utils';
 import { filterProposals, useDeployedProcedure } from '../../hooks/procedures';
 import { DiagramNode } from './Node';
 import { palette } from '../../ui';
-export const ProcedureNode = ({ ProcedureIcon, data: { procedure }, sourcePosition, targetPosition, hideHandles, onClick, organigram, signer }) => {
+import ProcedureIcon from '../../ui/icons/Procedure';
+import { CircularProgress } from '@mui/material';
+import { Tune } from '@mui/icons-material';
+export const ProcedureNode = ({ data: { procedure }, sourcePosition, targetPosition, hideHandles, onClick, organigram, signer }) => {
     const deployedProcedure = useDeployedProcedure({
         procedure,
         organigram,
@@ -45,7 +46,7 @@ export const ProcedureNode = ({ ProcedureIcon, data: { procedure }, sourcePositi
                             }, children: procedure.targetOrgans.some(to => getPermissionsSet(to.permissions).includes('ADD_PROCEDURES') ||
                                 getPermissionsSet(to.permissions).includes('REMOVE_PROCEDURES') ||
                                 getPermissionsSet(to.permissions).includes('ALL_PROCEDURES') ||
-                                getPermissionsSet(to.permissions).includes('ALL')) ? (_jsx(TuneIcon, { style: {
+                                getPermissionsSet(to.permissions).includes('ALL')) ? (_jsx(Tune, { style: {
                                     width: '15px',
                                     height: '15px',
                                     transform: 'rotate(90deg)'

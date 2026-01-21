@@ -1,26 +1,26 @@
 import React from 'react'
+import { Asset } from '@organigram/js'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
-import { Handle, Position } from 'react-flow-renderer'
+import { Handle, NodeProps, Position } from 'react-flow-renderer'
 import { DiagramNode } from './Node'
-import { palette } from '../../../src/ui'
+import { palette } from '../../ui'
+import TokenIcon from '../../ui/icons/Token'
 
-export interface Asset {
+export type DiagramAsset = Asset & {
+  id: string
   address: string
   name: string
 }
 
 export interface AssetNodeProps {
   Token: React.FC<{ style: any }>
-  data: { asset: Asset }
-  sourcePosition?: Position
-  targetPosition?: Position
+  data: { asset: DiagramAsset }
   hideHandles?: boolean
-  onClick: (asset: Asset) => void
+  onClick: (asset: DiagramAsset) => void
 }
 
-export const AssetNode: React.FC<AssetNodeProps> = ({
-  Token,
+export const AssetNode: React.FC<NodeProps & AssetNodeProps> = ({
   data: { asset },
   sourcePosition,
   targetPosition,
@@ -59,7 +59,7 @@ export const AssetNode: React.FC<AssetNodeProps> = ({
               backgroundColor: 'secondary.light2'
             }}
           >
-            <Token
+            <TokenIcon
               style={{
                 width: '14px',
                 height: '24px',
