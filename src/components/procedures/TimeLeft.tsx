@@ -1,8 +1,15 @@
 import React from 'react'
 import Alert from '@mui/material/Alert'
 import { useTranslation } from 'react-i18next'
+import { Election, ERC20VoteProcedure, VoteProcedure } from '@organigram/js'
 
-export const TimeLeft = ({ election, procedure }) => {
+export const TimeLeft = ({
+  election,
+  procedure
+}: {
+  election: Election | undefined
+  procedure: ERC20VoteProcedure | VoteProcedure
+}) => {
   const { t } = useTranslation()
   const now = Date.now() / 1000
   let timeLeft = ''

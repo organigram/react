@@ -1,9 +1,10 @@
 import React from 'react'
 import { ERC20VoteProcedure } from '@organigram/js'
-import { secondsToHms } from '../../../utils'
+import { secondsToHms } from '../../utils'
 import { useTranslation } from 'react-i18next'
+import { ElectionComponent } from './Election'
 
-export const ERC20VoteProcedureComponent = ({
+const ERC20VoteProcedureComponent = ({
   procedure
 }: {
   procedure: ERC20VoteProcedure
@@ -38,3 +39,10 @@ export const ERC20VoteProcedureComponent = ({
     <></>
   )
 }
+
+const erc20Vote = {
+  Component: ERC20VoteProcedureComponent,
+  Proposal: ElectionComponent
+}
+
+export default erc20Vote

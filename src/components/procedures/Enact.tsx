@@ -4,8 +4,13 @@ import Button from '@mui/material/Button'
 import Alert from '@mui/material/Alert'
 import { Provider } from 'ethers'
 import { Organ } from '@organigram/js'
+import { ElectionComponentProps } from './Election'
 
-export const VoteEnded = ({ procedure, proposal, wrapTransaction }) => {
+export const VoteEnded: React.FC<ElectionComponentProps> = ({
+  procedure,
+  proposal,
+  wrapTransaction
+}) => {
   const { t } = useTranslation()
 
   const election = procedure.elections?.find(
@@ -31,22 +36,23 @@ export const VoteEnded = ({ procedure, proposal, wrapTransaction }) => {
     handler()
   })
 
-  return parseInt(election.votesCount) >= quorum && election.approved ? ( // Vote is ended. Votes has quorum.(
-    <Button
-      variant='contained'
-      className='enact-proposal'
-      fullWidth
-      onClick={() => {
-        procedure
-          .adoptProposal(proposal.key, { onTransaction: wrapTransaction })
-          .catch((error: Error) => console.error(error.message))
-      }}
-    >
-      {t('Enact proposal')}
-    </Button>
-  ) : (
-    <Alert variant='filled' sx={{ width: '100%' }} severity='info'>
-      {t('Vote has ended with no decision.')}
-    </Alert>
-  )
+  return parseInt(election?.votesCount ?? '0') >= quorum &&
+    election?.approved ? (
+      <Button
+        variant='contained'
+        className='enact-proposal'
+        fullWidth
+        onClick={() => {
+          procedure
+            .adoptProposal(proposal.key, { onTransaction: wrapTransaction })
+            .catch((error: Error) => console.error(error.message))
+        }}
+      >
+        {t('Enact proposal')}
+      </Button>
+    ) : (
+      <Alert variant='filled' sx={{ width: '100%' }} severity='info'>
+        {t('Vote has ended with no decision.')}
+      </Alert>
+    )
 }

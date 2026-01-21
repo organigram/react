@@ -1,14 +1,14 @@
 import React from 'react'
-import { useTranslation } from 'react-i18next'
 import Button from '@mui/material/Button'
+import { ElectionComponentProps } from './Election'
 
-export const VetoProposal = ({
+export const VetoProposal: React.FC<ElectionComponentProps> = ({
   accountInOrgans,
   procedure,
   proposal,
-  wrapTransaction
+  wrapTransaction,
+  t
 }) => {
-  const { t } = useTranslation()
   return accountInOrgans?.moderators ? (
     <Button
       color='secondary'

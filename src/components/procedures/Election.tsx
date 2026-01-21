@@ -1,16 +1,33 @@
 import React from 'react'
+import {
+  ERC20VoteProcedure,
+  ProcedureProposal,
+  TransactionOptions,
+  VoteProcedure
+} from '@organigram/js'
 import Grid from '@mui/material/Grid'
 import Alert from '@mui/material/Alert'
 import { VetoProposal } from './Veto'
 import { DecidersActions } from './DecidersActions'
 import { VoteEnded } from './Enact'
 
-export const ElectionComponent = ({
+export interface ElectionComponentProps {
+  procedure: ERC20VoteProcedure | VoteProcedure
+  proposal: ProcedureProposal
+  accountInOrgans: {
+    proposers?: boolean
+    moderators?: boolean
+    deciders?: boolean
+  }
+  wrapTransaction: TransactionOptions['onTransaction']
+  t: (key: string) => string
+}
+export const ElectionComponent: React.FC<ElectionComponentProps> = ({
   procedure,
   proposal,
   accountInOrgans,
   wrapTransaction,
-  t = key => key
+  t = (key: string) => key
 }) => {
   const election = procedure.elections?.find(
     (b: { proposalKey: any }) => b.proposalKey && b.proposalKey === proposal.key
@@ -41,14 +58,16 @@ export const ElectionComponent = ({
         <></>
       ) : now < parseInt(election.start) ? ( // Election is started. Vote is not started.
         <VetoProposal
-          {...{ procedure, proposal, accountInOrgans, wrapTransaction }}
+          {...{ procedure, proposal, accountInOrgans, wrapTransaction, t }}
         />
       ) : now < parseInt(election.start) + parseInt(procedure.voteDuration) ? ( // Vote is started. Vote is not ended.
         <DecidersActions
-          {...{ procedure, proposal, accountInOrgans, wrapTransaction }}
+          {...{ procedure, proposal, accountInOrgans, wrapTransaction, t }}
         />
       ) : (
-        <VoteEnded {...{ procedure, proposal, wrapTransaction }} />
+        <VoteEnded
+          {...{ procedure, proposal, wrapTransaction, t, accountInOrgans }}
+        />
       )}
     </Grid>
   )

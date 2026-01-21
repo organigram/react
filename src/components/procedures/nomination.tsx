@@ -7,6 +7,13 @@ import {
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 
+export const NominationProcedureComponent = ({
+  procedure
+}: {
+  procedure: NominationProcedure
+}) => {
+  return <></>
+}
 export interface NominationProposalProps {
   procedure: NominationProcedure
   proposal: ProcedureProposal
@@ -19,7 +26,7 @@ export interface NominationProposalProps {
   t: (key: string, options?: any) => string
 }
 
-const NominationProposalComponent = ({
+const NominationProposal = ({
   procedure,
   proposal,
   accountInOrgans,
@@ -67,4 +74,9 @@ const NominationProposalComponent = ({
   )
 }
 
-export default NominationProposalComponent
+const vote = {
+  Component: NominationProcedureComponent,
+  Proposal: NominationProposal
+}
+
+export default vote
