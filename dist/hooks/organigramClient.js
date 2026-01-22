@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { OrganigramClient } from '@organigram/js';
+import { OrganigramClient, organigramClientDeployedAddresses } from '@organigram/js';
 import { atom } from 'recoil';
 export const organigramIdState = atom({
     key: 'organigramId',
@@ -14,9 +14,8 @@ export const useOrganigramClient = (signer, handleTransaction) => {
             if (signer?.provider == null || signer == null)
                 return;
             const chainId = (await signer.provider?.getNetwork())?.chainId?.toString();
-            const { default: { 'OrganigramClientModule#OrganigramClient': organigramClientAddress } } = await import(`@organigram/protocol/ignition/deployments/chain-${chainId}/deployed_addresses.json`);
             setLoading(true);
-            const _client = await OrganigramClient.load(organigramClientAddress, signer.provider, signer).catch((error) => {
+            const _client = await OrganigramClient.load(organigramClientDeployedAddresses[chainId], signer.provider, signer).catch((error) => {
                 console.error('Error loading Organigram client:', error.message);
             });
             if (_client != null) {

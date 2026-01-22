@@ -36,8 +36,11 @@
   "scripts": {
     "build": "pnpm clean && tsc --pretty",
     "clean": "rm -rf ./dist",
+    "dev": "vite",
     "typecheck": "tsc --noEmit --incremental false",
-    "test": "jest"
+    "test": "vitest run",
+    "test:dev": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
     "@mui/icons-material": "^5.18.0",
@@ -45,11 +48,17 @@
     "@organigram/protocol": "workspace:^",
     "@types/dagre": "^0.7.53",
     "@types/react": "^18.3.3",
+    "@vitejs/plugin-react": "^5.1.2",
+    "@vitest/browser-playwright": "^4.0.17",
+    "@vitest/coverage-v8": "4.0.17",
     "ethers": "^6.16.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-i18next": "^15.0.0",
     "recoil": "^0.7.7",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "vite": "^7.3.1",
+    "vitest": "^4.0.17",
+    "vitest-browser-react": "^2.0.2"
   }
 }

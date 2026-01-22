@@ -4,7 +4,8 @@ import {
   OrganigramClient,
   type ProcedureType,
   type Organ,
-  type Procedure
+  type Procedure,
+  organigramClientDeployedAddresses
 } from '@organigram/js'
 import { ethers, Signer } from 'ethers'
 import { atom } from 'recoil'
@@ -53,16 +54,9 @@ export const useOrganigramClient = (
     const initManager: () => Promise<void> = async () => {
       if (signer?.provider == null || signer == null) return
       const chainId = (await signer.provider?.getNetwork())?.chainId?.toString()
-      const {
-        default: {
-          'OrganigramClientModule#OrganigramClient': organigramClientAddress
-        }
-      } = await import(
-        `@organigram/protocol/ignition/deployments/chain-${chainId}/deployed_addresses.json`
-      )
       setLoading(true)
       const _client = await OrganigramClient.load(
-        organigramClientAddress,
+        organigramClientDeployedAddresses[chainId as '11155111'],
         signer.provider,
         signer
       ).catch((error: Error) => {
