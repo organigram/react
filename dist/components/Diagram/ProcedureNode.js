@@ -11,7 +11,7 @@ import { palette } from '../../ui';
 import ProcedureIcon from '../../ui/icons/Procedure';
 import { CircularProgress } from '@mui/material';
 import { Tune } from '@mui/icons-material';
-export const ProcedureNode = ({ data: { procedure }, sourcePosition, targetPosition, hideHandles, onClick, organigram, signer }) => {
+export const ProcedureNode = ({ data: { procedure, onClick }, sourcePosition, targetPosition, hideHandles, organigram, signer }) => {
     const deployedProcedure = useDeployedProcedure({
         procedure,
         organigram,
@@ -38,7 +38,9 @@ export const ProcedureNode = ({ data: { procedure }, sourcePosition, targetPosit
                         pt: 1,
                         pl: 2,
                         minWidth: '240px'
-                    }, children: _jsx(DiagramNode, { onClick: onClick, icon: _jsx(Grid, { container: true, alignItems: 'center', justifyContent: 'center', height: '100%', sx: {
+                    }, children: _jsx(DiagramNode, { onClick: () => {
+                            onClick(procedure);
+                        }, icon: _jsx(Grid, { container: true, alignItems: 'center', justifyContent: 'center', height: '100%', sx: {
                                 borderRadius: '6px',
                                 width: 3 * 8,
                                 height: 3 * 8,

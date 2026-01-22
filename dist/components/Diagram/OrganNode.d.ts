@@ -17,10 +17,10 @@ export interface OrganNodeProps {
             x: number;
             y: number;
         };
+        onClick?: () => void;
     };
     hideHandles?: boolean;
     signer?: Signer | null;
-    onClick?: () => void;
 }
 export declare const EntryCount: React.FC<{
     organ: DiagramOrgan;

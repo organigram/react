@@ -23,7 +23,7 @@ export const EntryCount = ({ organ: dbOrgan, signer }) => {
         : 'entry';
     return (_jsxs("span", { id: makeTestId(`organ-${organ?.name}-entry-count`), children: [count, " ", t(singularOrPlural)] }));
 };
-export const OrganNode = ({ data, sourcePosition, targetPosition, hideHandles, onClick, signer }) => {
+export const OrganNode = ({ data, sourcePosition, targetPosition, hideHandles, signer }) => {
     const isMaster = data?.position?.y === 0;
     const isDeployed = data?.organ?.address != null && data?.organ.address !== '';
     return (_jsxs(_Fragment, { children: [_jsxs(Card, { sx: {
@@ -50,7 +50,9 @@ export const OrganNode = ({ data, sourcePosition, targetPosition, hideHandles, o
                                     ? palette.background.secondary
                                     : palette.background.default,
                             borderBottom: `solid 0.5px ${isMaster ? palette.grey : palette.grey.light2}`
-                        }, children: _jsx(DiagramNode, { onClick: onClick, icon: _jsx(Grid, { container: true, alignItems: 'center', justifyContent: 'center', height: '100%', sx: {
+                        }, children: _jsx(DiagramNode, { onClick: () => {
+                                data.onClick(data.organ);
+                            }, icon: _jsx(Grid, { container: true, alignItems: 'center', justifyContent: 'center', height: '100%', sx: {
                                     borderRadius: '6px',
                                     width: 3 * 8,
                                     height: 3 * 8,

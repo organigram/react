@@ -15,7 +15,8 @@ import ReactFlow, {
   type NodeChange,
   type Connection,
   type EdgeChange,
-  NodeProps
+  type NodeProps,
+  type NodeTypes
 } from 'react-flow-renderer'
 import { NoSsr } from '@mui/material'
 
@@ -39,6 +40,7 @@ export interface DiagramOrganigram {
 }
 
 export interface DiagramProps {
+  nodeTypes?: NodeTypes
   direction: string
   organigram: DiagramOrganigram | null
   style?: Record<string, unknown>
@@ -46,9 +48,12 @@ export interface DiagramProps {
   options?: ReactFlowProps
   signer?: Signer | null
   isTabletOrAbove?: boolean
+  onClickOrgan: (procedure: DiagramOrgan) => void
+  onClickProcedure: (procedure: DiagramProcedure) => void
+  onClickAsset: (procedure: DiagramAsset) => void
 }
 
-const nodeTypes = {
+export const defaultNodeTypes = {
   procedure: ProcedureNode as React.FC<
     NodeProps<{ procedure: DiagramProcedure }>
   >,
@@ -108,13 +113,17 @@ const autodistribute: (
 }
 
 export const Diagram: React.FC<DiagramProps> = ({
+  nodeTypes = defaultNodeTypes,
   direction,
   organigram,
   style,
   controls,
   options,
   signer,
-  isTabletOrAbove
+  isTabletOrAbove,
+  onClickOrgan,
+  onClickProcedure,
+  onClickAsset
 }) => {
   const [layers] = useLayers()
   const organsNodes = useMemo(
@@ -123,9 +132,9 @@ export const Diagram: React.FC<DiagramProps> = ({
         id: `organ-${index}`,
         type: 'organ',
         position: { x: 0, y: 0 },
-        data: { organ }
+        data: { organ, onClick: onClickOrgan }
       })) ?? [],
-    [organigram?.organs]
+    [organigram?.organs, onClickOrgan]
   )
 
   const proceduresNodes = useMemo(
@@ -134,9 +143,9 @@ export const Diagram: React.FC<DiagramProps> = ({
         id: `procedure-${index}`,
         type: 'procedure',
         position: { x: 0, y: 0 },
-        data: { procedure }
+        data: { procedure, onClick: onClickProcedure }
       })) ?? [],
-    [organigram?.procedures]
+    [organigram?.procedures, onClickProcedure]
   )
 
   const assetsNodes = useMemo(
@@ -145,9 +154,9 @@ export const Diagram: React.FC<DiagramProps> = ({
         id: `asset-${index}`,
         type: 'asset',
         position: { x: 0, y: 0 },
-        data: { asset }
+        data: { asset, onClick: onClickAsset }
       })) ?? [],
-    [organigram?.assets]
+    [organigram?.assets, onClickAsset]
   )
 
   const initialEdges = useMemo(
@@ -334,7 +343,10 @@ export const Diagram: React.FC<DiagramProps> = ({
         {...{
           nodes: nodes.map(n => ({
             ...n,
-            data: { ...n.data, position: n.position }
+            data: {
+              ...n.data,
+              position: n.position
+            }
           })),
           edges,
           onNodesChange,

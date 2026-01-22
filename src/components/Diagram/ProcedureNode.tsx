@@ -30,7 +30,6 @@ export type DiagramProcedure = Procedure & {
 
 export interface ProcedureNodeProps {
   hideHandles?: boolean
-  onClick?: () => void
   signer?: Signer | null
   organigram: DiagramOrganigram
 }
@@ -38,14 +37,14 @@ export interface ProcedureNodeProps {
 export const ProcedureNode: React.FC<
   NodeProps<{
     procedure: DiagramProcedure
+    onClick: (procedure: DiagramProcedure) => void
   }> &
     ProcedureNodeProps
 > = ({
-  data: { procedure },
+  data: { procedure, onClick },
   sourcePosition,
   targetPosition,
   hideHandles,
-  onClick,
   organigram,
   signer
 }) => {
@@ -104,7 +103,9 @@ export const ProcedureNode: React.FC<
           }}
         >
           <DiagramNode
-            onClick={onClick}
+            onClick={() => {
+              onClick(procedure)
+            }}
             icon={
               <Grid
                 container

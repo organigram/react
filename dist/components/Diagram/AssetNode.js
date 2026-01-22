@@ -5,7 +5,7 @@ import { Handle, Position } from 'react-flow-renderer';
 import { DiagramNode } from './Node';
 import { palette } from '../../ui';
 import TokenIcon from '../../ui/icons/Token';
-export const AssetNode = ({ data: { asset }, sourcePosition, targetPosition, hideHandles, onClick }) => (_jsxs(_Fragment, { children: [_jsx(Card, { sx: {
+export const AssetNode = ({ data: { asset, onClick }, sourcePosition, targetPosition, hideHandles }) => (_jsxs(_Fragment, { children: [_jsx(Card, { sx: {
                 borderRadius: '16px',
                 backgroundColor: asset.address != null && asset.address !== '' ? '' : 'transparent',
                 border: asset.address != null && asset.address !== ''

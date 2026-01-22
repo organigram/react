@@ -12,10 +12,10 @@ export type DiagramProcedure = Procedure & {
 };
 export interface ProcedureNodeProps {
     hideHandles?: boolean;
-    onClick?: () => void;
     signer?: Signer | null;
     organigram: DiagramOrganigram;
 }
 export declare const ProcedureNode: React.FC<NodeProps<{
     procedure: DiagramProcedure;
+    onClick: (procedure: DiagramProcedure) => void;
 }> & ProcedureNodeProps>;

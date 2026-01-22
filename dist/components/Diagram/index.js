@@ -9,7 +9,7 @@ import { mobileNavHeight } from '../../ui';
 import { ProcedureNode } from './ProcedureNode';
 import { OrganNode } from './OrganNode';
 import { AssetNode } from './AssetNode';
-const nodeTypes = {
+export const defaultNodeTypes = {
     procedure: ProcedureNode,
     organ: OrganNode,
     asset: AssetNode
@@ -52,26 +52,26 @@ const autodistribute = (nodes, edges, direction) => {
     });
     return nodes;
 };
-export const Diagram = ({ direction, organigram, style, controls, options, signer, isTabletOrAbove }) => {
+export const Diagram = ({ nodeTypes = defaultNodeTypes, direction, organigram, style, controls, options, signer, isTabletOrAbove, onClickOrgan, onClickProcedure, onClickAsset }) => {
     const [layers] = useLayers();
     const organsNodes = useMemo(() => organigram?.organs?.map((organ, index) => ({
         id: `organ-${index}`,
         type: 'organ',
         position: { x: 0, y: 0 },
-        data: { organ }
-    })) ?? [], [organigram?.organs]);
+        data: { organ, onClick: onClickOrgan }
+    })) ?? [], [organigram?.organs, onClickOrgan]);
     const proceduresNodes = useMemo(() => organigram?.procedures?.map((procedure, index) => ({
         id: `procedure-${index}`,
         type: 'procedure',
         position: { x: 0, y: 0 },
-        data: { procedure }
-    })) ?? [], [organigram?.procedures]);
+        data: { procedure, onClick: onClickProcedure }
+    })) ?? [], [organigram?.procedures, onClickProcedure]);
     const assetsNodes = useMemo(() => organigram?.assets?.map((asset, index) => ({
         id: `asset-${index}`,
         type: 'asset',
         position: { x: 0, y: 0 },
-        data: { asset }
-    })) ?? [], [organigram?.assets]);
+        data: { asset, onClick: onClickAsset }
+    })) ?? [], [organigram?.assets, onClickAsset]);
     const initialEdges = useMemo(() => proceduresNodes
         ?.map((procedureNode, index) => {
         const procedure = procedureNode.data.procedure;
@@ -181,7 +181,10 @@ export const Diagram = ({ direction, organigram, style, controls, options, signe
     }, [direction, initialEdges, organsNodes, proceduresNodes, assetsNodes]);
     return (_jsx(NoSsr, { children: _jsxs(ReactFlow, { nodes: nodes.map(n => ({
                 ...n,
-                data: { ...n.data, position: n.position }
+                data: {
+                    ...n.data,
+                    position: n.position
+                }
             })),
             edges,
             onNodesChange,

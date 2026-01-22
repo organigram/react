@@ -15,17 +15,15 @@ export type DiagramAsset = Asset & {
 
 export interface AssetNodeProps {
   Token: React.FC<{ style: any }>
-  data: { asset: DiagramAsset }
+  data: { asset: DiagramAsset; onClick: (asset: DiagramAsset) => void }
   hideHandles?: boolean
-  onClick: (asset: DiagramAsset) => void
 }
 
 export const AssetNode: React.FC<NodeProps & AssetNodeProps> = ({
-  data: { asset },
+  data: { asset, onClick },
   sourcePosition,
   targetPosition,
-  hideHandles,
-  onClick
+  hideHandles
 }) => (
   <>
     <Card

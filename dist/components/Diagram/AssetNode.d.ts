@@ -12,8 +12,8 @@ export interface AssetNodeProps {
     }>;
     data: {
         asset: DiagramAsset;
+        onClick: (asset: DiagramAsset) => void;
     };
     hideHandles?: boolean;
-    onClick: (asset: DiagramAsset) => void;
 }
 export declare const AssetNode: React.FC<NodeProps & AssetNodeProps>;

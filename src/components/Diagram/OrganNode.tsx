@@ -27,10 +27,10 @@ export interface OrganNodeProps {
   data: {
     organ: DiagramOrgan
     position?: { x: number; y: number }
+    onClick?: () => void
   }
   hideHandles?: boolean
   signer?: Signer | null
-  onClick?: () => void
 }
 
 export const EntryCount: React.FC<{
@@ -62,7 +62,6 @@ export const OrganNode: React.FC<NodeProps & OrganNodeProps> = ({
   sourcePosition,
   targetPosition,
   hideHandles,
-  onClick,
   signer
 }) => {
   const isMaster = data?.position?.y === 0
@@ -109,7 +108,9 @@ export const OrganNode: React.FC<NodeProps & OrganNodeProps> = ({
           }}
         >
           <DiagramNode
-            onClick={onClick}
+            onClick={() => {
+              data.onClick(data.organ)
+            }}
             icon={
               <Grid
                 container
@@ -126,9 +127,7 @@ export const OrganNode: React.FC<NodeProps & OrganNodeProps> = ({
                 {isMaster ? (
                   <SummitIcon style={{ width: '15px', height: '15px' }} />
                 ) : (
-                  <PeopleAltRounded
-                    style={{ width: '15px', height: '15px' }}
-                  />
+                  <PeopleAltRounded style={{ width: '15px', height: '15px' }} />
                 )}
               </Grid>
             }
