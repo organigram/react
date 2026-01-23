@@ -5,7 +5,7 @@ import {
   type ProcedureType,
   type Organ,
   type Procedure,
-  organigramClientDeployedAddresses
+  deployedAddresses
 } from '@organigram/js'
 import { ethers, Signer } from 'ethers'
 import { atom } from 'recoil'
@@ -56,7 +56,7 @@ export const useOrganigramClient = (
       const chainId = (await signer.provider?.getNetwork())?.chainId?.toString()
       setLoading(true)
       const _client = await OrganigramClient.load(
-        organigramClientDeployedAddresses[chainId as '11155111'],
+        deployedAddresses[chainId as '11155111'].OrganigramClient,
         signer.provider,
         signer
       ).catch((error: Error) => {
