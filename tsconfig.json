@@ -7,7 +7,6 @@
     "moduleResolution": "bundler",
     "removeComments": true,
     "preserveConstEnums": true,
-    "forceConsistentCasingInFileNames": true,
     "rootDir": "src",
     "outDir": "dist",
     "declaration": true,
@@ -17,10 +16,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "sourceMap": false,
-    "noImplicitThis": true,
-    "strictNullChecks": true,
     "allowArbitraryExtensions": true
   },
   "include": ["src/**/*.ts", "index.d.ts"],
-  "ignore": ["./jest.config.ts"]
+  "exclude": ["./jest.config.ts"]
 }

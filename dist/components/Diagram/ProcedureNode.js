@@ -11,10 +11,10 @@ import { palette } from '../../ui';
 import ProcedureIcon from '../../ui/icons/Procedure';
 import { CircularProgress } from '@mui/material';
 import { Tune } from '@mui/icons-material';
-export const ProcedureNode = ({ data: { procedure, onClick }, sourcePosition, targetPosition, hideHandles, organigram, signer }) => {
+export const ProcedureNode = ({ data, sourcePosition, targetPosition, hideHandles, organigram, signer, ...nodeProps }) => {
     const deployedProcedure = useDeployedProcedure({
-        procedure,
-        organigram,
+        procedure: data?.procedure,
+        organigram: organigram,
         signer
     });
     const activeProposals = deployedProcedure?.deployed != null
@@ -38,19 +38,19 @@ export const ProcedureNode = ({ data: { procedure, onClick }, sourcePosition, ta
                         pt: 1,
                         pl: 2,
                         minWidth: '240px'
-                    }, children: _jsx(DiagramNode, { onClick: () => {
-                            onClick(procedure);
+                    }, children: _jsx(DiagramNode, { ...nodeProps, onClick: () => {
+                            data?.onClick?.(data.procedure);
                         }, icon: _jsx(Grid, { container: true, alignItems: 'center', justifyContent: 'center', height: '100%', sx: {
                                 borderRadius: '6px',
                                 width: 3 * 8,
                                 height: 3 * 8,
                                 backgroundColor: 'violet.light3'
-                            }, children: procedure.targetOrgans.some(to => getPermissionsSet(to.permissions).includes('ADD_PROCEDURES') ||
+                            }, children: data?.procedure.targetOrgans.some(to => getPermissionsSet(to.permissions).includes('ADD_PROCEDURES') ||
                                 getPermissionsSet(to.permissions).includes('REMOVE_PROCEDURES') ||
                                 getPermissionsSet(to.permissions).includes('ALL_PROCEDURES') ||
                                 getPermissionsSet(to.permissions).includes('ALL')) ? (_jsx(Tune, { style: {
                                     width: '15px',
                                     height: '15px',
                                     transform: 'rotate(90deg)'
-                                } })) : (_jsx(ProcedureIcon, { style: { width: '15px', height: '15px' } })) }), label: procedure.name, id: makeTestId(`expand-procedure-${procedure?.name}`) }) }) }, procedure.id), hideHandles !== true && (_jsxs(_Fragment, { children: [_jsx(Handle, { type: 'source', position: sourcePosition ?? Position.Top }), _jsx(Handle, { type: 'target', position: targetPosition ?? Position.Bottom })] }))] }));
+                                } })) : (_jsx(ProcedureIcon, { style: { width: '15px', height: '15px' } })) }), label: data?.procedure.name, id: makeTestId(`expand-procedure-${data?.procedure?.name}`) }) }) }, data?.procedure?.id), hideHandles !== true && (_jsxs(_Fragment, { children: [_jsx(Handle, { type: 'source', position: sourcePosition ?? Position.Top }), _jsx(Handle, { type: 'target', position: targetPosition ?? Position.Bottom })] }))] }));
 };

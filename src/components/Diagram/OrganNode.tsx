@@ -57,7 +57,7 @@ export const EntryCount: React.FC<{
   )
 }
 
-export const OrganNode: React.FC<NodeProps & OrganNodeProps> = ({
+export const OrganNode: React.FC<Partial<NodeProps> & OrganNodeProps> = ({
   data,
   sourcePosition,
   targetPosition,
@@ -109,7 +109,7 @@ export const OrganNode: React.FC<NodeProps & OrganNodeProps> = ({
         >
           <DiagramNode
             onClick={() => {
-              data.onClick(data.organ)
+              data.onClick?.(data.organ)
             }}
             icon={
               <Grid

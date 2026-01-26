@@ -15,7 +15,7 @@ export const AssetNode = ({ data: { asset, onClick }, sourcePosition, targetPosi
                 pl: 2,
                 minWidth: '180px'
             }, children: _jsx(DiagramNode, { onClick: () => {
-                    onClick(asset);
+                    onClick?.(asset);
                 }, icon: _jsx(Grid, { container: true, alignItems: 'center', justifyContent: 'center', height: '100%', sx: {
                         borderRadius: '6px',
                         width: 3 * 8,

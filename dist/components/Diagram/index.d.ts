@@ -8,7 +8,7 @@ import { DiagramAsset } from './AssetNode';
 export type SourceOrgan = {
     organId: string;
     procedureId: string;
-    assetId: string;
+    assetId?: string;
 };
 export type TargetOrgan = SourceOrgan & {
     permissions: number;

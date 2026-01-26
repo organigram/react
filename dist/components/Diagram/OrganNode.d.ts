@@ -26,4 +26,4 @@ export declare const EntryCount: React.FC<{
     organ: DiagramOrgan;
     signer?: Signer | null;
 }>;
-export declare const OrganNode: React.FC<NodeProps & OrganNodeProps>;
+export declare const OrganNode: React.FC<Partial<NodeProps> & OrganNodeProps>;

@@ -3,7 +3,7 @@ import { EnhancedProcedure, Procedure } from '@organigram/js';
 import { Signer } from 'ethers';
 import { NodeProps } from 'react-flow-renderer';
 import { DiagramOrganigram, SourceOrgan, TargetOrgan } from '.';
-export type DiagramProcedure = Procedure & {
+export type DiagramProcedure = Partial<Procedure> & {
     id: string;
     name: string;
     sourceOrgans: SourceOrgan[];
@@ -13,9 +13,9 @@ export type DiagramProcedure = Procedure & {
 export interface ProcedureNodeProps {
     hideHandles?: boolean;
     signer?: Signer | null;
-    organigram: DiagramOrganigram;
+    organigram?: DiagramOrganigram;
 }
-export declare const ProcedureNode: React.FC<NodeProps<{
+export declare const ProcedureNode: React.FC<Partial<NodeProps<{
     procedure: DiagramProcedure;
-    onClick: (procedure: DiagramProcedure) => void;
-}> & ProcedureNodeProps>;
+    onClick?: (procedure: DiagramProcedure) => void;
+}>> & ProcedureNodeProps>;

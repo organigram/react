@@ -20,7 +20,7 @@ import ProcedureIcon from '../../ui/icons/Procedure'
 import { CircularProgress } from '@mui/material'
 import { Tune } from '@mui/icons-material'
 
-export type DiagramProcedure = Procedure & {
+export type DiagramProcedure = Partial<Procedure> & {
   id: string
   name: string
   sourceOrgans: SourceOrgan[]
@@ -31,26 +31,29 @@ export type DiagramProcedure = Procedure & {
 export interface ProcedureNodeProps {
   hideHandles?: boolean
   signer?: Signer | null
-  organigram: DiagramOrganigram
+  organigram?: DiagramOrganigram
 }
 
 export const ProcedureNode: React.FC<
-  NodeProps<{
-    procedure: DiagramProcedure
-    onClick: (procedure: DiagramProcedure) => void
-  }> &
+  Partial<
+    NodeProps<{
+      procedure: DiagramProcedure
+      onClick?: (procedure: DiagramProcedure) => void
+    }>
+  > &
     ProcedureNodeProps
 > = ({
-  data: { procedure, onClick },
+  data,
   sourcePosition,
   targetPosition,
   hideHandles,
   organigram,
-  signer
+  signer,
+  ...nodeProps
 }) => {
   const deployedProcedure = useDeployedProcedure({
-    procedure,
-    organigram,
+    procedure: data?.procedure,
+    organigram: organigram as DiagramOrganigram,
     signer
   })
   const activeProposals =
@@ -64,7 +67,7 @@ export const ProcedureNode: React.FC<
   return (
     <>
       <Badge
-        key={procedure.id}
+        key={data?.procedure?.id}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         sx={{
           '& .MuiBadge-badge': {
@@ -103,8 +106,9 @@ export const ProcedureNode: React.FC<
           }}
         >
           <DiagramNode
+            {...nodeProps}
             onClick={() => {
-              onClick(procedure)
+              data?.onClick?.(data.procedure)
             }}
             icon={
               <Grid
@@ -119,7 +123,7 @@ export const ProcedureNode: React.FC<
                   backgroundColor: 'violet.light3'
                 }}
               >
-                {procedure.targetOrgans.some(
+                {data?.procedure.targetOrgans.some(
                   to =>
                     getPermissionsSet(to.permissions).includes(
                       'ADD_PROCEDURES'
@@ -144,8 +148,8 @@ export const ProcedureNode: React.FC<
                 )}
               </Grid>
             }
-            label={procedure.name}
-            id={makeTestId(`expand-procedure-${procedure?.name}`)}
+            label={data?.procedure.name}
+            id={makeTestId(`expand-procedure-${data?.procedure?.name}`)}
           />
         </Card>
       </Badge>

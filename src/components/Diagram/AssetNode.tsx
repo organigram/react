@@ -7,7 +7,7 @@ import { DiagramNode } from './Node'
 import { palette } from '../../ui'
 import TokenIcon from '../../ui/icons/Token'
 
-export type DiagramAsset = Asset & {
+export type DiagramAsset = Partial<Asset> & {
   id: string
   address: string
   name: string
@@ -15,7 +15,7 @@ export type DiagramAsset = Asset & {
 
 export interface AssetNodeProps {
   Token: React.FC<{ style: any }>
-  data: { asset: DiagramAsset; onClick: (asset: DiagramAsset) => void }
+  data: { asset: DiagramAsset; onClick?: (asset: DiagramAsset) => void }
   hideHandles?: boolean
 }
 
@@ -42,7 +42,7 @@ export const AssetNode: React.FC<NodeProps & AssetNodeProps> = ({
     >
       <DiagramNode
         onClick={() => {
-          onClick(asset)
+          onClick?.(asset)
         }}
         icon={
           <Grid

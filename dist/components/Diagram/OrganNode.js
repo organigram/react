@@ -51,7 +51,7 @@ export const OrganNode = ({ data, sourcePosition, targetPosition, hideHandles, s
                                     : palette.background.default,
                             borderBottom: `solid 0.5px ${isMaster ? palette.grey : palette.grey.light2}`
                         }, children: _jsx(DiagramNode, { onClick: () => {
-                                data.onClick(data.organ);
+                                data.onClick?.(data.organ);
                             }, icon: _jsx(Grid, { container: true, alignItems: 'center', justifyContent: 'center', height: '100%', sx: {
                                     borderRadius: '6px',
                                     width: 3 * 8,
