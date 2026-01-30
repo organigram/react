@@ -10,7 +10,7 @@ export const useOrganigramClient = (signer, handleTransaction) => {
     const [organigramClient, setOrganigramClient] = useState(null);
     const [isLoading, setLoading] = useState(false);
     useEffect(() => {
-        const initManager = async () => {
+        const initClient = async () => {
             if (signer?.provider == null || signer == null)
                 return;
             const chainId = (await signer.provider?.getNetwork())?.chainId?.toString();
@@ -23,10 +23,10 @@ export const useOrganigramClient = (signer, handleTransaction) => {
             }
             setLoading(false);
         };
-        initManager();
+        initClient();
     }, [signer]);
     return useMemo(() => {
-        const createOrgan = async (metadataCid, index) => {
+        const createOrgan = async (metadataCid, salt, index) => {
             if (organigramClient == null) {
                 throw new Error('Manager not loaded.');
             }
@@ -36,12 +36,12 @@ export const useOrganigramClient = (signer, handleTransaction) => {
                 transactionNonce = walletNonce + index;
             }
             const signerAddress = (await signer?.getAddress());
-            return await organigramClient.createOrgan(metadataCid, signerAddress, {
+            return await organigramClient.createOrgan(metadataCid, signerAddress, salt, {
                 nonce: transactionNonce,
                 onTransaction: handleTransaction
             });
         };
-        const createProcedure = async (type, options, metadataCid, proposers, moderators, deciders, withModeration, forwarder, ...args) => {
+        const createProcedure = async (type, options, metadataCid, proposers, moderators, deciders, withModeration, forwarder, salt, ...args) => {
             if (organigramClient == null) {
                 throw new Error('Manager not loaded.');
             }
@@ -49,7 +49,7 @@ export const useOrganigramClient = (signer, handleTransaction) => {
             if (procedureType?.address == null) {
                 throw new Error('Procedure type not registered.');
             }
-            return await organigramClient.createProcedure(procedureType.address, { onTransaction: handleTransaction, nonce: options.nonce }, metadataCid, proposers, moderators, deciders, withModeration, forwarder, ...args);
+            return await organigramClient.createProcedure(procedureType.address, { onTransaction: handleTransaction, nonce: options.nonce }, metadataCid, proposers, moderators, deciders, withModeration, forwarder, salt, ...args);
         };
         return {
             organigramClient,

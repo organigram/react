@@ -18,6 +18,7 @@ export const organigramIdState = atom({
 
 export type CreateOrgan = (
   metadataCid: string,
+  salt: string,
   index?: number
 ) => Promise<Organ>
 export type CreateProcedure = (
@@ -29,6 +30,7 @@ export type CreateProcedure = (
   deciders: string,
   withModeration: boolean,
   forwarder: string,
+  salt: string,
   ...args: unknown[]
 ) => Promise<Procedure & { type: ProcedureType }>
 
@@ -50,8 +52,9 @@ export const useOrganigramClient = (
   const [organigramClient, setOrganigramClient] =
     useState<OrganigramClient | null>(null)
   const [isLoading, setLoading] = useState(false)
+
   useEffect(() => {
-    const initManager: () => Promise<void> = async () => {
+    const initClient: () => Promise<void> = async () => {
       if (signer?.provider == null || signer == null) return
       const chainId = (await signer.provider?.getNetwork())?.chainId?.toString()
       setLoading(true)
@@ -67,11 +70,11 @@ export const useOrganigramClient = (
       }
       setLoading(false)
     }
-    initManager()
+    initClient()
   }, [signer])
 
   return useMemo(() => {
-    const createOrgan: CreateOrgan = async (metadataCid, index) => {
+    const createOrgan: CreateOrgan = async (metadataCid, salt, index) => {
       if (organigramClient == null) {
         throw new Error('Manager not loaded.')
       }
@@ -81,10 +84,15 @@ export const useOrganigramClient = (
         transactionNonce = walletNonce + index
       }
       const signerAddress = (await signer?.getAddress()) as string
-      return await organigramClient.createOrgan(metadataCid, signerAddress, {
-        nonce: transactionNonce,
-        onTransaction: handleTransaction
-      })
+      return await organigramClient.createOrgan(
+        metadataCid,
+        signerAddress,
+        salt,
+        {
+          nonce: transactionNonce,
+          onTransaction: handleTransaction
+        }
+      )
     }
 
     const createProcedure: CreateProcedure = async (
@@ -96,6 +104,7 @@ export const useOrganigramClient = (
       deciders,
       withModeration,
       forwarder,
+      salt,
       ...args
     ) => {
       if (organigramClient == null) {
@@ -116,6 +125,7 @@ export const useOrganigramClient = (
         deciders,
         withModeration,
         forwarder,
+        salt,
         ...args
       )
     }
