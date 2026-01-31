@@ -38,6 +38,7 @@ export const useOrganigramClient = (signer, handleTransaction) => {
             const signerAddress = (await signer?.getAddress());
             return await organigramClient.createOrgan(metadataCid, signerAddress, salt, {
                 nonce: transactionNonce,
+                customData: { index },
                 onTransaction: handleTransaction
             });
         };
@@ -49,7 +50,11 @@ export const useOrganigramClient = (signer, handleTransaction) => {
             if (procedureType?.address == null) {
                 throw new Error('Procedure type not registered.');
             }
-            return await organigramClient.createProcedure(procedureType.address, { onTransaction: handleTransaction, nonce: options.nonce }, metadataCid, proposers, moderators, deciders, withModeration, forwarder, salt, ...args);
+            return await organigramClient.createProcedure(procedureType.address, {
+                onTransaction: handleTransaction,
+                nonce: options.nonce,
+                customData: options.customData
+            }, metadataCid, proposers, moderators, deciders, withModeration, forwarder, salt, ...args);
         };
         return {
             organigramClient,

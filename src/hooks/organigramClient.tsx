@@ -90,6 +90,7 @@ export const useOrganigramClient = (
         salt,
         {
           nonce: transactionNonce,
+          customData: { index },
           onTransaction: handleTransaction
         }
       )
@@ -118,7 +119,11 @@ export const useOrganigramClient = (
       }
       return await organigramClient.createProcedure(
         procedureType.address,
-        { onTransaction: handleTransaction, nonce: options.nonce },
+        {
+          onTransaction: handleTransaction,
+          nonce: options.nonce,
+          customData: options.customData
+        },
         metadataCid,
         proposers,
         moderators,
