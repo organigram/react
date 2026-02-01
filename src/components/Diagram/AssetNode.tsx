@@ -4,8 +4,8 @@ import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import { Handle, NodeProps, Position } from 'react-flow-renderer'
 import { DiagramNode } from './Node'
-import { palette } from '../../ui'
-import TokenIcon from '../../ui/icons/Token'
+import { palette } from '../../theme/palette'
+import TokenIcon from '../icons/Token'
 
 export type DiagramAsset = Partial<Asset> & {
   id: string

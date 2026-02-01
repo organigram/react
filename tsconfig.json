@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "lib": ["ESNext"],
+    "lib": ["ESNext", "DOM"],
     "target": "ESNext",
+    "emitDeclarationOnly": false,
     "jsx": "react-jsx",
     "module": "esnext",
     "moduleResolution": "bundler",
@@ -18,6 +19,6 @@
     "sourceMap": false,
     "allowArbitraryExtensions": true
   },
-  "include": ["src/**/*.ts", "index.d.ts"],
-  "exclude": ["./jest.config.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "index.d.ts"],
+  "exclude": ["./src/**/*.spec.tsx", "./src/**/*.spec.ts"]
 }

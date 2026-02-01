@@ -21,7 +21,7 @@ import ReactFlow, {
 import { NoSsr } from '@mui/material'
 
 import { useLayers } from '../../hooks/diagram'
-import { mobileNavHeight } from '../../ui'
+import { mobileNavHeight } from '../../theme'
 import { DiagramProcedure, ProcedureNode } from './ProcedureNode'
 import { DiagramOrgan, OrganNode } from './OrganNode'
 import { DiagramAsset, AssetNode } from './AssetNode'
@@ -51,6 +51,9 @@ export interface DiagramProps {
   onClickOrgan: (procedure: DiagramOrgan) => void
   onClickProcedure: (procedure: DiagramProcedure) => void
   onClickAsset: (procedure: DiagramAsset) => void
+  onAssetDeployed?: (asset: DiagramAsset) => void
+  onOrganDeployed?: (organ: DiagramOrgan) => void
+  onProcedureDeployed?: (procedure: DiagramProcedure) => void
 }
 
 export const defaultNodeTypes = {
@@ -128,8 +131,8 @@ export const Diagram: React.FC<DiagramProps> = ({
   const [layers] = useLayers()
   const organsNodes = useMemo(
     () =>
-      organigram?.organs?.map((organ, index) => ({
-        id: `organ-${index}`,
+      organigram?.organs?.map(organ => ({
+        id: `organ-${organ.address}`,
         type: 'organ',
         position: { x: 0, y: 0 },
         data: { organ, onClick: onClickOrgan }
@@ -139,8 +142,8 @@ export const Diagram: React.FC<DiagramProps> = ({
 
   const proceduresNodes = useMemo(
     () =>
-      organigram?.procedures?.map((procedure, index) => ({
-        id: `procedure-${index}`,
+      organigram?.procedures?.map(procedure => ({
+        id: `procedure-${procedure.address}`,
         type: 'procedure',
         position: { x: 0, y: 0 },
         data: { procedure, onClick: onClickProcedure }
@@ -150,8 +153,8 @@ export const Diagram: React.FC<DiagramProps> = ({
 
   const assetsNodes = useMemo(
     () =>
-      organigram?.assets?.map((asset, index) => ({
-        id: `asset-${index}`,
+      organigram?.assets?.map(asset => ({
+        id: `asset-${asset.address}`,
         type: 'asset',
         position: { x: 0, y: 0 },
         data: { asset, onClick: onClickAsset }

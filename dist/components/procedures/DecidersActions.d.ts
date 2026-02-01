@@ -1,4 +1,4 @@
-import React from 'react';
+import { default as React } from 'react';
 import { AccountInOrgans, ERC20VoteProcedure, ProcedureProposal, VoteProcedure } from '@organigram/js';
 import { ElectionComponentProps } from './Election';
 export interface DecidersActionsProps {

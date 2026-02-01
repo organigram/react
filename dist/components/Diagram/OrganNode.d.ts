@@ -1,4 +1,4 @@
-import React from 'react';
+import { default as React } from 'react';
 import { Organ, OrganEntry } from '@organigram/js';
 import { Signer } from 'ethers';
 import { NodeProps } from 'react-flow-renderer';

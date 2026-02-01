@@ -1,9 +1,28 @@
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import { playwright } from '@vitest/browser-playwright'
+import dts from 'vite-plugin-dts'
 
 export default defineConfig({
-  plugins: [react()],
+  logLevel: 'error',
+  plugins: [
+    react(),
+    dts({
+      entryRoot: 'src',
+      insertTypesEntry: true
+    })
+  ],
+  build: {
+    lib: {
+      entry: 'src/index.ts',
+      name: '@organigram/react',
+      formats: ['es', 'cjs'],
+      fileName: format => (format === 'es' ? 'index.mjs' : 'index.cjs')
+    },
+    rollupOptions: {
+      external: ['react', 'react-dom', 'react/jsx-runtime', /@mui/, 'recoil'],
+    }
+  },
   test: {
     globals: true,
     browser: {

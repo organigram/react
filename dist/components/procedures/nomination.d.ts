@@ -1,4 +1,4 @@
-import { ProcedureProposal, NominationProcedure, type TransactionOptions } from '@organigram/js';
+import { ProcedureProposal, NominationProcedure, TransactionOptions } from '@organigram/js';
 export declare const NominationProcedureComponent: ({ procedure }: {
     procedure: NominationProcedure;
 }) => import("react/jsx-runtime").JSX.Element;

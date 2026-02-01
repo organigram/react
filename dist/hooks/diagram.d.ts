@@ -1,4 +1,4 @@
-import { type SetterOrUpdater } from 'recoil';
+import { SetterOrUpdater } from 'recoil';
 export interface Layer {
     name: string;
     organIds: string[];
@@ -9,5 +9,5 @@ export interface Layer {
     isPublic: boolean;
     isHidden: boolean;
 }
-export declare const layersState: import("recoil").RecoilState<Layer[]>;
+export declare const layersState: import('recoil').RecoilState<Layer[]>;
 export declare const useLayers: () => [Layer[], SetterOrUpdater<Layer[]>];

@@ -1,4 +1,4 @@
-import { type Organ, OrganigramClient } from '@organigram/js';
+import { Organ, OrganigramClient } from '@organigram/js';
 import { DiagramOrganigram } from '../components/Diagram';
 import { Signer } from 'ethers';
 import { DiagramOrgan } from '../components/Diagram/OrganNode';

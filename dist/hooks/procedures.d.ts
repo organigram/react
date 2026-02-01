@@ -1,4 +1,4 @@
-import { type Procedure as DeployedProcedure, type ProcedureProposal } from '@organigram/js';
+import { Procedure as DeployedProcedure, ProcedureProposal } from '@organigram/js';
 import { Signer } from 'ethers';
 import { DiagramOrganigram } from '../components/Diagram';
 import { DiagramProcedure } from '../components/Diagram/ProcedureNode';

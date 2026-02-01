@@ -13,5 +13,6 @@ export * from './hooks/diagram';
 export * from './hooks/organigramClient';
 export * from './hooks/organs';
 export * from './hooks/procedures';
-export * from './ui';
+export * from './hooks/modal';
+export * from './theme';
 export * from './utils';

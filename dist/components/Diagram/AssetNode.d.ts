@@ -1,4 +1,4 @@
-import React from 'react';
+import { default as React } from 'react';
 import { Asset } from '@organigram/js';
 import { NodeProps } from 'react-flow-renderer';
 export type DiagramAsset = Partial<Asset> & {

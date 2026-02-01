@@ -1,4 +1,4 @@
-import React from 'react';
+import { default as React } from 'react';
 import { ERC20VoteProcedure, ProcedureProposal, TransactionOptions, VoteProcedure } from '@organigram/js';
 export interface ElectionComponentProps {
     procedure: ERC20VoteProcedure | VoteProcedure;

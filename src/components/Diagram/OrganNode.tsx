@@ -10,12 +10,12 @@ import { makeTestId } from '../../utils'
 import { useTranslation } from 'react-i18next'
 import { useDeployedOrgan } from '../../hooks/organs'
 import { DiagramNode } from './Node'
-import { palette } from '../../ui'
-import SummitIcon from '../../ui/icons/Summit'
+import { palette } from '../../theme/palette'
+import SummitIcon from '../icons/Summit'
 import { PeopleAltRounded } from '@mui/icons-material'
 
 export type DiagramOrgan = {
-  id: string
+  id: string // salt
   name: string
   description: string
   entries: OrganEntry[]

@@ -1,7 +1,7 @@
-import React from 'react';
-import { type Asset } from '@organigram/js';
+import { default as React } from 'react';
+import { Asset } from '@organigram/js';
 import { Signer } from 'ethers';
-import { type ReactFlowProps, type NodeProps, type NodeTypes } from 'react-flow-renderer';
+import { ReactFlowProps, NodeProps, NodeTypes } from 'react-flow-renderer';
 import { DiagramProcedure } from './ProcedureNode';
 import { DiagramOrgan } from './OrganNode';
 import { DiagramAsset } from './AssetNode';
@@ -30,6 +30,9 @@ export interface DiagramProps {
     onClickOrgan: (procedure: DiagramOrgan) => void;
     onClickProcedure: (procedure: DiagramProcedure) => void;
     onClickAsset: (procedure: DiagramAsset) => void;
+    onAssetDeployed?: (asset: DiagramAsset) => void;
+    onOrganDeployed?: (organ: DiagramOrgan) => void;
+    onProcedureDeployed?: (procedure: DiagramProcedure) => void;
 }
 export declare const defaultNodeTypes: {
     procedure: React.FC<NodeProps<{
