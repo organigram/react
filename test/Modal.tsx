@@ -1,8 +1,8 @@
-import React, { useEffect, createContext, type ReactNode } from 'react'
+import React, { createContext, useEffect, type ReactNode } from 'react'
 import Grid from '@mui/material/Grid'
 import MuiModal from '@mui/material/Modal'
 import { useRecoilState, type SetterOrUpdater } from 'recoil'
-import { modalState } from '@organigram/react'
+import { modalState } from '../src'
 
 export interface ModalState {
   modal: ReactNode | null
@@ -14,6 +14,21 @@ const ModalContext = createContext<ModalState>({
   modal: null,
   setModal: _ => undefined
 })
+
+export const ModalProvider: React.FC<{ children: ReactNode }> = props => {
+  const [modal, setModal] = useRecoilState(modalState)
+  return (
+    <ModalContext.Provider
+      value={{
+        modal,
+        setModal
+      }}
+    >
+      {props.children}
+      <Modal {...{ modal, setModal }} />
+    </ModalContext.Provider>
+  )
+}
 
 export const Modal: React.FC<ModalState> = ({ modal, setModal, id }) => {
   useEffect(() => {
@@ -54,20 +69,5 @@ export const Modal: React.FC<ModalState> = ({ modal, setModal, id }) => {
         {modal ?? <></>}
       </Grid>
     </MuiModal>
-  )
-}
-
-export const ModalProvider: React.FC<{ children: ReactNode }> = props => {
-  const [modal, setModal] = useRecoilState(modalState)
-  return (
-    <ModalContext.Provider
-      value={{
-        modal,
-        setModal
-      }}
-    >
-      {props.children}
-      <Modal {...{ modal, setModal }} />
-    </ModalContext.Provider>
   )
 }
