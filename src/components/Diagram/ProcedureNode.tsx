@@ -12,7 +12,7 @@ import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 
 import { makeTestId } from '../../utils'
-import { filterProposals, useDeployedProcedure } from '../../hooks/procedures'
+import { filterProposals, useDeployedProcedure } from '../../hooks/useProcedures'
 import { DiagramNode } from './Node'
 import { palette } from '../../theme/palette'
 import { DiagramOrganigram, SourceOrgan, TargetOrgan } from '.'

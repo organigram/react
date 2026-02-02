@@ -20,7 +20,7 @@ import ReactFlow, {
 } from 'react-flow-renderer'
 import { NoSsr } from '@mui/material'
 
-import { useLayers } from '../../hooks/diagram'
+import { useLayers } from '../../hooks/useLayers'
 import { mobileNavHeight } from '../../theme'
 import { DiagramProcedure, ProcedureNode } from './ProcedureNode'
 import { DiagramOrgan, OrganNode } from './OrganNode'

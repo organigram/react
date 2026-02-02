@@ -8,7 +8,7 @@ import Grid from '@mui/material/Grid'
 
 import { makeTestId } from '../../utils'
 import { useTranslation } from 'react-i18next'
-import { useDeployedOrgan } from '../../hooks/organs'
+import { useDeployedOrgan } from '../../hooks/useOrgans'
 import { DiagramNode } from './Node'
 import { palette } from '../../theme/palette'
 import SummitIcon from '../icons/Summit'

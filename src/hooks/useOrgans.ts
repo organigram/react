@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { type Organ, OrganigramClient } from '@organigram/js'
-import { useOrganigramClient } from './organigramClient'
+import { useOrganigramClient } from './useOrganigramClient'
 import { DiagramOrganigram } from '../components/Diagram'
 import { Signer } from 'ethers'
 import { DiagramOrgan } from '../components/Diagram/OrganNode'

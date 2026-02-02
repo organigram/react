@@ -6,8 +6,8 @@ import {
   type ProcedureProposal
 } from '@organigram/js'
 
-import { useDeployedOrgans } from './organs'
-import { useOrganigramClient } from './organigramClient'
+import { useDeployedOrgans } from './useOrgans'
+import { useOrganigramClient } from './useOrganigramClient'
 import { Signer } from 'ethers'
 import { DiagramOrganigram } from '../components/Diagram'
 import { DiagramProcedure } from '../components/Diagram/ProcedureNode'
