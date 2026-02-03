@@ -1,18 +1,10 @@
 import { default as React } from 'react';
-import { Organ, OrganEntry } from '@organigram/js';
+import { Organ } from '@organigram/js';
 import { Signer } from 'ethers';
 import { NodeProps } from 'react-flow-renderer';
-export type DiagramOrgan = {
-    id: string;
-    name: string;
-    description: string;
-    entries: OrganEntry[];
-    address?: string;
-    deployed?: Organ;
-};
 export interface OrganNodeProps {
     data: {
-        organ: DiagramOrgan;
+        organ: Organ;
         position?: {
             x: number;
             y: number;
@@ -23,7 +15,7 @@ export interface OrganNodeProps {
     signer?: Signer | null;
 }
 export declare const EntryCount: React.FC<{
-    organ: DiagramOrgan;
+    organ: Organ;
     signer?: Signer | null;
 }>;
 export declare const OrganNode: React.FC<Partial<NodeProps> & OrganNodeProps>;

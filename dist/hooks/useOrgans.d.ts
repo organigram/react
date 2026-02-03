@@ -1,13 +1,12 @@
-import { Organ, OrganigramClient } from '@organigram/js';
-import { DiagramOrganigram } from '../components/Diagram';
+import { Organ, Organigram, OrganigramClient, OrganWithSourcesAndTargets } from '@organigram/js';
 import { Signer } from 'ethers';
-import { DiagramOrgan } from '../components/Diagram/OrganNode';
 export declare const getDeployedOrganData: (organAddress?: string | null, client?: OrganigramClient | null) => Promise<Organ | undefined>;
+export declare const getOrganSourcesAndTargets: (organ: Organ, organigram: Organigram) => OrganWithSourcesAndTargets;
 export declare const useDeployedOrgan: ({ organ, signer }: {
-    organ?: DiagramOrgan | null;
+    organ?: Organ | null;
     signer?: Signer | null;
-}) => DiagramOrgan | undefined;
+}) => Organ | undefined;
 export declare const useDeployedOrgans: ({ organigram, signer }: {
-    organigram: DiagramOrganigram;
+    organigram: Organigram;
     signer?: Signer | null;
-}) => DiagramOrgan[];
+}) => Organ[];

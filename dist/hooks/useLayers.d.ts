@@ -1,7 +1,7 @@
 import { SetterOrUpdater } from 'recoil';
 export interface Layer {
     name: string;
-    organIds: string[];
+    organAddresses: string[];
     procedureIds: string[];
     showAdminPermissions: boolean;
     showEntriesPermissions: boolean;
