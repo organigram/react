@@ -3,15 +3,15 @@ import {
   type Procedure as DeployedProcedure,
   type OrganEntry,
   type EnhancedProcedure,
-  type ProcedureProposal
+  type ProcedureProposal,
+  Organigram,
+  Organ,
+  Procedure
 } from '@organigram/js'
 
 import { useDeployedOrgans } from './useOrgans'
 import { useOrganigramClient } from './useOrganigramClient'
 import { Signer } from 'ethers'
-import { DiagramOrganigram } from '../components/Diagram'
-import { DiagramProcedure } from '../components/Diagram/ProcedureNode'
-import { DiagramOrgan } from '../components/Diagram/OrganNode'
 
 export type ProposalFilter = 'current' | 'drafts' | 'passed' | 'blocked' | ''
 
@@ -37,10 +37,10 @@ export const filterProposals: (
     : proposals
 
 export const useDeployedProcedure: (options: {
-  procedure?: DiagramProcedure
-  organigram: DiagramOrganigram
+  procedure?: EnhancedProcedure
+  organigram: Organigram
   signer?: Signer | null
-}) => DiagramProcedure | undefined = ({ organigram, procedure, signer }) => {
+}) => Procedure | undefined = ({ organigram, procedure, signer }) => {
   const { organigramClient } = useOrganigramClient(signer)
   const deployedOrgans = useDeployedOrgans({ organigram, signer })
   const [deployedState, setDeployedState] = useState(procedure) // can't use recoil state here because of procedure._Class
@@ -50,7 +50,7 @@ export const useDeployedProcedure: (options: {
       let deployed: EnhancedProcedure | undefined
       const userAddress = await signer?.getAddress()
       if (
-        procedure?.deployed == null &&
+        procedure?.isDeployed != null &&
         procedure?.address != null &&
         procedure.address !== '' &&
         organigramClient != null
@@ -69,19 +69,19 @@ export const useDeployedProcedure: (options: {
               isUserDecider: isUserInSourceOrgan(
                 'deciders',
                 deployedOrgans,
-                _deployedState?.deployed,
+                _deployedState,
                 userAddress
               ),
               isUserModerator: isUserInSourceOrgan(
                 'moderators',
                 deployedOrgans,
-                _deployedState?.deployed,
+                _deployedState,
                 userAddress
               ),
               isUserProposer: isUserInSourceOrgan(
                 'proposers',
                 deployedOrgans,
-                _deployedState?.deployed,
+                _deployedState,
                 userAddress
               ),
               updateCid: procedure.updateCid,
@@ -102,20 +102,14 @@ export const useDeployedProcedure: (options: {
       } else setDeployedState(procedure)
     }
     initDeployed()
-  }, [
-    procedure,
-    organigramClient,
-    deployedOrgans,
-    procedure?.id,
-    procedure?.deployed
-  ])
+  }, [procedure, organigramClient, deployedOrgans, procedure?.address])
 
   return deployedState
 }
 
 export const isUserInSourceOrgan: (
   sourceOrganType: string,
-  organs: DiagramOrgan[],
+  organs: Organ[],
   deployedProcedure?: DeployedProcedure,
   wallet?: string
 ) => boolean = (sourceOrganType, organs, deployedProcedure, wallet) =>
@@ -128,7 +122,7 @@ export const isUserInSourceOrgan: (
     )
     // Find any deployed organ whose entries contain the current user's wallet
     .find(async organ =>
-      organ?.deployed?.entries
+      organ?.entries
         ?.map((entry: OrganEntry) => entry?.address)
         .includes(wallet as string)
     ) !== undefined

@@ -2,7 +2,7 @@ import { atom, useRecoilState, type SetterOrUpdater } from 'recoil'
 
 export interface Layer {
   name: string
-  organIds: string[]
+  organAddresses: string[]
   procedureIds: string[]
   showAdminPermissions: boolean
   showEntriesPermissions: boolean
@@ -21,7 +21,7 @@ export const layersState = atom({
       showAssetsPermissions: true,
       isPublic: false,
       isHidden: false,
-      organIds: [],
+      organAddresses: [],
       procedureIds: []
     }
   ] as Layer[]

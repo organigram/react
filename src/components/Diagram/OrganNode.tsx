@@ -1,5 +1,5 @@
 import React from 'react'
-import { Organ, OrganEntry } from '@organigram/js'
+import { Organ } from '@organigram/js'
 import { Signer } from 'ethers'
 import { Handle, NodeProps, Position } from 'react-flow-renderer'
 import Box from '@mui/material/Box'
@@ -13,19 +13,9 @@ import { DiagramNode } from './Node'
 import { palette } from '../../theme/palette'
 import SummitIcon from '../icons/Summit'
 import { PeopleAltRounded } from '@mui/icons-material'
-
-export type DiagramOrgan = {
-  id: string // salt
-  name: string
-  description: string
-  entries: OrganEntry[]
-  address?: string
-  deployed?: Organ
-}
-
 export interface OrganNodeProps {
   data: {
-    organ: DiagramOrgan
+    organ: Organ
     position?: { x: number; y: number }
     onClick?: () => void
   }
@@ -34,20 +24,14 @@ export interface OrganNodeProps {
 }
 
 export const EntryCount: React.FC<{
-  organ: DiagramOrgan
+  organ: Organ
   signer?: Signer | null
 }> = ({ organ: dbOrgan, signer }) => {
   const { t } = useTranslation()
   const organ = useDeployedOrgan({ organ: dbOrgan, signer })
-  const count = (
-    organ?.deployed == null
-      ? (organ?.entries?.length ?? 0)
-      : (organ?.deployed?.entries?.length ?? 0)
-  )?.toString()
+  const count = organ?.entries?.length?.toString()
   const singularOrPlural =
-    (organ?.deployed?.entries?.length != null &&
-      organ?.deployed?.entries?.length > 1) ||
-    (organ?.entries?.length != null && organ?.entries.length > 1)
+    organ?.entries?.length != null && organ?.entries?.length > 1
       ? 'entries'
       : 'entry'
   return (

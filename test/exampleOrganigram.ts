@@ -1,22 +1,22 @@
 import { formatSalt, predictContractAddress } from '@organigram/js'
 
-const boardOfDirectorsId = formatSalt()
-const executiveTeamId = formatSalt()
-const electExecutiveTeamProcedureId = formatSalt()
+const boardOfDirectorsSalt = formatSalt()
+const executiveTeamSalt = formatSalt()
+const electExecutiveTeamProcedureSalt = formatSalt()
 const electExecutiveTeamProcedureAddress = predictContractAddress({
   type: 'VoteProcedure',
   chainId: '11155111',
-  salt: electExecutiveTeamProcedureId
+  salt: electExecutiveTeamProcedureSalt
 })
 const boardOfDirectorsAddress = predictContractAddress({
   type: 'Organ',
   chainId: '11155111',
-  salt: boardOfDirectorsId
+  salt: boardOfDirectorsSalt
 })
 const executiveTeamAddress = predictContractAddress({
   type: 'Organ',
   chainId: '11155111',
-  salt: executiveTeamId
+  salt: executiveTeamSalt
 })
 
 export const exampleOrganigram = {
@@ -25,7 +25,6 @@ export const exampleOrganigram = {
   description: 'This is an example organigram.',
   organs: [
     {
-      id: boardOfDirectorsId,
       address: boardOfDirectorsAddress,
       name: 'Board of directors',
       description: '',
@@ -33,13 +32,12 @@ export const exampleOrganigram = {
       entries: []
     },
     {
-      id: executiveTeamId,
       address: executiveTeamAddress,
       name: 'Executive team',
       description: '',
-      procedures: [
+      permissions: [
         {
-          address: electExecutiveTeamProcedureAddress
+          permissionAddress: electExecutiveTeamProcedureAddress
         }
       ],
       cid: '',
@@ -48,7 +46,6 @@ export const exampleOrganigram = {
   ],
   procedures: [
     {
-      id: electExecutiveTeamProcedureId,
       address: electExecutiveTeamProcedureAddress,
       name: 'Elect executive team',
       description:
@@ -58,9 +55,8 @@ export const exampleOrganigram = {
       data: null,
       sourceOrgans: [
         {
-          organId: boardOfDirectorsId,
           organAddress: boardOfDirectorsAddress,
-          permissions: 12,
+          permissionValue: 12,
           types: [
             {
               name: 'deciders',
@@ -76,8 +72,7 @@ export const exampleOrganigram = {
       ],
       targetOrgans: [
         {
-          permissions: 12,
-          organId: executiveTeamId,
+          permissionValue: 12,
           organAddress: executiveTeamAddress
         }
       ],

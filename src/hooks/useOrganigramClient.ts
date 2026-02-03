@@ -16,7 +16,7 @@ export const organigramIdState = atom({
   dangerouslyAllowMutability: true
 })
 
-export type CreateOrgan = (
+export type DeployOrganInput = (
   metadataCid: string,
   salt: string,
   index?: number
@@ -36,8 +36,8 @@ export type CreateProcedure = (
 
 export interface OrganigramClientContext {
   organigramClient: OrganigramClient | null
-  createOrgan: CreateOrgan
-  createProcedure: CreateProcedure
+  deployOrgan: DeployOrganInput
+  deployProcedure: CreateProcedure
   isLoading: boolean
   chainId?: string
 }
@@ -74,7 +74,7 @@ export const useOrganigramClient = (
   }, [signer])
 
   return useMemo(() => {
-    const createOrgan: CreateOrgan = async (metadataCid, salt, index) => {
+    const deployOrgan: DeployOrganInput = async (metadataCid, salt, index) => {
       if (organigramClient == null) {
         throw new Error('Manager not loaded.')
       }
@@ -84,10 +84,13 @@ export const useOrganigramClient = (
         transactionNonce = walletNonce + index
       }
       const signerAddress = (await signer?.getAddress()) as string
-      return await organigramClient.createOrgan({
+      return await organigramClient.deployOrgan({
         metadata: metadataCid,
-        procedures: [
-          { address: signerAddress, permissions: parseInt('0xfff', 16) }
+        permissions: [
+          {
+            permissionAddress: signerAddress,
+            permissionValue: parseInt('0xfff', 16)
+          }
         ],
         salt,
         options: {
@@ -98,7 +101,7 @@ export const useOrganigramClient = (
       })
     }
 
-    const createProcedure: CreateProcedure = async (
+    const deployProcedure: CreateProcedure = async (
       type,
       options,
       metadataCid,
@@ -119,7 +122,7 @@ export const useOrganigramClient = (
       if (procedureType?.address == null) {
         throw new Error('Procedure type not registered.')
       }
-      return await organigramClient.createProcedure(
+      return await organigramClient.deployProcedure(
         procedureType.address,
         {
           onTransaction: handleTransaction,
@@ -137,10 +140,13 @@ export const useOrganigramClient = (
       )
     }
 
+    const loadUserOrganigrams = () => {}
+
     return {
       organigramClient,
-      createOrgan,
-      createProcedure,
+      loadUserOrganigrams,
+      deployOrgan,
+      deployProcedure,
       isLoading,
       chainId: organigramClient?.chainId
     }

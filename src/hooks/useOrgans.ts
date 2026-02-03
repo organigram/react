@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react'
-import { type Organ, OrganigramClient } from '@organigram/js'
+import {
+  type Organ,
+  Organigram,
+  OrganigramClient,
+  OrganWithSourcesAndTargets
+} from '@organigram/js'
 import { useOrganigramClient } from './useOrganigramClient'
-import { DiagramOrganigram } from '../components/Diagram'
 import { Signer } from 'ethers'
-import { DiagramOrgan } from '../components/Diagram/OrganNode'
+// import { DiagramOrgan } from '../components/Diagram/OrganNode'
 
 export const getDeployedOrganData = async (
   organAddress?: string | null,
@@ -18,29 +22,36 @@ export const getDeployedOrganData = async (
   if (organ != null) return organ
 }
 
+export const getOrganSourcesAndTargets = (
+  organ: Organ,
+  organigram: Organigram
+): OrganWithSourcesAndTargets => {
+  return organ as OrganWithSourcesAndTargets
+}
+
 export const useDeployedOrgan = ({
   organ,
   signer
 }: {
-  organ?: DiagramOrgan | null
+  organ?: Organ | null
   signer?: Signer | null
-}): DiagramOrgan | undefined => {
+}): Organ | undefined => {
   // const deployed = useRecoilValue(deployedOrganState(organ?.address))
   const [deployedState, setDeployedState] = useState(organ)
-  const client = useOrganigramClient(signer)
+  const { organigramClient } = useOrganigramClient(signer)
 
   useEffect(() => {
     const getDeployedOrgan: () => Promise<void> = async () => {
       const deployed = await getDeployedOrganData(
         organ?.address,
-        client?.organigramClient
+        organigramClient
       )
       if (organ != null && deployed != null) {
-        setDeployedState({ ...organ, deployed })
+        setDeployedState(deployed)
       }
     }
     getDeployedOrgan()
-  }, [client, organ, organ?.entries])
+  }, [organigramClient, organ, organ?.entries])
 
   return deployedState ?? undefined
 }
@@ -49,10 +60,10 @@ export const useDeployedOrgans = ({
   organigram,
   signer
 }: {
-  organigram: DiagramOrganigram
+  organigram: Organigram
   signer?: Signer | null
-}): DiagramOrgan[] => {
-  const [deployedOrgans, setDeployedOrgans] = useState<DiagramOrgan[]>([])
+}): Organ[] => {
+  const [deployedOrgans, setDeployedOrgans] = useState<Organ[]>([])
   const { organigramClient } = useOrganigramClient(signer)
   useEffect(() => {
     const getDeployedOrgans: () => Promise<void> = async () => {
@@ -66,7 +77,7 @@ export const useDeployedOrgans = ({
                 organigramClient
               )
               if (organ != null && deployed != null) {
-                return { ...organ, deployed }
+                return deployed
               } else return organ
             })
         )

@@ -1,8 +1,8 @@
 import React from 'react'
 import {
-  EnhancedProcedure,
-  Procedure,
+  Organigram,
   ProcedureProposal,
+  ProcedureWithSourcesAndTargets,
   getPermissionsSet
 } from '@organigram/js'
 import { Signer } from 'ethers'
@@ -12,33 +12,27 @@ import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 
 import { makeTestId } from '../../utils'
-import { filterProposals, useDeployedProcedure } from '../../hooks/useProcedures'
+import {
+  filterProposals,
+  useDeployedProcedure
+} from '../../hooks/useProcedures'
 import { DiagramNode } from './Node'
 import { palette } from '../../theme/palette'
-import { DiagramOrganigram, SourceOrgan, TargetOrgan } from '.'
 import ProcedureIcon from '../icons/Procedure'
 import { CircularProgress } from '@mui/material'
 import { Tune } from '@mui/icons-material'
 
-export type DiagramProcedure = Partial<Procedure> & {
-  id: string
-  name: string
-  sourceOrgans: SourceOrgan[]
-  targetOrgans: TargetOrgan[]
-  deployed?: EnhancedProcedure
-}
-
 export interface ProcedureNodeProps {
   hideHandles?: boolean
   signer?: Signer | null
-  organigram?: DiagramOrganigram
+  organigram?: Organigram
 }
 
 export const ProcedureNode: React.FC<
   Partial<
     NodeProps<{
-      procedure: DiagramProcedure
-      onClick?: (procedure: DiagramProcedure) => void
+      procedure: ProcedureWithSourcesAndTargets
+      onClick?: (procedure: ProcedureWithSourcesAndTargets) => void
     }>
   > &
     ProcedureNodeProps
@@ -53,21 +47,20 @@ export const ProcedureNode: React.FC<
 }) => {
   const deployedProcedure = useDeployedProcedure({
     procedure: data?.procedure,
-    organigram: organigram as DiagramOrganigram,
+    organigram: organigram as Organigram,
     signer
   })
-  const activeProposals =
-    deployedProcedure?.deployed != null
-      ? filterProposals(
-          'current',
-          deployedProcedure?.deployed?.proposals as ProcedureProposal[]
-        ).length
-      : undefined
+  const activeProposals = deployedProcedure?.isDeployed
+    ? filterProposals(
+        'current',
+        deployedProcedure?.proposals as ProcedureProposal[]
+      ).length
+    : undefined
 
   return (
     <>
       <Badge
-        key={data?.procedure?.id}
+        key={data?.procedure?.address}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         sx={{
           '& .MuiBadge-badge': {
@@ -77,7 +70,7 @@ export const ProcedureNode: React.FC<
         }}
         invisible={activeProposals === 0 || deployedProcedure?.address === ''}
         badgeContent={
-          deployedProcedure?.deployed != null ? (
+          deployedProcedure?.isDeployed ? (
             <>{activeProposals}</>
           ) : (
             <CircularProgress
@@ -90,16 +83,10 @@ export const ProcedureNode: React.FC<
         <Card
           sx={{
             borderRadius: '16px',
-            backgroundColor:
-              deployedProcedure?.address != null &&
-              deployedProcedure?.address !== ''
-                ? ''
-                : 'transparent',
-            border:
-              deployedProcedure?.address != null &&
-              deployedProcedure?.address !== ''
-                ? ''
-                : `dashed 1px ${palette.violet.light3}`,
+            backgroundColor: deployedProcedure?.isDeployed ? '' : 'transparent',
+            border: deployedProcedure?.isDeployed
+              ? ''
+              : `dashed 1px ${palette.violet.light3}`,
             pt: 1,
             pl: 2,
             minWidth: '240px'
@@ -125,16 +112,16 @@ export const ProcedureNode: React.FC<
               >
                 {data?.procedure.targetOrgans.some(
                   to =>
-                    getPermissionsSet(to.permissions).includes(
+                    getPermissionsSet(to.permissionValue).includes(
                       'ADD_PROCEDURES'
                     ) ||
-                    getPermissionsSet(to.permissions).includes(
+                    getPermissionsSet(to.permissionValue).includes(
                       'REMOVE_PROCEDURES'
                     ) ||
-                    getPermissionsSet(to.permissions).includes(
+                    getPermissionsSet(to.permissionValue).includes(
                       'ALL_PROCEDURES'
                     ) ||
-                    getPermissionsSet(to.permissions).includes('ALL')
+                    getPermissionsSet(to.permissionValue).includes('ALL')
                 ) ? (
                   <Tune
                     style={{

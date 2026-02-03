@@ -1,5 +1,14 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react'
-import { getPermissionsSet, type Asset } from '@organigram/js'
+import {
+  EnhancedProcedure,
+  getPermissionsSet,
+  Organ,
+  Organigram,
+  Procedure,
+  SourceOrgan,
+  TargetOrgan,
+  type Asset
+} from '@organigram/js'
 import { Signer } from 'ethers'
 import dagre from 'dagre'
 import ReactFlow, {
@@ -22,45 +31,35 @@ import { NoSsr } from '@mui/material'
 
 import { useLayers } from '../../hooks/useLayers'
 import { mobileNavHeight } from '../../theme'
-import { DiagramProcedure, ProcedureNode } from './ProcedureNode'
-import { DiagramOrgan, OrganNode } from './OrganNode'
-import { DiagramAsset, AssetNode } from './AssetNode'
+import { ProcedureNode } from './ProcedureNode'
+import { OrganNode } from './OrganNode'
+import { AssetNode } from './AssetNode'
 
-export type SourceOrgan = {
-  organId: string
-  procedureId: string
-  assetId?: string
+export interface OrganigramInput {
+  organs: Organ[]
+  procedures: Procedure[]
+  assets: Asset[]
 }
-export type TargetOrgan = SourceOrgan & { permissions: number }
-
-export interface DiagramOrganigram {
-  organs: DiagramOrgan[]
-  procedures: DiagramProcedure[]
-  assets: DiagramAsset[]
-}
-
 export interface DiagramProps {
   nodeTypes?: NodeTypes
   direction: string
-  organigram: DiagramOrganigram | null
+  organigram: Organigram | null
   style?: Record<string, unknown>
   controls?: boolean
   options?: ReactFlowProps
   signer?: Signer | null
   isTabletOrAbove?: boolean
-  onClickOrgan: (procedure: DiagramOrgan) => void
-  onClickProcedure: (procedure: DiagramProcedure) => void
-  onClickAsset: (procedure: DiagramAsset) => void
-  onAssetDeployed?: (asset: DiagramAsset) => void
-  onOrganDeployed?: (organ: DiagramOrgan) => void
-  onProcedureDeployed?: (procedure: DiagramProcedure) => void
+  onClickOrgan: (organ: Organ) => void
+  onClickAsset: (asset: Asset) => void
+  onClickProcedure: (procedure: EnhancedProcedure) => void
+  onOrganDeployed?: (organ: Organ) => void
+  onAssetDeployed?: (asset: Asset) => void
+  onProcedureDeployed?: (procedure: EnhancedProcedure) => void
 }
 
 export const defaultNodeTypes = {
-  procedure: ProcedureNode as React.FC<
-    NodeProps<{ procedure: DiagramProcedure }>
-  >,
-  organ: OrganNode as React.FC<NodeProps<{ organ: DiagramOrgan }>>,
+  procedure: ProcedureNode as React.FC<NodeProps<{ procedure: Procedure }>>,
+  organ: OrganNode as React.FC<NodeProps<{ organ: Organ }>>,
   asset: AssetNode as React.FC<NodeProps<{ asset: Asset }>>
 }
 const nodeWidth = 256
@@ -122,7 +121,6 @@ export const Diagram: React.FC<DiagramProps> = ({
   style,
   controls,
   options,
-  signer,
   isTabletOrAbove,
   onClickOrgan,
   onClickProcedure,
@@ -166,7 +164,7 @@ export const Diagram: React.FC<DiagramProps> = ({
     () =>
       (proceduresNodes
         ?.map((procedureNode, index) => {
-          const procedure: DiagramProcedure = procedureNode.data.procedure
+          const procedure = procedureNode.data.procedure
           if (procedure == null) {
             return null
           }
@@ -174,51 +172,54 @@ export const Diagram: React.FC<DiagramProps> = ({
             procedure.sourceOrgans
               ?.filter(sourceOrgan =>
                 // layers[0].showAdminPermissions &&
-                sourceOrgan.organId != null &&
+                sourceOrgan.organAddress != null &&
                 procedure.targetOrgans.find(
                   (targetOrgan: TargetOrgan) =>
-                    getPermissionsSet(targetOrgan.permissions).findIndex(i =>
-                      [
-                        'ALL_PROCEDURES',
-                        'ADD_PROCEDURES',
-                        'REMOVE_PROCEDURES'
-                      ].includes(i)
+                    getPermissionsSet(targetOrgan.permissionValue).findIndex(
+                      i =>
+                        [
+                          'ALL_PROCEDURES',
+                          'ADD_PROCEDURES',
+                          'REMOVE_PROCEDURES'
+                        ].includes(i)
                     ) >= 0
                 ) != null
                   ? true
                   : layers[0].showEntriesPermissions &&
                       procedure.targetOrgans.find(
                         (targetOrgan: TargetOrgan) =>
-                          getPermissionsSet(targetOrgan.permissions).findIndex(
-                            i =>
-                              [
-                                'ALL_ENTRIES',
-                                'ADD_ENTRIES',
-                                'REMOVE_ENTRIES'
-                              ].includes(i)
+                          getPermissionsSet(
+                            targetOrgan.permissionValue
+                          ).findIndex(i =>
+                            [
+                              'ALL_ENTRIES',
+                              'ADD_ENTRIES',
+                              'REMOVE_ENTRIES'
+                            ].includes(i)
                           ) >= 0
                       ) != null
                     ? true
                     : layers[0].showAssetsPermissions &&
                       procedure.targetOrgans.find(
                         (targetOrgan: TargetOrgan) =>
-                          getPermissionsSet(targetOrgan.permissions).findIndex(
-                            i =>
-                              [
-                                'DEPOSIT_ETHER',
-                                'WITHDRAW_ETHER',
-                                'DEPOSIT_COINS',
-                                'WITHDRAW_COINS',
-                                'DEPOSIT_COLLECTIBLES',
-                                'WITHDRAW_COLLECTIBLES'
-                              ].includes(i)
+                          getPermissionsSet(
+                            targetOrgan.permissionValue
+                          ).findIndex(i =>
+                            [
+                              'DEPOSIT_ETHER',
+                              'WITHDRAW_ETHER',
+                              'DEPOSIT_COINS',
+                              'WITHDRAW_COINS',
+                              'DEPOSIT_COLLECTIBLES',
+                              'WITHDRAW_COLLECTIBLES'
+                            ].includes(i)
                           ) >= 0
                       ) != null
               )
               ?.map((sourceOrgan: SourceOrgan, idx: number) => {
                 const sourceNode = organsNodes?.find(
                   organNode =>
-                    organNode?.data?.organ?.id === sourceOrgan.organId
+                    organNode?.data?.organ?.address === sourceOrgan.organAddress
                 )
                 if (sourceNode != null) {
                   return {
@@ -231,7 +232,7 @@ export const Diagram: React.FC<DiagramProps> = ({
               })
               .filter(s => s != null) ?? []
           const erc20Asset = procedure.sourceOrgans.find(
-            source => source.assetId != null
+            source => source.assetAddress != null
           )
           const tokenSource =
             erc20Asset == null
@@ -240,7 +241,8 @@ export const Diagram: React.FC<DiagramProps> = ({
                   {
                     id: `procedure-${index}-source-token`,
                     source: assetsNodes.find(
-                      node => node.data.asset.id === erc20Asset.assetId
+                      node =>
+                        node.data.asset.address === erc20Asset.assetAddress
                     )?.id,
                     target: procedureNode.id
                   }
@@ -249,7 +251,7 @@ export const Diagram: React.FC<DiagramProps> = ({
             procedure.targetOrgans
               ?.filter((targetOrgan: TargetOrgan) =>
                 layers[0].showAdminPermissions &&
-                getPermissionsSet(targetOrgan.permissions).findIndex(i =>
+                getPermissionsSet(targetOrgan.permissionValue).findIndex(i =>
                   [
                     'ALL_PROCEDURES',
                     'ADD_PROCEDURES',
@@ -258,29 +260,31 @@ export const Diagram: React.FC<DiagramProps> = ({
                 ) >= 0
                   ? true
                   : layers[0].showEntriesPermissions &&
-                      getPermissionsSet(targetOrgan.permissions).findIndex(i =>
-                        [
-                          'ALL_ENTRIES',
-                          'ADD_ENTRIES',
-                          'REMOVE_ENTRIES'
-                        ].includes(i)
+                      getPermissionsSet(targetOrgan.permissionValue).findIndex(
+                        i =>
+                          [
+                            'ALL_ENTRIES',
+                            'ADD_ENTRIES',
+                            'REMOVE_ENTRIES'
+                          ].includes(i)
                       ) >= 0
                     ? true
-                    : getPermissionsSet(targetOrgan.permissions).findIndex(i =>
-                        [
-                          'DEPOSIT_ETHER',
-                          'WITHDRAW_ETHER',
-                          'DEPOSIT_COINS',
-                          'WITHDRAW_COINS',
-                          'DEPOSIT_COLLECTIBLES',
-                          'WITHDRAW_COLLECTIBLES'
-                        ].includes(i)
+                    : getPermissionsSet(targetOrgan.permissionValue).findIndex(
+                        i =>
+                          [
+                            'DEPOSIT_ETHER',
+                            'WITHDRAW_ETHER',
+                            'DEPOSIT_COINS',
+                            'WITHDRAW_COINS',
+                            'DEPOSIT_COLLECTIBLES',
+                            'WITHDRAW_COLLECTIBLES'
+                          ].includes(i)
                       ) >= 0
               )
               ?.map((targetOrgan: TargetOrgan, idx: number) => {
                 const destinationNode = organsNodes?.find(
                   organNode =>
-                    organNode?.data?.organ?.id === targetOrgan.organId
+                    organNode?.data?.organ?.address === targetOrgan.organAddress
                 )
                 if (destinationNode != null) {
                   return {
