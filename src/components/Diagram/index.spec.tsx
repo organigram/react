@@ -1,20 +1,19 @@
+import { Organigram } from '@organigram/js'
 import { render } from 'vitest-browser-react'
 import { test, expect } from 'vitest'
 
-import { Diagram, DiagramOrganigram } from '.'
+import { Diagram } from '.'
 import Wrapper from '../../../test/Wrapper'
-import { exampleOrganigram } from '../../../test/exampleOrganigram'
 
 test('Mount', async () => {
+  const organigram = new Organigram()
   const { getByText } = await render(
     <Diagram
       {...{
-        direction: 'TB',
-        organigram: exampleOrganigram as DiagramOrganigram,
+        organigram,
         style: {
           height: '100vh'
         },
-        controls: true,
         onClickAsset: () => {},
         onClickOrgan: () => {},
         onClickProcedure: () => {}

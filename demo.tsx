@@ -1,21 +1,19 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client'
+import { Organigram } from '@organigram/js'
 
-import { Diagram, DiagramOrganigram } from './src'
+import { Diagram } from './src'
 import Wrapper from './test/Wrapper'
-import { exampleOrganigram } from './test/exampleOrganigram'
 
 createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Wrapper>
       <Diagram
         {...{
-          direction: 'TB',
-          organigram: exampleOrganigram as unknown as DiagramOrganigram,
+          organigram: new Organigram(), // Creates a default organigram. See options for more customization.
           style: {
             height: '100vh'
           },
-          controls: true,
           onClickAsset: () => {},
           onClickOrgan: () => {},
           onClickProcedure: () => {}

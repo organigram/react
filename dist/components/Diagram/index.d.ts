@@ -9,7 +9,7 @@ export interface OrganigramInput {
 }
 export interface DiagramProps {
     nodeTypes?: NodeTypes;
-    direction: string;
+    direction?: string;
     organigram: Organigram | null;
     style?: Record<string, unknown>;
     controls?: boolean;
