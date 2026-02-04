@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import {
   EnhancedProcedure,
   getPermissionsSet,
+  getSourcesAndTargets,
   Organ,
   Organigram,
   Procedure,
@@ -42,7 +43,7 @@ export interface OrganigramInput {
 }
 export interface DiagramProps {
   nodeTypes?: NodeTypes
-  direction: string
+  direction?: string
   organigram: Organigram | null
   style?: Record<string, unknown>
   controls?: boolean
@@ -116,7 +117,7 @@ const autodistribute: (
 
 export const Diagram: React.FC<DiagramProps> = ({
   nodeTypes = defaultNodeTypes,
-  direction,
+  direction = 'TB',
   organigram,
   style,
   controls,
@@ -126,38 +127,40 @@ export const Diagram: React.FC<DiagramProps> = ({
   onClickProcedure,
   onClickAsset
 }) => {
+  const organigramWithSourcesAndTargets = getSourcesAndTargets(organigram!)
+
   const [layers] = useLayers()
   const organsNodes = useMemo(
     () =>
-      organigram?.organs?.map(organ => ({
+      organigramWithSourcesAndTargets?.organs?.map(organ => ({
         id: `organ-${organ.address}`,
         type: 'organ',
         position: { x: 0, y: 0 },
         data: { organ, onClick: onClickOrgan }
       })) ?? [],
-    [organigram?.organs, onClickOrgan]
+    [organigramWithSourcesAndTargets?.organs, onClickOrgan]
   )
 
   const proceduresNodes = useMemo(
     () =>
-      organigram?.procedures?.map(procedure => ({
+      organigramWithSourcesAndTargets?.procedures?.map(procedure => ({
         id: `procedure-${procedure.address}`,
         type: 'procedure',
         position: { x: 0, y: 0 },
         data: { procedure, onClick: onClickProcedure }
       })) ?? [],
-    [organigram?.procedures, onClickProcedure]
+    [organigramWithSourcesAndTargets?.procedures, onClickProcedure]
   )
 
   const assetsNodes = useMemo(
     () =>
-      organigram?.assets?.map(asset => ({
+      organigramWithSourcesAndTargets?.assets?.map(asset => ({
         id: `asset-${asset.address}`,
         type: 'asset',
         position: { x: 0, y: 0 },
         data: { asset, onClick: onClickAsset }
       })) ?? [],
-    [organigram?.assets, onClickAsset]
+    [organigramWithSourcesAndTargets?.assets, onClickAsset]
   )
 
   const initialEdges = useMemo(
@@ -334,16 +337,15 @@ export const Diagram: React.FC<DiagramProps> = ({
     [setEdges]
   )
 
-  useEffect(() => {
-    const distributedNodes = autodistribute(
-      [...organsNodes, ...proceduresNodes, ...assetsNodes],
-      initialEdges,
-      direction
-    )
-    setNodes([...distributedNodes])
-    setEdges(initialEdges)
-  }, [direction, initialEdges, organsNodes, proceduresNodes, assetsNodes])
-
+  // useEffect(() => {
+  //   const distributedNodes = autodistribute(
+  //     [...organsNodes, ...proceduresNodes, ...assetsNodes],
+  //     initialEdges,
+  //     direction
+  //   )
+  //   setNodes([...distributedNodes])
+  //   setEdges(initialEdges)
+  // }, [direction, initialEdges, organsNodes, proceduresNodes, assetsNodes])
   return (
     <NoSsr>
       <ReactFlow
