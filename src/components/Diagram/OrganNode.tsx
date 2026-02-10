@@ -1,5 +1,5 @@
 import React from 'react'
-import { Organ } from '@organigram/js'
+import { Organ, OrganJson } from '@organigram/js'
 import { Signer } from 'ethers'
 import { Handle, NodeProps, Position } from 'react-flow-renderer'
 import Box from '@mui/material/Box'
@@ -8,7 +8,7 @@ import Grid from '@mui/material/Grid'
 
 import { makeTestId } from '../../utils'
 import { useTranslation } from 'react-i18next'
-import { useDeployedOrgan } from '../../hooks/useOrgans'
+// import { useDeployedOrgan } from '../../hooks/useOrgans'
 import { DiagramNode } from './Node'
 import { palette } from '../../theme/palette'
 import SummitIcon from '../icons/Summit'
@@ -24,11 +24,11 @@ export interface OrganNodeProps {
 }
 
 export const EntryCount: React.FC<{
-  organ: Organ
+  organ: OrganJson
   signer?: Signer | null
-}> = ({ organ: dbOrgan, signer }) => {
+}> = ({ organ, signer }) => {
   const { t } = useTranslation()
-  const organ = useDeployedOrgan({ organ: dbOrgan, signer })
+  // const organ = useDeployedOrgan({ organ: dbOrgan, signer })
   const count = organ?.entries?.length?.toString()
   const singularOrPlural =
     organ?.entries?.length != null && organ?.entries?.length > 1
@@ -49,7 +49,7 @@ export const OrganNode: React.FC<Partial<NodeProps> & OrganNodeProps> = ({
   signer
 }) => {
   const isMaster = data?.position?.y === 0
-  const isDeployed = data?.organ?.address != null && data?.organ.address !== ''
+  const isDeployed = data?.organ?.isDeployed
 
   return (
     <>

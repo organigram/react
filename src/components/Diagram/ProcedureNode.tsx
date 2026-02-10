@@ -1,8 +1,8 @@
 import React from 'react'
 import {
-  Organigram,
+  OrganigramJson,
+  ProcedureJson,
   ProcedureProposal,
-  ProcedureWithSourcesAndTargets,
   getPermissionsSet
 } from '@organigram/js'
 import { Signer } from 'ethers'
@@ -25,14 +25,14 @@ import { Tune } from '@mui/icons-material'
 export interface ProcedureNodeProps {
   hideHandles?: boolean
   signer?: Signer | null
-  organigram?: Organigram
+  organigram?: OrganigramJson
 }
 
 export const ProcedureNode: React.FC<
   Partial<
     NodeProps<{
-      procedure: ProcedureWithSourcesAndTargets
-      onClick?: (procedure: ProcedureWithSourcesAndTargets) => void
+      procedure: ProcedureJson
+      onClick?: (procedure: ProcedureJson) => void
     }>
   > &
     ProcedureNodeProps
@@ -47,7 +47,7 @@ export const ProcedureNode: React.FC<
 }) => {
   const deployedProcedure = useDeployedProcedure({
     procedure: data?.procedure,
-    organigram: organigram as Organigram,
+    organigram: organigram!,
     signer
   })
   const activeProposals = deployedProcedure?.isDeployed
@@ -68,9 +68,9 @@ export const ProcedureNode: React.FC<
             color: 'violet.light'
           }
         }}
-        invisible={activeProposals === 0 || deployedProcedure?.address === ''}
+        invisible={activeProposals === 0 || !deployedProcedure?.isDeployed}
         badgeContent={
-          deployedProcedure?.isDeployed ? (
+          deployedProcedure?.proposals?.length ? (
             <>{activeProposals}</>
           ) : (
             <CircularProgress
@@ -110,16 +110,16 @@ export const ProcedureNode: React.FC<
                   backgroundColor: 'violet.light3'
                 }}
               >
-                {data?.procedure.targetOrgans.some(
+                {data?.procedure.targetOrgans?.some(
                   to =>
                     getPermissionsSet(to.permissionValue).includes(
-                      'ADD_PROCEDURES'
+                      'ADD_PERMISSIONS'
                     ) ||
                     getPermissionsSet(to.permissionValue).includes(
-                      'REMOVE_PROCEDURES'
+                      'REMOVE_PERMISSIONS'
                     ) ||
                     getPermissionsSet(to.permissionValue).includes(
-                      'ALL_PROCEDURES'
+                      'ALL_PERMISSIONS'
                     ) ||
                     getPermissionsSet(to.permissionValue).includes('ALL')
                 ) ? (

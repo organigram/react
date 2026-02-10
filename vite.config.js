@@ -20,7 +20,16 @@ export default defineConfig({
       fileName: format => (format === 'es' ? 'index.mjs' : 'index.cjs')
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime', /@mui/, 'recoil'],
+      external: [
+        'react',
+        'react-dom',
+        'react/jsx-runtime',
+        /@mui/,
+        'recoil',
+        'ethers',
+        '@organigram/js',
+        '@organigram/protocol'
+      ]
     }
   },
   test: {

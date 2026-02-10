@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react'
 import {
-  type Procedure as DeployedProcedure,
   type OrganEntry,
-  type EnhancedProcedure,
   type ProcedureProposal,
-  Organigram,
-  Organ,
-  Procedure
+  ProcedureJson,
+  OrganigramJson,
+  OrganJson
 } from '@organigram/js'
 
 import { useDeployedOrgans } from './useOrgans'
@@ -37,17 +35,17 @@ export const filterProposals: (
     : proposals
 
 export const useDeployedProcedure: (options: {
-  procedure?: EnhancedProcedure
-  organigram: Organigram
+  procedure?: ProcedureJson
+  organigram: OrganigramJson
   signer?: Signer | null
-}) => Procedure | undefined = ({ organigram, procedure, signer }) => {
+}) => ProcedureJson | undefined = ({ organigram, procedure, signer }) => {
   const { organigramClient } = useOrganigramClient(signer)
   const deployedOrgans = useDeployedOrgans({ organigram, signer })
   const [deployedState, setDeployedState] = useState(procedure) // can't use recoil state here because of procedure._Class
 
   useEffect(() => {
     const initDeployed: () => Promise<void> = async () => {
-      let deployed: EnhancedProcedure | undefined
+      let deployed: ProcedureJson | undefined
       const userAddress = await signer?.getAddress()
       if (
         procedure?.isDeployed != null &&
@@ -56,12 +54,14 @@ export const useDeployedProcedure: (options: {
         organigramClient != null
       ) {
         try {
-          deployed = await organigramClient
-            ?.getProcedure(procedure.address)
-            .catch((e: Error) => {
-              console.error(e)
-              return undefined
-            })
+          deployed = (
+            await organigramClient
+              ?.getProcedure(procedure.address)
+              .catch((e: Error) => {
+                console.error(e)
+                return undefined
+              })
+          )?.toJson()
           if (deployed != null) {
             setDeployedState(_deployedState => ({
               ...procedure,
@@ -84,16 +84,11 @@ export const useDeployedProcedure: (options: {
                 _deployedState,
                 userAddress
               ),
-              updateCid: procedure.updateCid,
-              updateAdmin: procedure.updateAdmin,
-              propose: procedure.propose,
-              blockProposal: procedure.blockProposal,
-              presentProposal: procedure.presentProposal,
-              reloadProposal: procedure.reloadProposal,
-              reloadProposals: procedure.reloadProposals,
-              adoptProposal: procedure.adoptProposal,
-              applyProposal: procedure.applyProposal,
-              reloadData: procedure.reloadData
+              data: procedure.data,
+              metadata: procedure.metadata,
+              sourceOrgans: procedure.sourceOrgans,
+              targetOrgans: procedure.targetOrgans,
+              type: procedure.type
             }))
           }
         } catch (e) {
@@ -109,16 +104,15 @@ export const useDeployedProcedure: (options: {
 
 export const isUserInSourceOrgan: (
   sourceOrganType: string,
-  organs: Organ[],
-  deployedProcedure?: DeployedProcedure,
+  organs: OrganJson[],
+  deployedProcedure?: ProcedureJson,
   wallet?: string
 ) => boolean = (sourceOrganType, organs, deployedProcedure, wallet) =>
   organs
     // Find all organs that are this procedure's source organ type (for example: deciders)
     .filter(
       organ =>
-        organ.address ===
-        deployedProcedure?.[sourceOrganType as keyof DeployedProcedure]
+        organ.address === deployedProcedure?.[sourceOrganType as 'deciders']
     )
     // Find any deployed organ whose entries contain the current user's wallet
     .find(async organ =>

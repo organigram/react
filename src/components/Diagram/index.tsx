@@ -1,14 +1,17 @@
 import React, { useState, useCallback, useMemo } from 'react'
 import {
-  EnhancedProcedure,
+  OrganigramJson,
+  OrganJson,
+  AssetJson,
+  ProcedureJson,
   getPermissionsSet,
   getSourcesAndTargets,
   Organ,
-  Organigram,
   Procedure,
   SourceOrgan,
   TargetOrgan,
-  type Asset
+  type Asset,
+  Organigram
 } from '@organigram/js'
 import { Signer } from 'ethers'
 import dagre from 'dagre'
@@ -36,26 +39,21 @@ import { ProcedureNode } from './ProcedureNode'
 import { OrganNode } from './OrganNode'
 import { AssetNode } from './AssetNode'
 
-export interface OrganigramInput {
-  organs: Organ[]
-  procedures: Procedure[]
-  assets: Asset[]
-}
 export interface DiagramProps {
   nodeTypes?: NodeTypes
   direction?: string
-  organigram: Organigram | null
+  organigram: OrganigramJson | null
   style?: Record<string, unknown>
   controls?: boolean
   options?: ReactFlowProps
   signer?: Signer | null
   isTabletOrAbove?: boolean
-  onClickOrgan: (organ: Organ) => void
-  onClickAsset: (asset: Asset) => void
-  onClickProcedure: (procedure: EnhancedProcedure) => void
-  onOrganDeployed?: (organ: Organ) => void
-  onAssetDeployed?: (asset: Asset) => void
-  onProcedureDeployed?: (procedure: EnhancedProcedure) => void
+  onClickOrgan: (organ: OrganJson) => void
+  onClickAsset: (asset: AssetJson) => void
+  onClickProcedure: (procedure: ProcedureJson) => void
+  onOrganDeployed?: (organ: OrganJson) => void
+  onAssetDeployed?: (asset: AssetJson) => void
+  onProcedureDeployed?: (procedure: ProcedureJson) => void
 }
 
 export const defaultNodeTypes = {
@@ -127,7 +125,9 @@ export const Diagram: React.FC<DiagramProps> = ({
   onClickProcedure,
   onClickAsset
 }) => {
-  const organigramWithSourcesAndTargets = getSourcesAndTargets(organigram!)
+  const organigramWithSourcesAndTargets = new Organigram(
+    getSourcesAndTargets(organigram!)
+  )
 
   const [layers] = useLayers()
   const organsNodes = useMemo(
@@ -176,20 +176,20 @@ export const Diagram: React.FC<DiagramProps> = ({
               ?.filter(sourceOrgan =>
                 // layers[0].showAdminPermissions &&
                 sourceOrgan.organAddress != null &&
-                procedure.targetOrgans.find(
+                procedure.targetOrgans?.find(
                   (targetOrgan: TargetOrgan) =>
                     getPermissionsSet(targetOrgan.permissionValue).findIndex(
                       i =>
                         [
-                          'ALL_PROCEDURES',
-                          'ADD_PROCEDURES',
-                          'REMOVE_PROCEDURES'
+                          'ALL_PERMISSIONS',
+                          'ADD_PERMISSIONS',
+                          'REMOVE_PERMISSIONS'
                         ].includes(i)
                     ) >= 0
                 ) != null
                   ? true
                   : layers[0].showEntriesPermissions &&
-                      procedure.targetOrgans.find(
+                      procedure.targetOrgans?.find(
                         (targetOrgan: TargetOrgan) =>
                           getPermissionsSet(
                             targetOrgan.permissionValue
@@ -203,7 +203,7 @@ export const Diagram: React.FC<DiagramProps> = ({
                       ) != null
                     ? true
                     : layers[0].showAssetsPermissions &&
-                      procedure.targetOrgans.find(
+                      procedure.targetOrgans?.find(
                         (targetOrgan: TargetOrgan) =>
                           getPermissionsSet(
                             targetOrgan.permissionValue
@@ -234,7 +234,7 @@ export const Diagram: React.FC<DiagramProps> = ({
                 return null
               })
               .filter(s => s != null) ?? []
-          const erc20Asset = procedure.sourceOrgans.find(
+          const erc20Asset = procedure.sourceOrgans?.find(
             source => source.assetAddress != null
           )
           const tokenSource =
@@ -256,9 +256,9 @@ export const Diagram: React.FC<DiagramProps> = ({
                 layers[0].showAdminPermissions &&
                 getPermissionsSet(targetOrgan.permissionValue).findIndex(i =>
                   [
-                    'ALL_PROCEDURES',
-                    'ADD_PROCEDURES',
-                    'REMOVE_PROCEDURES'
+                    'ALL_PERMISSIONS',
+                    'ADD_PERMISSIONS',
+                    'REMOVE_PERMISSIONS'
                   ].includes(i)
                 ) >= 0
                   ? true
@@ -345,7 +345,7 @@ export const Diagram: React.FC<DiagramProps> = ({
   //   )
   //   setNodes([...distributedNodes])
   //   setEdges(initialEdges)
-  // }, [direction, initialEdges, organsNodes, proceduresNodes, assetsNodes])
+  // }, [])
   return (
     <NoSsr>
       <ReactFlow
