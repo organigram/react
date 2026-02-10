@@ -7,8 +7,6 @@ export type CreateProcedure = (type: string, options: TransactionOptions, metada
 }>;
 export interface OrganigramClientContext {
     organigramClient: OrganigramClient | null;
-    deployOrgan: DeployOrganInput;
-    deployProcedure: CreateProcedure;
     isLoading: boolean;
     chainId?: string;
 }

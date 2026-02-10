@@ -1,5 +1,5 @@
 import { default as React } from 'react';
-import { Organ } from '@organigram/js';
+import { Organ, OrganJson } from '@organigram/js';
 import { Signer } from 'ethers';
 import { NodeProps } from 'react-flow-renderer';
 export interface OrganNodeProps {
@@ -15,7 +15,7 @@ export interface OrganNodeProps {
     signer?: Signer | null;
 }
 export declare const EntryCount: React.FC<{
-    organ: Organ;
+    organ: OrganJson;
     signer?: Signer | null;
 }>;
 export declare const OrganNode: React.FC<Partial<NodeProps> & OrganNodeProps>;
