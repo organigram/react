@@ -54,7 +54,7 @@ export const ProcedureNode: React.FC<
     ? filterProposals(
         'current',
         deployedProcedure?.proposals as ProcedureProposal[]
-      ).length
+      )?.length
     : undefined
 
   return (
