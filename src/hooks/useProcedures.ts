@@ -18,7 +18,7 @@ export const filterProposals: (
   proposals: ProcedureProposal[]
 ) => ProcedureProposal[] = (fltr, proposals) =>
   fltr != null || fltr !== ''
-    ? proposals.filter(proposal => {
+    ? proposals?.filter(proposal => {
         switch (fltr) {
           case 'current':
             return proposal.presented && !proposal.applied && !proposal.blocked
@@ -48,19 +48,14 @@ export const useDeployedProcedure: (options: {
       let deployed: ProcedureJson | undefined
       const userAddress = await signer?.getAddress()
       if (
-        procedure?.isDeployed != null &&
+        procedure?.isDeployed === true &&
         procedure?.address != null &&
         procedure.address !== '' &&
         organigramClient != null
       ) {
         try {
           deployed = (
-            await organigramClient
-              ?.getProcedure(procedure.address)
-              .catch((e: Error) => {
-                console.error(e)
-                return undefined
-              })
+            await organigramClient?.getProcedure(procedure.address)
           )?.toJson()
           if (deployed != null) {
             setDeployedState(_deployedState => ({

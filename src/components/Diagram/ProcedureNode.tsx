@@ -51,10 +51,10 @@ export const ProcedureNode: React.FC<
     signer
   })
   const activeProposals = deployedProcedure?.isDeployed
-    ? filterProposals(
+    ? (filterProposals(
         'current',
         deployedProcedure?.proposals as ProcedureProposal[]
-      )?.length
+      )?.length ?? 0)
     : undefined
 
   return (

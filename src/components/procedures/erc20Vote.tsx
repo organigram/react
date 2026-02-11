@@ -29,11 +29,11 @@ const ERC20VoteProcedureComponent = ({
       <br />
       {t('ERC20 Token balance')}: <code>{erc20Balance}</code>
       <br />
-      {t('Quorum Size')}: {procedure.quorumSize.toString()}
+      {t('Quorum Size')}: {procedure.quorumSize?.toString()}
       <br />
       {t('Vote Duration')}: {secondsToHms(parseInt(procedure.voteDuration))}
       <br />
-      {t('Majority Size')}: {procedure.majoritySize.toString()}
+      {t('Majority Size')}: {procedure.majoritySize?.toString()}
     </div>
   ) : (
     <></>
