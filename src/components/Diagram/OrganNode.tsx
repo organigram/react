@@ -8,7 +8,6 @@ import Grid from '@mui/material/Grid'
 
 import { makeTestId } from '../../utils'
 import { useTranslation } from 'react-i18next'
-// import { useDeployedOrgan } from '../../hooks/useOrgans'
 import { DiagramNode } from './Node'
 import { palette } from '../../theme/palette'
 import SummitIcon from '../icons/Summit'
@@ -28,7 +27,6 @@ export const EntryCount: React.FC<{
   signer?: Signer | null
 }> = ({ organ, signer }) => {
   const { t } = useTranslation()
-  // const organ = useDeployedOrgan({ organ: dbOrgan, signer })
   const count = organ?.entries?.length?.toString()
   const singularOrPlural =
     organ?.entries?.length != null && organ?.entries?.length > 1
@@ -49,7 +47,6 @@ export const OrganNode: React.FC<Partial<NodeProps> & OrganNodeProps> = ({
   signer
 }) => {
   const isMaster = data?.position?.y === 0
-  const isDeployed = data?.organ?.isDeployed
 
   return (
     <>
@@ -57,17 +54,17 @@ export const OrganNode: React.FC<Partial<NodeProps> & OrganNodeProps> = ({
         sx={{
           borderRadius: '12px',
           padding: 2,
-          backgroundColor: !isDeployed
+          backgroundColor: !data.organ?.isDeployed
             ? 'transparent'
             : isMaster
               ? 'background.secondary'
               : '',
-          color: !isDeployed
+          color: !data.organ?.isDeployed
             ? 'text.primary'
             : isMaster
               ? 'violet.light3'
               : 'text.primary',
-          border: isDeployed
+          border: data.organ?.isDeployed
             ? 'none'
             : `dashed 1px ${palette.grey.light2 as string}`,
           minWidth: '240px'
@@ -75,7 +72,7 @@ export const OrganNode: React.FC<Partial<NodeProps> & OrganNodeProps> = ({
       >
         <Box
           sx={{
-            background: !isDeployed
+            background: !data.organ?.isDeployed
               ? 'transparent'
               : isMaster
                 ? palette.background.secondary

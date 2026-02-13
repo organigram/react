@@ -12,10 +12,7 @@ import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 
 import { makeTestId } from '../../utils'
-import {
-  filterProposals,
-  useDeployedProcedure
-} from '../../hooks/useProcedures'
+import { filterProposals } from '../../hooks/useProcedures'
 import { DiagramNode } from './Node'
 import { palette } from '../../theme/palette'
 import ProcedureIcon from '../icons/Procedure'
@@ -45,15 +42,10 @@ export const ProcedureNode: React.FC<
   signer,
   ...nodeProps
 }) => {
-  const deployedProcedure = useDeployedProcedure({
-    procedure: data?.procedure,
-    organigram: organigram!,
-    signer
-  })
-  const activeProposals = deployedProcedure?.isDeployed
+  const activeProposals = data?.procedure?.isDeployed
     ? (filterProposals(
         'current',
-        deployedProcedure?.proposals as ProcedureProposal[]
+        data?.procedure?.proposals as ProcedureProposal[]
       )?.length ?? 0)
     : undefined
 
@@ -68,9 +60,9 @@ export const ProcedureNode: React.FC<
             color: 'violet.light'
           }
         }}
-        invisible={activeProposals === 0 || !deployedProcedure?.isDeployed}
+        invisible={activeProposals === 0 || !data?.procedure?.isDeployed}
         badgeContent={
-          deployedProcedure?.proposals?.length ? (
+          data?.procedure?.proposals?.length ? (
             <>{activeProposals}</>
           ) : (
             <CircularProgress
@@ -83,8 +75,8 @@ export const ProcedureNode: React.FC<
         <Card
           sx={{
             borderRadius: '16px',
-            backgroundColor: deployedProcedure?.isDeployed ? '' : 'transparent',
-            border: deployedProcedure?.isDeployed
+            backgroundColor: data?.procedure?.isDeployed ? '' : 'transparent',
+            border: data?.procedure?.isDeployed
               ? ''
               : `dashed 1px ${palette.violet.light3}`,
             pt: 1,
@@ -95,7 +87,7 @@ export const ProcedureNode: React.FC<
           <DiagramNode
             {...nodeProps}
             onClick={() => {
-              data?.onClick?.(data.procedure)
+              data?.onClick?.(data?.procedure)
             }}
             icon={
               <Grid

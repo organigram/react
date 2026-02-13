@@ -4,8 +4,7 @@ import {
   OrganigramClient,
   type ProcedureType,
   type Organ,
-  type Procedure,
-  deployedAddresses
+  type Procedure
 } from '@organigram/js'
 import { ethers, Signer } from 'ethers'
 import { atom } from 'recoil'
@@ -36,8 +35,6 @@ export type CreateProcedure = (
 
 export interface OrganigramClientContext {
   organigramClient: OrganigramClient | null
-  deployOrgan: DeployOrganInput
-  deployProcedure: CreateProcedure
   isLoading: boolean
   chainId?: string
 }
@@ -56,13 +53,11 @@ export const useOrganigramClient = (
   useEffect(() => {
     const initClient: () => Promise<void> = async () => {
       if (signer?.provider == null || signer == null) return
-      const chainId = (await signer.provider?.getNetwork())?.chainId?.toString()
       setLoading(true)
-      const _client = await OrganigramClient.load(
-        deployedAddresses[chainId as '11155111'].OrganigramClient,
-        signer.provider,
+      const _client = await OrganigramClient.load({
+        provider: signer.provider,
         signer
-      ).catch((error: Error) => {
+      }).catch((error: Error) => {
         console.error('Error loading Organigram client:', error.message)
       })
       if (_client != null) {
@@ -74,81 +69,11 @@ export const useOrganigramClient = (
   }, [signer])
 
   return useMemo(() => {
-    const deployOrgan: DeployOrganInput = async (metadataCid, salt, index) => {
-      if (organigramClient == null) {
-        throw new Error('Manager not loaded.')
-      }
-      let transactionNonce: number | undefined
-      const walletNonce = await signer?.getNonce()
-      if (walletNonce != null && index != null) {
-        transactionNonce = walletNonce + index
-      }
-      const signerAddress = (await signer?.getAddress()) as string
-      return await organigramClient.deployOrgan({
-        metadata: metadataCid,
-        permissions: [
-          {
-            permissionAddress: signerAddress,
-            permissionValue: parseInt('0xfff', 16)
-          }
-        ],
-        salt,
-        options: {
-          nonce: transactionNonce,
-          customData: { index },
-          onTransaction: handleTransaction
-        }
-      })
-    }
-
-    const deployProcedure: CreateProcedure = async (
-      type,
-      options,
-      metadataCid,
-      proposers,
-      moderators,
-      deciders,
-      withModeration,
-      forwarder,
-      salt,
-      ...args
-    ) => {
-      if (organigramClient == null) {
-        throw new Error('Manager not loaded.')
-      }
-      const procedureType = organigramClient.procedureTypes?.find(
-        pt => pt.key === type
-      )
-      if (procedureType?.address == null) {
-        throw new Error('Procedure type not registered.')
-      }
-      return await organigramClient.deployProcedure(
-        procedureType.address,
-        {
-          onTransaction: handleTransaction,
-          nonce: options.nonce,
-          customData: options.customData
-        },
-        metadataCid,
-        proposers,
-        moderators,
-        deciders,
-        withModeration,
-        forwarder,
-        salt,
-        ...args
-      )
-    }
-
-    const loadUserOrganigrams = () => {}
+    // const loadUserOrganigrams = () => {}
 
     return {
       organigramClient,
-      loadUserOrganigrams,
-      deployOrgan,
-      deployProcedure,
-      isLoading,
-      chainId: organigramClient?.chainId
+      isLoading
     }
-  }, [organigramClient, isLoading, signer, handleTransaction])
+  }, [organigramClient, isLoading])
 }
