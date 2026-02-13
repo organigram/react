@@ -1,10 +1,4 @@
-import { ProcedureProposal, ProcedureJson, OrganigramJson, OrganJson } from '@organigram/js';
-import { Signer } from 'ethers';
+import { ProcedureProposal, ProcedureJson, OrganJson, SourceOrganTypeName } from '@organigram/js';
 export type ProposalFilter = 'current' | 'drafts' | 'passed' | 'blocked' | '';
 export declare const filterProposals: (filter: ProposalFilter, proposals: ProcedureProposal[]) => ProcedureProposal[];
-export declare const useDeployedProcedure: (options: {
-    procedure?: ProcedureJson;
-    organigram: OrganigramJson;
-    signer?: Signer | null;
-}) => ProcedureJson | undefined;
-export declare const isUserInSourceOrgan: (sourceOrganType: string, organs: OrganJson[], deployedProcedure?: ProcedureJson, wallet?: string) => boolean;
+export declare const isUserInSourceOrgan: (sourceOrganType: SourceOrganTypeName, organs: OrganJson[], deployedProcedure?: ProcedureJson, userAddress?: string) => boolean;
