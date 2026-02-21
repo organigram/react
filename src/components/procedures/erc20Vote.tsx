@@ -10,6 +10,7 @@ const ERC20VoteProcedureComponent = ({
   procedure: ERC20VoteProcedure
 }) => {
   const { t } = useTranslation()
+  const { quorumSize, voteDuration, majoritySize } = JSON.parse(procedure.data)
   const [erc20Balance, setErc20Balance] = React.useState<string>('0')
   React.useEffect(() => {
     const handler = (): void => {
@@ -29,11 +30,11 @@ const ERC20VoteProcedureComponent = ({
       <br />
       {t('ERC20 Token balance')}: <code>{erc20Balance}</code>
       <br />
-      {t('Quorum Size')}: {procedure.quorumSize?.toString()}
+      {t('Quorum Size')}: {parseInt(quorumSize) / 1000}%
       <br />
-      {t('Vote Duration')}: {secondsToHms(parseInt(procedure.voteDuration))}
+      {t('Vote Duration')}: {secondsToHms(parseInt(voteDuration))}
       <br />
-      {t('Majority Size')}: {procedure.majoritySize?.toString()}
+      {t('Majority Size')}: {parseInt(majoritySize) / 1000}%
     </div>
   ) : (
     <></>

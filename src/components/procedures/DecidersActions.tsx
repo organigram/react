@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next'
 import {
   AccountInOrgans,
   ERC20VoteProcedure,
+  getProcedureClass,
+  Procedure,
   ProcedureProposal,
   VoteProcedure
 } from '@organigram/js'
@@ -22,7 +24,8 @@ export const DecidersActions: React.FC<ElectionComponentProps> = ({
   procedure,
   accountInOrgans,
   proposal,
-  wrapTransaction
+  wrapTransaction,
+  signer
 }) => {
   const { t } = useTranslation()
   const election = procedure.elections?.find(
@@ -32,7 +35,7 @@ export const DecidersActions: React.FC<ElectionComponentProps> = ({
     <>
       <TimeLeft {...{ election, procedure }} />
       {election?.hasVoted ? (
-        <Alert variant='filled' sx={{ width: '100%' }} severity='info'>
+        <Alert variant='filled' sx={{ width: '100%' }} severity='success'>
           {t('You already voted on this proposal.')}
         </Alert>
       ) : (
@@ -41,12 +44,25 @@ export const DecidersActions: React.FC<ElectionComponentProps> = ({
             sx={{ width: '48%' }}
             variant='contained'
             className='approve-proposal'
-            onClick={() => {
-              procedure
-                .vote(proposal.key, true, {
-                  onTransaction: wrapTransaction
-                })
-                .catch((error: Error) => console.error(error.message))
+            onClick={async () => {
+              if (
+                procedure.typeName === 'erc20Vote' ||
+                procedure.typeName === 'vote'
+              ) {
+                const Class = (await getProcedureClass(procedure.typeName)) as
+                  | typeof ERC20VoteProcedure
+                  | typeof VoteProcedure
+                const instance = new Class({
+                  ...procedure,
+                  erc20: (procedure as ERC20VoteProcedure).erc20,
+                  signerOrProvider: signer
+                }) as ERC20VoteProcedure | VoteProcedure
+                instance
+                  .vote(proposal.key, true, {
+                    onTransaction: wrapTransaction
+                  })
+                  .catch((error: Error) => console.error(error.message))
+              }
             }}
           >
             {t('Approve')}
@@ -56,13 +72,19 @@ export const DecidersActions: React.FC<ElectionComponentProps> = ({
             variant='contained'
             color='secondary'
             className='reject-proposal'
-            onClick={() => {
-              procedure
+            onClick={async () =>
+              (
+                (await Procedure.load(
+                  procedure.address,
+                  signer as any,
+                  procedure
+                )) as ERC20VoteProcedure | VoteProcedure
+              )
                 .vote(proposal.key, false, {
                   onTransaction: wrapTransaction
                 })
                 .catch((error: Error) => console.error(error.message))
-            }}
+            }
           >
             {t('Reject')}
           </Button>

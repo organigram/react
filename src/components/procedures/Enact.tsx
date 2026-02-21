@@ -1,17 +1,26 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
+import { Organ, Procedure } from '@organigram/js'
 import { useTranslation } from 'react-i18next'
 import Button from '@mui/material/Button'
 import Alert from '@mui/material/Alert'
 import { Provider } from 'ethers'
-import { Organ } from '@organigram/js'
 import { ElectionComponentProps } from './Election'
 
 export const VoteEnded: React.FC<ElectionComponentProps> = ({
   procedure,
   proposal,
-  wrapTransaction
+  wrapTransaction,
+  signer
 }) => {
   const { t } = useTranslation()
+  const _procedure = useMemo(
+    () =>
+      new Procedure({
+        ...procedure,
+        signerOrProvider: signer
+      }),
+    [procedure, signer]
+  )
 
   const election = procedure.elections?.find(
     (b: { proposalKey: any }) => b.proposalKey && b.proposalKey === proposal.key
@@ -43,16 +52,16 @@ export const VoteEnded: React.FC<ElectionComponentProps> = ({
         className='enact-proposal'
         fullWidth
         onClick={() => {
-          procedure
+          _procedure
             .adoptProposal(proposal.key, { onTransaction: wrapTransaction })
             .catch((error: Error) => console.error(error.message))
         }}
       >
         {t('Enact proposal')}
       </Button>
-    ) : (
-      <Alert variant='filled' sx={{ width: '100%' }} severity='info'>
-        {t('Vote has ended with no decision.')}
-      </Alert>
-    )
+  ) : (
+    <Alert variant='filled' sx={{ width: '100%' }} severity='info'>
+      {t('Vote has ended with no decision.')}
+    </Alert>
+  )
 }

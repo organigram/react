@@ -10,13 +10,14 @@ const VoteProcedureComponent = ({
   procedure: VoteProcedure
 }) => {
   const { t } = useTranslation()
+  const { quorumSize, voteDuration, majoritySize } = JSON.parse(procedure.data)
   return procedure ? (
     <div className='procedure-vote'>
-      {t('Quorum Size')}: {procedure.quorumSize?.toString()}
+      {t('Quorum Size')}: {parseInt(quorumSize) / 1000}%
       <br />
-      {t('Vote Duration')}: {secondsToHms(parseInt(procedure.voteDuration))}
+      {t('Vote Duration')}: {secondsToHms(parseInt(voteDuration))}
       <br />
-      {t('Majority Size')}: {procedure.majoritySize?.toString()}
+      {t('Majority Size')}: {parseInt(majoritySize) / 1000}%
     </div>
   ) : (
     <></>

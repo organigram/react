@@ -6,6 +6,7 @@ import {
 } from '@organigram/js'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
+import { ethers } from 'ethers'
 
 export const NominationProcedureComponent = ({
   procedure
@@ -24,6 +25,7 @@ export interface NominationProposalProps {
   }
   wrapTransaction: TransactionOptions['onTransaction']
   t: (key: string, options?: any) => string
+  signer: ethers.Signer | null
 }
 
 const NominationProposal = ({
@@ -31,7 +33,8 @@ const NominationProposal = ({
   proposal,
   accountInOrgans,
   wrapTransaction,
-  t = key => key
+  t = key => key,
+  signer
 }: NominationProposalProps) => {
   if (!proposal || !proposal.presented) {
     return <p className='text-danger'>{t('Proposal not presented.')}</p>
@@ -39,6 +42,10 @@ const NominationProposal = ({
   if (proposal.blocked || proposal.applied) {
     return <></>
   }
+  const _procedure = new NominationProcedure({
+    ...procedure,
+    signerOrProvider: signer
+  })
   return (
     <Grid container justifyContent='space-between' mt={3}>
       {accountInOrgans?.deciders && (
@@ -48,7 +55,7 @@ const NominationProposal = ({
             variant='contained'
             className='approve-proposal'
             onClick={() =>
-              procedure.nominate(proposal.key, {
+              _procedure.nominate(proposal.key, {
                 onTransaction: wrapTransaction
               })
             }
@@ -61,7 +68,7 @@ const NominationProposal = ({
             color='secondary'
             className='reject-proposal'
             onClick={() =>
-              procedure.blockProposal(proposal.key, '', {
+              _procedure.blockProposal(proposal.key, '', {
                 onTransaction: wrapTransaction
               })
             }
