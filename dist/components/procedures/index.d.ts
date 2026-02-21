@@ -3,7 +3,7 @@ declare const procedures: {
         Component: ({ procedure }: {
             procedure: import('@organigram/js').NominationProcedure;
         }) => import("react/jsx-runtime").JSX.Element;
-        Proposal: ({ procedure, proposal, accountInOrgans, wrapTransaction, t }: import('./nomination').NominationProposalProps) => import("react/jsx-runtime").JSX.Element;
+        Proposal: ({ procedure, proposal, accountInOrgans, wrapTransaction, t, signer }: import('./nomination').NominationProposalProps) => import("react/jsx-runtime").JSX.Element;
     };
     vote: {
         Proposal: import('react').FC<import('./Election').ElectionComponentProps>;

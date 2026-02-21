@@ -5,18 +5,18 @@ export const secondsToHms = (d: number): string => {
   const seconds = Math.floor((d % 3600) % 60)
 
   const dDisplay =
-    days > 0 ? days.toString() + (days === 1 ? ' day, ' : ' days, ') : ''
+    days > 0 ? days.toString() + (days === 1 ? ' day' : ' days') : ''
   const hDisplay =
-    hours > 0 ? hours.toString() + (hours === 1 ? ' hour, ' : ' hours, ') : ''
+    hours > 0 ? hours.toString() + (hours === 1 ? ' hour' : ' hours') : ''
   const mDisplay =
     minutes > 0
-      ? minutes.toString() + (minutes === 1 ? ' minute, ' : ' minutes, ')
+      ? minutes.toString() + (minutes === 1 ? ' minute' : ' minutes')
       : ''
   const sDisplay =
     seconds > 0
       ? seconds.toString() + (seconds === 1 ? ' second' : ' seconds')
       : ''
-  return dDisplay + hDisplay + mDisplay + sDisplay
+  return [dDisplay, hDisplay, mDisplay, sDisplay].filter(Boolean).join(', ')
 }
 
 export const makeTestId: (id: string) => string = id => id
