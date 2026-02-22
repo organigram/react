@@ -23,12 +23,10 @@ export const AssetNode: React.FC<NodeProps & AssetNodeProps> = ({
     <Card
       sx={{
         borderRadius: '16px',
-        backgroundColor:
-          asset.address != null && asset.address !== '' ? '' : 'transparent',
-        border:
-          asset.address != null && asset.address !== ''
-            ? ''
-            : `dashed 1px ${palette.violet.light3 as string}`,
+        backgroundColor: asset.isDeployed ? '' : 'transparent',
+        border: asset.isDeployed
+          ? ''
+          : `dashed 1px ${palette.violet.light3 as string}`,
         pt: 1,
         pl: 2,
         minWidth: '180px'
