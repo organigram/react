@@ -228,9 +228,7 @@ export const Diagram: React.FC<DiagramProps> = ({
                 return null
               })
               .filter(s => s != null) ?? []
-          const erc20Asset = procedure.sourceOrgans?.find(
-            source => source.assetAddress != null
-          )
+          const erc20Asset = JSON.parse(procedure.data ?? '{}')?.erc20
           const tokenSource =
             erc20Asset == null
               ? []
@@ -238,8 +236,7 @@ export const Diagram: React.FC<DiagramProps> = ({
                   {
                     id: `procedure-${index}-source-token`,
                     source: assetsNodes.find(
-                      node =>
-                        node.data.asset.address === erc20Asset.assetAddress
+                      node => node.data.asset.address === erc20Asset
                     )?.id,
                     target: procedureNode.id
                   }

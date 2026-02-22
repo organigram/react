@@ -14,7 +14,7 @@ const ERC20VoteProcedureComponent = ({
   const [erc20Balance, setErc20Balance] = React.useState<string>('0')
   React.useEffect(() => {
     const handler = (): void => {
-      procedure.erc20Balance().then(balance => {
+      procedure.erc20Balance?.().then(balance => {
         setErc20Balance(balance.toString())
       })
     }
@@ -23,8 +23,8 @@ const ERC20VoteProcedureComponent = ({
   return procedure ? (
     <div className='procedure-vote'>
       {t('Voters Organ')}: <code>{procedure.deciders}</code>
-      <br />
-      {t('Veto Organ')}: <code>{procedure.moderators}</code>
+      {/* <br />
+      {t('Veto Organ')}: <code>{procedure.moderators}</code> */}
       <br />
       {t('ERC20 Token contract')}: <code>{procedure.erc20}</code>
       <br />
