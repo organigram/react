@@ -1,3 +1,4 @@
+export * from './components/icons'
 export * from './components/Diagram/index'
 export * from './components/Diagram/Node'
 export * from './components/Diagram/AssetNode'
