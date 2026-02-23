@@ -6,7 +6,6 @@ import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 
-import { makeTestId } from '../../utils'
 import { useTranslation } from 'react-i18next'
 import { DiagramNode } from './Node'
 import { palette } from '../../theme/palette'
@@ -33,7 +32,7 @@ export const EntryCount: React.FC<{
       ? 'entries'
       : 'entry'
   return (
-    <span id={makeTestId(`organ-${organ?.name as string}-entry-count`)}>
+    <span id={`organ-${organ?.name as string}-entry-count`}>
       {count} {t(singularOrPlural)}
     </span>
   )
@@ -77,15 +76,9 @@ export const OrganNode: React.FC<Partial<NodeProps> & OrganNodeProps> = ({
               : isMaster
                 ? palette.background.secondary
                 : palette.background.default,
-            // border:
-            //   data.organ?.address != null && data.organ.address !== ''
-            //     ? 'none'
-            //     : 'solid 1px',
             borderBottom: `solid 0.5px ${
               isMaster ? palette.grey : palette.grey.light2
             }`
-
-            // height: '48px',
           }}
         >
           <DiagramNode
@@ -113,7 +106,7 @@ export const OrganNode: React.FC<Partial<NodeProps> & OrganNodeProps> = ({
               </Grid>
             }
             label={data.organ?.name}
-            id={makeTestId(`expand-organ-${data.organ?.name}`)}
+            id={`expand-organ-${data.organ?.name}`}
           />
         </Box>
         <Grid container justifyContent='flex-start' alignItems='center' pt={1}>

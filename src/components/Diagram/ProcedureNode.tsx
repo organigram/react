@@ -11,7 +11,6 @@ import Badge from '@mui/material/Badge'
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 
-import { makeTestId } from '../../utils'
 import { filterProposals } from '../../hooks/useProcedures'
 import { DiagramNode } from './Node'
 import { palette } from '../../theme/palette'
@@ -134,7 +133,7 @@ export const ProcedureNode: React.FC<
               </Grid>
             }
             label={data?.procedure.name}
-            id={makeTestId(`expand-procedure-${data?.procedure?.name}`)}
+            id={`expand-procedure-${data?.procedure?.name}`}
           />
         </Card>
       </Badge>

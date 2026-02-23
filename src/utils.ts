@@ -18,10 +18,3 @@ export const secondsToHms = (d: number): string => {
       : ''
   return [dDisplay, hDisplay, mDisplay, sDisplay].filter(Boolean).join(', ')
 }
-
-export const makeTestId: (id: string) => string = id => id
-// process.env.REACT_APP_CI != null
-//   ? id
-//   : Math.random()
-//     .toString(36)
-//     .substr(2, 9)
