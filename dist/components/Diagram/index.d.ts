@@ -1,11 +1,11 @@
 import { default as React } from 'react';
-import { OrganJson, AssetJson, ProcedureJson, Organ, Procedure, Asset, Organigram } from '@organigram/js';
+import { OrganJson, AssetJson, ProcedureJson, Organ, Procedure, Asset, OrganigramJson } from '@organigram/js';
 import { Signer } from 'ethers';
 import { ReactFlowProps, NodeProps, NodeTypes } from 'react-flow-renderer';
 export interface DiagramProps {
     nodeTypes?: NodeTypes;
     direction?: string;
-    organigram: Organigram | null;
+    organigram: OrganigramJson | null;
     style?: Record<string, unknown>;
     controls?: boolean;
     options?: ReactFlowProps;
