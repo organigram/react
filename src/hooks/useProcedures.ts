@@ -3,7 +3,7 @@ import {
   type ProcedureProposal,
   ProcedureJson,
   OrganJson,
-  SourceOrganTypeName
+  ProcedureRoleTypeName
 } from '@organigram/js'
 
 export type ProposalFilter = 'current' | 'drafts' | 'passed' | 'blocked' | ''
@@ -30,16 +30,15 @@ export const filterProposals: (
     : proposals
 
 export const isUserInSourceOrgan: (
-  sourceOrganType: SourceOrganTypeName,
+  roleType: ProcedureRoleTypeName,
   organs: OrganJson[],
   deployedProcedure?: ProcedureJson,
   userAddress?: string
-) => boolean = (sourceOrganType, organs, deployedProcedure, userAddress) =>
+) => boolean = (roleType, organs, deployedProcedure, userAddress) =>
   organs
-    // Find all organs that are this procedure's source organ type (for example: deciders)
+    // Find all organs that are this procedure's role (for example: deciders)
     ?.filter(
-      organ =>
-        organ.address === deployedProcedure?.[sourceOrganType as 'deciders']
+      organ => organ.address === deployedProcedure?.[roleType as 'deciders']
     )
     // Find any deployed organ whose entries contain the current user's userAddress
     ?.find(async organ =>

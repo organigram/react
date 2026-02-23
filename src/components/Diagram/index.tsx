@@ -6,10 +6,8 @@ import {
   getPermissionsSet,
   Organ,
   Procedure,
-  SourceOrgan,
-  TargetOrgan,
   type Asset,
-  Organigram
+  type OrganigramJson
 } from '@organigram/js'
 import { Signer } from 'ethers'
 import dagre from 'dagre'
@@ -40,7 +38,7 @@ import { AssetNode } from './AssetNode'
 export interface DiagramProps {
   nodeTypes?: NodeTypes
   direction?: string
-  organigram: Organigram | null
+  organigram: OrganigramJson | null
   style?: Record<string, unknown>
   controls?: boolean
   options?: ReactFlowProps
@@ -141,9 +139,9 @@ export const Diagram: React.FC<DiagramProps> = ({
         id: `procedure-${procedure.address}`,
         type: 'procedure',
         position: { x: 0, y: 0 },
-        data: { procedure, onClick: onClickProcedure }
+        data: { procedure, onClick: onClickProcedure, organigram }
       })) ?? [],
-    [organigram?.procedures, onClickProcedure]
+    [organigram, onClickProcedure]
   )
 
   const assetsNodes = useMemo(
@@ -165,69 +163,77 @@ export const Diagram: React.FC<DiagramProps> = ({
           if (procedure == null) {
             return null
           }
-          const procedureSources =
-            procedure.sourceOrgans
-              ?.filter(sourceOrgan =>
-                // layers[0].showAdminPermissions &&
-                sourceOrgan.organAddress != null &&
-                procedure.targetOrgans?.find(
-                  (targetOrgan: TargetOrgan) =>
-                    getPermissionsSet(targetOrgan.permissionValue).findIndex(
-                      i =>
-                        [
-                          'ALL_PERMISSIONS',
-                          'ADD_PERMISSIONS',
-                          'REMOVE_PERMISSIONS'
-                        ].includes(i)
-                    ) >= 0
-                ) != null
-                  ? true
-                  : layers[0].showEntriesPermissions &&
-                      procedure.targetOrgans?.find(
-                        (targetOrgan: TargetOrgan) =>
-                          getPermissionsSet(
-                            targetOrgan.permissionValue
-                          ).findIndex(i =>
-                            [
-                              'ALL_ENTRIES',
-                              'ADD_ENTRIES',
-                              'REMOVE_ENTRIES'
-                            ].includes(i)
-                          ) >= 0
-                      ) != null
-                    ? true
-                    : layers[0].showAssetsPermissions &&
-                      procedure.targetOrgans?.find(
-                        (targetOrgan: TargetOrgan) =>
-                          getPermissionsSet(
-                            targetOrgan.permissionValue
-                          ).findIndex(i =>
-                            [
-                              'DEPOSIT_ETHER',
-                              'WITHDRAW_ETHER',
-                              'DEPOSIT_COINS',
-                              'WITHDRAW_COINS',
-                              'DEPOSIT_COLLECTIBLES',
-                              'WITHDRAW_COLLECTIBLES'
-                            ].includes(i)
-                          ) >= 0
-                      ) != null
-              )
-              ?.map((sourceOrgan: SourceOrgan, idx: number) => {
-                const sourceNode = organsNodes?.find(
-                  organNode =>
-                    organNode?.data?.organ?.address === sourceOrgan.organAddress
+          const targetPermissions =
+            organsNodes?.flatMap(organNode => {
+              const organ = organNode.data?.organ
+              if (!organ?.permissions) return []
+              return organ.permissions
+                .filter(
+                  permission =>
+                    permission.permissionAddress === procedure.address
                 )
-                if (sourceNode != null) {
-                  return {
-                    id: `procedure-${index}-source-${idx}`,
-                    source: sourceNode.id,
-                    target: procedureNode.id
+                .map(permission => ({
+                  organAddress: organ.address,
+                  permissionValue: permission.permissionValue
+                }))
+            }) ?? []
+          const hasAdminPermissions = targetPermissions.some(targetOrgan =>
+            getPermissionsSet(targetOrgan.permissionValue).some(i =>
+              [
+                'ALL_PERMISSIONS',
+                'ADD_PERMISSIONS',
+                'REMOVE_PERMISSIONS'
+              ].includes(i)
+            )
+          )
+          const hasEntriesPermissions = targetPermissions.some(targetOrgan =>
+            getPermissionsSet(targetOrgan.permissionValue).some(i =>
+              ['ALL_ENTRIES', 'ADD_ENTRIES', 'REMOVE_ENTRIES'].includes(i)
+            )
+          )
+          const hasAssetsPermissions = targetPermissions.some(targetOrgan =>
+            getPermissionsSet(targetOrgan.permissionValue).some(i =>
+              [
+                'DEPOSIT_ETHER',
+                'WITHDRAW_ETHER',
+                'DEPOSIT_COINS',
+                'WITHDRAW_COINS',
+                'DEPOSIT_COLLECTIBLES',
+                'WITHDRAW_COLLECTIBLES'
+              ].includes(i)
+            )
+          )
+          const shouldShowSources =
+            hasAdminPermissions ||
+            (layers[0].showEntriesPermissions && hasEntriesPermissions) ||
+            (layers[0].showAssetsPermissions && hasAssetsPermissions)
+          const sourceOrganAddresses = Array.from(
+            new Set(
+              [
+                procedure.deciders,
+                procedure.proposers,
+                procedure.moderators
+              ].filter(Boolean) as string[]
+            )
+          )
+          const procedureSources = shouldShowSources
+            ? sourceOrganAddresses
+                .map((sourceAddress, idx) => {
+                  const sourceNode = organsNodes?.find(
+                    organNode =>
+                      organNode?.data?.organ?.address === sourceAddress
+                  )
+                  if (sourceNode != null) {
+                    return {
+                      id: `procedure-${index}-source-${idx}`,
+                      source: sourceNode.id,
+                      target: procedureNode.id
+                    }
                   }
-                }
-                return null
-              })
-              .filter(s => s != null) ?? []
+                  return null
+                })
+                .filter(s => s != null)
+            : []
           const erc20Asset = JSON.parse(procedure.data ?? '{}')?.erc20
           const tokenSource =
             erc20Asset == null
@@ -242,8 +248,8 @@ export const Diagram: React.FC<DiagramProps> = ({
                   }
                 ]
           const procedureDestinations =
-            procedure.targetOrgans
-              ?.filter((targetOrgan: TargetOrgan) =>
+            targetPermissions
+              ?.filter(targetOrgan =>
                 layers[0].showAdminPermissions &&
                 getPermissionsSet(targetOrgan.permissionValue).findIndex(i =>
                   [
@@ -275,7 +281,7 @@ export const Diagram: React.FC<DiagramProps> = ({
                           ].includes(i)
                       ) >= 0
               )
-              ?.map((targetOrgan: TargetOrgan, idx: number) => {
+              ?.map((targetOrgan, idx: number) => {
                 const destinationNode = organsNodes?.find(
                   organNode =>
                     organNode?.data?.organ?.address === targetOrgan.organAddress

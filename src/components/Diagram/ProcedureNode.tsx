@@ -30,6 +30,7 @@ export const ProcedureNode: React.FC<
     NodeProps<{
       procedure: ProcedureJson
       onClick?: (procedure: ProcedureJson) => void
+      organigram?: OrganigramJson
     }>
   > &
     ProcedureNodeProps
@@ -42,12 +43,29 @@ export const ProcedureNode: React.FC<
   signer,
   ...nodeProps
 }) => {
+  const resolvedOrganigram = organigram ?? data?.organigram
   const activeProposals = data?.procedure?.isDeployed
     ? (filterProposals(
         'current',
         data?.procedure?.proposals as ProcedureProposal[]
       )?.length ?? 0)
     : undefined
+  const hasPermissionsUpdate = resolvedOrganigram?.organs?.some(organ =>
+    organ.permissions?.some(
+      permission =>
+        permission.permissionAddress === data?.procedure?.address &&
+        (getPermissionsSet(permission.permissionValue).includes(
+          'ADD_PERMISSIONS'
+        ) ||
+          getPermissionsSet(permission.permissionValue).includes(
+            'REMOVE_PERMISSIONS'
+          ) ||
+          getPermissionsSet(permission.permissionValue).includes(
+            'ALL_PERMISSIONS'
+          ) ||
+          getPermissionsSet(permission.permissionValue).includes('ALL'))
+    )
+  )
 
   return (
     <>
@@ -102,19 +120,7 @@ export const ProcedureNode: React.FC<
                   backgroundColor: 'violet.light3'
                 }}
               >
-                {data?.procedure.targetOrgans?.some(
-                  to =>
-                    getPermissionsSet(to.permissionValue).includes(
-                      'ADD_PERMISSIONS'
-                    ) ||
-                    getPermissionsSet(to.permissionValue).includes(
-                      'REMOVE_PERMISSIONS'
-                    ) ||
-                    getPermissionsSet(to.permissionValue).includes(
-                      'ALL_PERMISSIONS'
-                    ) ||
-                    getPermissionsSet(to.permissionValue).includes('ALL')
-                ) ? (
+                {hasPermissionsUpdate ? (
                   <Tune
                     style={{
                       width: '15px',
