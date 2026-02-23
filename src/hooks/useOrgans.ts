@@ -7,7 +7,7 @@ export const getDeployedOrganData = async (
   if (organAddress == null || organAddress === '') {
     return undefined
   }
-  const organ = await client?.getOrgan(organAddress).catch(e => {
+  const organ = await client?.getDeployedOrgan(organAddress).catch(e => {
     console.error(e.message)
   })
   if (organ != null) return organ.toJson()
