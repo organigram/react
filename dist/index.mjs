@@ -12221,7 +12221,7 @@ const QY = (A, e) => {
     ": ",
     /* @__PURE__ */ j("code", { children: A.erc20 }),
     /* @__PURE__ */ j("br", {}),
-    e("ERC20 Token balance"),
+    e("Your Token balance"),
     ": ",
     /* @__PURE__ */ j("code", { children: s }),
     /* @__PURE__ */ j("br", {}),
@@ -12270,7 +12270,7 @@ const QY = (A, e) => {
 }, eL = async (A, e) => {
   if (A == null || A === "")
     return;
-  const t = await e?.getOrgan(A).catch((r) => {
+  const t = await e?.getDeployedOrgan(A).catch((r) => {
     console.error(r.message);
   });
   if (t != null) return t.toJson();
