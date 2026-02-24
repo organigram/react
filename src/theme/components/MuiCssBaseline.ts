@@ -49,6 +49,7 @@ export const MuiCssBaseline = {
       height: -webkit-fill-available;
     }
     .notistack-SnackbarContainer {
+      top: 60px;
       z-index: 9999
     }
   `
