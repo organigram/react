@@ -11144,6 +11144,7 @@ const xF = hE({
       height: -webkit-fill-available;
     }
     .notistack-SnackbarContainer {
+      top: 60px;
       z-index: 9999
     }
   `
@@ -11374,6 +11375,7 @@ const zY = {
     /* @__PURE__ */ K(
       fv,
       {
+        id: `procedure-node-badge-${A?.procedure?.name}`,
         anchorOrigin: { horizontal: "right", vertical: "bottom" },
         sx: {
           "& .MuiBadge-badge": {
@@ -11754,7 +11756,7 @@ const uY = (A, e) => {
 }) => {
   const [E] = RF(), w = fA(
     () => t?.organs?.map((D) => ({
-      id: `organ-${D.address}`,
+      id: `organ-${D.name}`,
       type: "organ",
       position: { x: 0, y: 0 },
       data: { organ: D, onClick: B }
@@ -11762,7 +11764,7 @@ const uY = (A, e) => {
     [t?.organs, B]
   ), g = fA(
     () => t?.procedures?.map((D) => ({
-      id: `procedure-${D.address}`,
+      id: `procedure-${D.name}`,
       type: "procedure",
       position: { x: 0, y: 0 },
       data: { procedure: D, onClick: i, organigram: t }
@@ -11770,7 +11772,7 @@ const uY = (A, e) => {
     [t, i]
   ), c = fA(
     () => t?.assets?.map((D) => ({
-      id: `asset-${D.address}`,
+      id: `asset-${D.name}`,
       type: "asset",
       position: { x: 0, y: 0 },
       data: { asset: D, onClick: a }

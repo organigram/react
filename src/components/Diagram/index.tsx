@@ -125,7 +125,7 @@ export const Diagram: React.FC<DiagramProps> = ({
   const organsNodes = useMemo(
     () =>
       organigram?.organs?.map(organ => ({
-        id: `organ-${organ.address}`,
+        id: `organ-${organ.name}`,
         type: 'organ',
         position: { x: 0, y: 0 },
         data: { organ, onClick: onClickOrgan }
@@ -136,7 +136,7 @@ export const Diagram: React.FC<DiagramProps> = ({
   const proceduresNodes = useMemo(
     () =>
       organigram?.procedures?.map(procedure => ({
-        id: `procedure-${procedure.address}`,
+        id: `procedure-${procedure.name}`,
         type: 'procedure',
         position: { x: 0, y: 0 },
         data: { procedure, onClick: onClickProcedure, organigram }
@@ -147,7 +147,7 @@ export const Diagram: React.FC<DiagramProps> = ({
   const assetsNodes = useMemo(
     () =>
       organigram?.assets?.map(asset => ({
-        id: `asset-${asset.address}`,
+        id: `asset-${asset.name}`,
         type: 'asset',
         position: { x: 0, y: 0 },
         data: { asset, onClick: onClickAsset }

@@ -69,6 +69,7 @@ export const ProcedureNode: React.FC<
   return (
     <>
       <Badge
+        id={`procedure-node-badge-${data?.procedure?.name}`}
         key={data?.procedure?.address}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         sx={{
