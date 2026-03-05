@@ -1,5 +1,4 @@
 import { palette } from '../palette'
-import { typography } from '../typography'
 
 export const MuiButton = {
   styleOverrides: {
@@ -21,12 +20,6 @@ export const MuiButton = {
     containedSecondary: {
       background: palette.gradient.red,
       color: palette.text.primary
-    },
-    outlined: {
-      borderRadius: '30px',
-      border: `1px solid ${palette.text.primary}`,
-      ...typography.h3,
-      padding: '8px 16px'
     },
     textPrimary: {
       '&:hover': { color: palette.primary.main }

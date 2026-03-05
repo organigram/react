@@ -21,15 +21,6 @@ export declare const MuiButton: {
             background: string;
             color: string;
         };
-        outlined: {
-            padding: string;
-            fontFamily: string;
-            textTransform: string;
-            letterSpacing: string;
-            lineHeight: string;
-            borderRadius: string;
-            border: string;
-        };
         textPrimary: {
             '&:hover': {
                 color: string;
