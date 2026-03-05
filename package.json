@@ -39,7 +39,7 @@
     "recoil": "^0.7.7"
   },
   "dependencies": {
-    "@organigram/js": "workspace:^",
+    "@organigram/js": "^0.1.0",
     "dagre": "^0.8.5"
   },
   "scripts": {
@@ -54,7 +54,7 @@
   "devDependencies": {
     "@mui/icons-material": "^5.18.0",
     "@organigram/js": "workspace:^",
-    "@organigram/protocol": "workspace:^",
+    "@organigram/protocol": "^0.1.0",
     "@types/dagre": "^0.7.53",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.7",
@@ -73,5 +73,6 @@
     "vite-plugin-dts": "^4.5.4",
     "vitest": "^4.0.17",
     "vitest-browser-react": "^2.0.2"
-  }
+  },
+  "gitHead": "c5cdc1e6588185086b0803170f1fa38ad958e2e0"
 }
