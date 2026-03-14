@@ -29,8 +29,8 @@
   "peerDependencies": {
     "@mui/icons-material": "^5.18.0",
     "@mui/material": "^5.15.4",
-    "@organigram/js": "^0.1.0",
-    "@organigram/protocol": "^0.1.0",
+    "@organigram/js": "workspace:^",
+    "@organigram/protocol": "workspace:^",
     "ethers": "^6.16.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -39,7 +39,7 @@
     "recoil": "^0.7.7"
   },
   "dependencies": {
-    "@organigram/js": "^0.1.0",
+    "@organigram/js": "workspace:^",
     "dagre": "^0.8.5"
   },
   "scripts": {
@@ -54,7 +54,7 @@
   "devDependencies": {
     "@mui/icons-material": "^5.18.0",
     "@organigram/js": "workspace:^",
-    "@organigram/protocol": "^0.1.0",
+    "@organigram/protocol": "workspace:^",
     "@types/dagre": "^0.7.53",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.7",
