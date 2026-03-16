@@ -1,7 +1,8 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import {
   TransactionOptions,
   OrganigramClient,
+  procedureTypes,
   type ProcedureType,
   type Organ,
   type Procedure
@@ -33,47 +34,20 @@ export type CreateProcedure = (
   ...args: unknown[]
 ) => Promise<Procedure & { type: ProcedureType }>
 
-export interface OrganigramClientContext {
-  organigramClient: OrganigramClient | null
-  isLoading: boolean
-  chainId?: string
-}
-
 export const useOrganigramClient = (
   signer?: Signer | null,
   handleTransaction?: (
     tx: ethers.TransactionResponse,
     description: string
   ) => void
-): OrganigramClientContext => {
-  const [organigramClient, setOrganigramClient] =
-    useState<OrganigramClient | null>(null)
-  const [isLoading, setLoading] = useState(false)
-
-  useEffect(() => {
-    const initClient: () => Promise<void> = async () => {
-      if (signer?.provider == null || signer == null) return
-      setLoading(true)
-      const _client = await OrganigramClient.load({
-        provider: signer.provider,
-        signer
-      }).catch((error: Error) => {
-        console.error('Error loading Organigram client:', error.message)
-      })
-      if (_client != null) {
-        setOrganigramClient(_client)
-      }
-      setLoading(false)
-    }
-    initClient()
-  }, [signer])
-
+): OrganigramClient | null => {
   return useMemo(() => {
-    // const loadUserOrganigrams = () => {}
-
-    return {
-      organigramClient,
-      isLoading
-    }
-  }, [organigramClient, isLoading])
+    return signer?.provider == null || signer == null
+      ? null
+      : new OrganigramClient({
+          provider: signer.provider,
+          signer,
+          procedureTypes: Object.values(procedureTypes)
+        })
+  }, [signer])
 }
