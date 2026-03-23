@@ -53,7 +53,7 @@ export const VoteEnded: React.FC<ElectionComponentProps> = ({
         fullWidth
         onClick={() => {
           _procedure
-            .adoptProposal(proposal.key, { onTransaction: wrapTransaction })
+            .applyProposal(proposal.key, { onTransaction: wrapTransaction })
             .catch((error: Error) => console.error(error.message))
         }}
       >
