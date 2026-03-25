@@ -1,6 +1,6 @@
 import { default as React } from 'react';
 import { ERC20VoteProcedure, ProcedureProposal, TransactionOptions, VoteProcedure } from '@organigram/js';
-import { ethers } from 'ethers';
+import { PublicClient, WalletClient } from 'viem';
 export interface ElectionComponentProps {
     procedure: ERC20VoteProcedure | VoteProcedure;
     proposal: ProcedureProposal;
@@ -11,6 +11,7 @@ export interface ElectionComponentProps {
     };
     wrapTransaction: TransactionOptions['onTransaction'];
     t: (key: string) => string;
-    signer?: ethers.Signer | null;
+    publicClient?: PublicClient | null;
+    walletClient?: WalletClient | null;
 }
 export declare const ElectionComponent: React.FC<ElectionComponentProps>;
