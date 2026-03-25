@@ -1,6 +1,5 @@
 import React from 'react'
 import { Organ, OrganJson } from '@organigram/js'
-import { Signer } from 'ethers'
 import { Handle, NodeProps, Position } from 'react-flow-renderer'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
@@ -18,13 +17,11 @@ export interface OrganNodeProps {
     onClick?: () => void
   }
   hideHandles?: boolean
-  signer?: Signer | null
 }
 
 export const EntryCount: React.FC<{
   organ: OrganJson
-  signer?: Signer | null
-}> = ({ organ, signer }) => {
+}> = ({ organ }) => {
   const { t } = useTranslation()
   const count = organ?.entries?.length?.toString()
   const singularOrPlural =
@@ -42,8 +39,7 @@ export const OrganNode: React.FC<Partial<NodeProps> & OrganNodeProps> = ({
   data,
   sourcePosition,
   targetPosition,
-  hideHandles,
-  signer
+  hideHandles
 }) => {
   const isMaster = data?.position?.y === 0
 
@@ -110,7 +106,7 @@ export const OrganNode: React.FC<Partial<NodeProps> & OrganNodeProps> = ({
           />
         </Box>
         <Grid container justifyContent='flex-start' alignItems='center' pt={1}>
-          <EntryCount organ={data.organ} signer={signer} />
+          <EntryCount organ={data.organ} />
         </Grid>
       </Card>
       {hideHandles !== true && (

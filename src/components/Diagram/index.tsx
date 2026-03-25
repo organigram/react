@@ -9,7 +9,6 @@ import {
   type Asset,
   type OrganigramJson
 } from '@organigram/js'
-import { Signer } from 'ethers'
 import dagre from 'dagre'
 import ReactFlow, {
   Controls,
@@ -42,7 +41,6 @@ export interface DiagramProps {
   style?: Record<string, unknown>
   controls?: boolean
   options?: ReactFlowProps
-  signer?: Signer | null
   isTabletOrAbove?: boolean
   onClickOrgan: (organ: OrganJson) => void
   onClickAsset: (asset: AssetJson) => void

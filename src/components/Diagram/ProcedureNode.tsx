@@ -5,7 +5,6 @@ import {
   ProcedureProposal,
   getPermissionsSet
 } from '@organigram/js'
-import { Signer } from 'ethers'
 import { Handle, NodeProps, Position } from 'react-flow-renderer'
 import Badge from '@mui/material/Badge'
 import Grid from '@mui/material/Grid'
@@ -20,7 +19,6 @@ import { Tune } from '@mui/icons-material'
 
 export interface ProcedureNodeProps {
   hideHandles?: boolean
-  signer?: Signer | null
   organigram?: OrganigramJson
 }
 
@@ -39,7 +37,6 @@ export const ProcedureNode: React.FC<
   targetPosition,
   hideHandles,
   organigram,
-  signer,
   ...nodeProps
 }) => {
   const resolvedOrganigram = organigram ?? data?.organigram

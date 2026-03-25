@@ -26,7 +26,7 @@ export default defineConfig({
         'react/jsx-runtime',
         /@mui/,
         'recoil',
-        'ethers',
+        'viem',
         '@organigram/js',
         '@organigram/protocol'
       ]

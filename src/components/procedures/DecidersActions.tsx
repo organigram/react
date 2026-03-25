@@ -7,7 +7,6 @@ import {
   AccountInOrgans,
   ERC20VoteProcedure,
   getProcedureClass,
-  Procedure,
   ProcedureProposal,
   VoteProcedure
 } from '@organigram/js'
@@ -25,7 +24,8 @@ export const DecidersActions: React.FC<ElectionComponentProps> = ({
   accountInOrgans,
   proposal,
   wrapTransaction,
-  signer
+  publicClient,
+  walletClient
 }) => {
   const { t } = useTranslation()
   const election = procedure.elections?.find(
@@ -45,6 +45,9 @@ export const DecidersActions: React.FC<ElectionComponentProps> = ({
             variant='contained'
             className='approve-proposal'
             onClick={async () => {
+              if (publicClient == null) {
+                return
+              }
               if (
                 procedure.typeName === 'erc20Vote' ||
                 procedure.typeName === 'vote'
@@ -55,7 +58,8 @@ export const DecidersActions: React.FC<ElectionComponentProps> = ({
                 const instance = new Class({
                   ...procedure,
                   erc20: (procedure as ERC20VoteProcedure).erc20,
-                  signerOrProvider: signer
+                  publicClient,
+                  walletClient
                 }) as ERC20VoteProcedure | VoteProcedure
                 instance
                   .vote(proposal.key, true, {
@@ -72,19 +76,30 @@ export const DecidersActions: React.FC<ElectionComponentProps> = ({
             variant='contained'
             color='secondary'
             className='reject-proposal'
-            onClick={async () =>
-              (
-                (await Procedure.load(
-                  procedure.address,
-                  signer as any,
-                  procedure
-                )) as ERC20VoteProcedure | VoteProcedure
-              )
-                .vote(proposal.key, false, {
-                  onTransaction: wrapTransaction
-                })
-                .catch((error: Error) => console.error(error.message))
-            }
+            onClick={async () => {
+              if (publicClient == null) {
+                return
+              }
+              if (
+                procedure.typeName === 'erc20Vote' ||
+                procedure.typeName === 'vote'
+              ) {
+                const Class = (await getProcedureClass(procedure.typeName)) as
+                  | typeof ERC20VoteProcedure
+                  | typeof VoteProcedure
+                const instance = new Class({
+                  ...procedure,
+                  erc20: (procedure as ERC20VoteProcedure).erc20,
+                  publicClient,
+                  walletClient
+                }) as ERC20VoteProcedure | VoteProcedure
+                instance
+                  .vote(proposal.key, false, {
+                    onTransaction: wrapTransaction
+                  })
+                  .catch((error: Error) => console.error(error.message))
+              }
+            }}
           >
             {t('Reject')}
           </Button>

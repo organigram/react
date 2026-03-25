@@ -7,7 +7,7 @@ import {
 } from '@organigram/js'
 import Grid from '@mui/material/Grid'
 import Alert from '@mui/material/Alert'
-import { ethers } from 'ethers'
+import type { PublicClient, WalletClient } from 'viem'
 
 import { VetoProposal } from './Veto'
 import { DecidersActions } from './DecidersActions'
@@ -23,7 +23,8 @@ export interface ElectionComponentProps {
   }
   wrapTransaction: TransactionOptions['onTransaction']
   t: (key: string) => string
-  signer?: ethers.Signer | null
+  publicClient?: PublicClient | null
+  walletClient?: WalletClient | null
 }
 export const ElectionComponent: React.FC<ElectionComponentProps> = ({
   procedure,
@@ -31,7 +32,8 @@ export const ElectionComponent: React.FC<ElectionComponentProps> = ({
   accountInOrgans,
   wrapTransaction,
   t = (key: string) => key,
-  signer
+  publicClient,
+  walletClient
 }) => {
   const election = procedure.elections?.find(
     (b: { proposalKey: any }) => b.proposalKey && b.proposalKey === proposal.key
@@ -62,7 +64,15 @@ export const ElectionComponent: React.FC<ElectionComponentProps> = ({
         <></>
       ) : now < parseInt(election.start) ? ( // Election is started. Vote is not started.
         <VetoProposal
-          {...{ procedure, proposal, accountInOrgans, wrapTransaction, t, signer }}
+          {...{
+            procedure,
+            proposal,
+            accountInOrgans,
+            wrapTransaction,
+            t,
+            publicClient,
+            walletClient
+          }}
         />
       ) : now < parseInt(election.start) + parseInt(procedure.voteDuration) ? ( // Vote is started. Vote is not ended.
         <DecidersActions
@@ -72,7 +82,8 @@ export const ElectionComponent: React.FC<ElectionComponentProps> = ({
             accountInOrgans,
             wrapTransaction,
             t,
-            signer
+            publicClient,
+            walletClient
           }}
         />
       ) : (
@@ -83,7 +94,8 @@ export const ElectionComponent: React.FC<ElectionComponentProps> = ({
             wrapTransaction,
             t,
             accountInOrgans,
-            signer
+            publicClient,
+            walletClient
           }}
         />
       )}

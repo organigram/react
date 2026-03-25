@@ -1,13 +1,13 @@
 import { useMemo } from 'react'
 import {
-  TransactionOptions,
   OrganigramClient,
   procedureTypes,
+  type TransactionOptions,
   type ProcedureType,
   type Organ,
   type Procedure
 } from '@organigram/js'
-import { ethers, Signer } from 'ethers'
+import type { PublicClient, WalletClient } from 'viem'
 import { atom } from 'recoil'
 
 export const organigramIdState = atom({
@@ -35,19 +35,16 @@ export type CreateProcedure = (
 ) => Promise<Procedure & { type: ProcedureType }>
 
 export const useOrganigramClient = (
-  signer?: Signer | null,
-  handleTransaction?: (
-    tx: ethers.TransactionResponse,
-    description: string
-  ) => void
+  publicClient?: PublicClient | null,
+  walletClient?: WalletClient | null
 ): OrganigramClient | null => {
   return useMemo(() => {
-    return signer?.provider == null || signer == null
+    return publicClient == null
       ? null
       : new OrganigramClient({
-          provider: signer.provider,
-          signer,
+          publicClient,
+          walletClient: walletClient ?? undefined,
           procedureTypes: Object.values(procedureTypes)
         })
-  }, [signer])
+  }, [publicClient, walletClient])
 }
