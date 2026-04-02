@@ -9,13 +9,13 @@ import { Handle, NodeProps, Position } from 'react-flow-renderer'
 import Badge from '@mui/material/Badge'
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
+import Tune from '@mui/icons-material/Tune'
+import CircularProgress from '@mui/material/CircularProgress'
 
-import { filterProposals } from '../../hooks/useProcedures'
+import { filterProposals } from '../../utils'
 import { DiagramNode } from './Node'
 import { palette } from '../../theme/palette'
 import ProcedureIcon from '../icons/Procedure'
-import { CircularProgress } from '@mui/material'
-import { Tune } from '@mui/icons-material'
 
 export interface ProcedureNodeProps {
   hideHandles?: boolean

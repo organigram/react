@@ -12,8 +12,6 @@ export * from './components/procedures/Veto';
 export * as procedures from './components/procedures';
 export * from './hooks/useLayers';
 export * from './hooks/useOrganigramClient';
-export * from './hooks/useOrgans';
-export * from './hooks/useProcedures';
 export * from './hooks/useModal';
 export * from './theme';
 export * from './utils';

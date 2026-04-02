@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import {
   OrganigramClient,
-  procedureTypes,
   type TransactionOptions,
   type ProcedureType,
   type Organ,
@@ -43,8 +42,7 @@ export const useOrganigramClient = (
       ? null
       : new OrganigramClient({
           publicClient,
-          walletClient: walletClient ?? undefined,
-          procedureTypes: Object.values(procedureTypes)
+          walletClient: walletClient ?? undefined
         })
   }, [publicClient, walletClient])
 }

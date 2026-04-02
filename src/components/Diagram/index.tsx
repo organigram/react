@@ -26,7 +26,7 @@ import ReactFlow, {
   type NodeProps,
   type NodeTypes
 } from 'react-flow-renderer'
-import { NoSsr } from '@mui/material'
+import NoSsr from '@mui/material/NoSsr'
 
 import { useLayers } from '../../hooks/useLayers'
 import { mobileNavHeight } from '../../theme'
@@ -42,9 +42,9 @@ export interface DiagramProps {
   controls?: boolean
   options?: ReactFlowProps
   isTabletOrAbove?: boolean
-  onClickOrgan: (organ: OrganJson) => void
-  onClickAsset: (asset: AssetJson) => void
-  onClickProcedure: (procedure: ProcedureJson) => void
+  onClickOrgan?: (organ: OrganJson) => void
+  onClickAsset?: (asset: AssetJson) => void
+  onClickProcedure?: (procedure: ProcedureJson) => void
   onOrganDeployed?: (organ: OrganJson) => void
   onAssetDeployed?: (asset: AssetJson) => void
   onProcedureDeployed?: (procedure: ProcedureJson) => void
