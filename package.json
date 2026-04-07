@@ -44,7 +44,7 @@
   },
   "scripts": {
     "build": "vite build",
-    "docs": "env-cmd --silent tsx ./scripts/docs.ts",
+    "docs:generate": "env-cmd --silent tsx ./scripts/docs.ts",
     "dev": "vite dev",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit --incremental false",
