@@ -7,12 +7,18 @@ import { DiagramNode } from './Node'
 import { palette } from '../../theme/palette'
 import TokenIcon from '../icons/Token'
 
+/**
+ * Props accepted by the default asset node renderer.
+ */
 export interface AssetNodeProps {
   Token: React.FC<{ style: any }>
   data: { asset: Asset; onClick?: (asset: Asset) => void }
   hideHandles?: boolean
 }
 
+/**
+ * Default React Flow node used to display one asset inside a diagram.
+ */
 export const AssetNode: React.FC<NodeProps & AssetNodeProps> = ({
   data: { asset, onClick },
   sourcePosition,

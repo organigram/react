@@ -34,6 +34,9 @@ import { ProcedureNode } from './ProcedureNode'
 import { OrganNode } from './OrganNode'
 import { AssetNode } from './AssetNode'
 
+/**
+ * Props accepted by the default `Diagram` component.
+ */
 export interface DiagramProps {
   nodeTypes?: NodeTypes
   direction?: string
@@ -50,6 +53,9 @@ export interface DiagramProps {
   onProcedureDeployed?: (procedure: ProcedureJson) => void
 }
 
+/**
+ * Default React Flow node registry used by the diagram component.
+ */
 export const defaultNodeTypes = {
   procedure: ProcedureNode as React.FC<NodeProps<{ procedure: Procedure }>>,
   organ: OrganNode as React.FC<NodeProps<{ organ: Organ }>>,
@@ -107,6 +113,11 @@ const autodistribute: (
   return nodes
 }
 
+/**
+ * Render an organigram as a React Flow diagram with automatic layout.
+ *
+ * @param props Diagram configuration, callbacks, and the serialized organigram to render.
+ */
 export const Diagram: React.FC<DiagramProps> = ({
   nodeTypes = defaultNodeTypes,
   direction = 'TB',

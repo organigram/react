@@ -10,6 +10,10 @@ import { DiagramNode } from './Node'
 import { palette } from '../../theme/palette'
 import SummitIcon from '../icons/Summit'
 import { PeopleAltRounded } from '@mui/icons-material'
+
+/**
+ * Props accepted by the default organ node renderer.
+ */
 export interface OrganNodeProps {
   data: {
     organ: Organ
@@ -19,6 +23,9 @@ export interface OrganNodeProps {
   hideHandles?: boolean
 }
 
+/**
+ * Small helper that renders the current entry count for an organ.
+ */
 export const EntryCount: React.FC<{
   organ: OrganJson
 }> = ({ organ }) => {
@@ -35,6 +42,9 @@ export const EntryCount: React.FC<{
   )
 }
 
+/**
+ * Default React Flow node used to display one organ inside a diagram.
+ */
 export const OrganNode: React.FC<Partial<NodeProps> & OrganNodeProps> = ({
   data,
   sourcePosition,

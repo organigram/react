@@ -6,8 +6,17 @@ import {
   ProcedureRoleTypeName
 } from '@organigram/js'
 
+/**
+ * Named filters used by proposal list UIs.
+ */
 export type ProposalFilter = 'current' | 'drafts' | 'passed' | 'blocked' | ''
 
+/**
+ * Filter hydrated proposals according to their workflow status.
+ *
+ * @param filter Filter label selected by the UI.
+ * @param proposals Proposals to filter.
+ */
 export const filterProposals: (
   filter: ProposalFilter,
   proposals: ProcedureProposal[]
@@ -29,6 +38,14 @@ export const filterProposals: (
       })
     : proposals
 
+/**
+ * Check whether the current user belongs to the organ assigned to one procedure role.
+ *
+ * @param roleType Procedure role to inspect.
+ * @param organs Hydrated organs available in the current organigram.
+ * @param deployedProcedure Procedure whose role organ should be checked.
+ * @param userAddress Connected user address.
+ */
 export const isUserInSourceOrgan: (
   roleType: ProcedureRoleTypeName,
   organs: OrganJson[],
@@ -47,6 +64,9 @@ export const isUserInSourceOrgan: (
         .includes(userAddress as string)
     ) !== undefined
 
+/**
+ * Convert a duration in seconds into a human-readable string.
+ */
 export const secondsToHms = (d: number): string => {
   const days = Math.floor(d / 86400)
   const hours = Math.floor((d % 86400) / 3600)

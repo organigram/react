@@ -5,6 +5,9 @@ import Button from '@mui/material/Button'
 import { palette } from '../../theme/palette'
 import { MoreVert } from '@mui/icons-material'
 
+/**
+ * Shared visual shell used by organ, procedure, and asset nodes.
+ */
 export const DiagramNode: React.FC<{
   onClick?: () => void
   label?: string

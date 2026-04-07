@@ -17,11 +17,17 @@ import { DiagramNode } from './Node'
 import { palette } from '../../theme/palette'
 import ProcedureIcon from '../icons/Procedure'
 
+/**
+ * Props accepted by the default procedure node renderer.
+ */
 export interface ProcedureNodeProps {
   hideHandles?: boolean
   organigram?: OrganigramJson
 }
 
+/**
+ * Default React Flow node used to display one procedure inside a diagram.
+ */
 export const ProcedureNode: React.FC<
   Partial<
     NodeProps<{

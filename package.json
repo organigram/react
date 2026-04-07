@@ -44,6 +44,7 @@
   },
   "scripts": {
     "build": "vite build",
+    "docs": "env-cmd --silent tsx ./scripts/docs.ts",
     "dev": "vite dev",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit --incremental false",
@@ -55,6 +56,7 @@
     "@mui/icons-material": "^5.18.0",
     "@organigram/js": "workspace:^",
     "@organigram/protocol": "workspace:^",
+    "@types/node": "^20.19.37",
     "@types/dagre": "^0.7.53",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.7",
