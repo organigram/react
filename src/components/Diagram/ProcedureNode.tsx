@@ -5,25 +5,29 @@ import {
   ProcedureProposal,
   getPermissionsSet
 } from '@organigram/js'
-import { Signer } from 'ethers'
 import { Handle, NodeProps, Position } from 'react-flow-renderer'
 import Badge from '@mui/material/Badge'
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
+import Tune from '@mui/icons-material/Tune'
+import CircularProgress from '@mui/material/CircularProgress'
 
-import { filterProposals } from '../../hooks/useProcedures'
+import { filterProposals } from '../../utils'
 import { DiagramNode } from './Node'
 import { palette } from '../../theme/palette'
 import ProcedureIcon from '../icons/Procedure'
-import { CircularProgress } from '@mui/material'
-import { Tune } from '@mui/icons-material'
 
+/**
+ * Props accepted by the default procedure node renderer.
+ */
 export interface ProcedureNodeProps {
   hideHandles?: boolean
-  signer?: Signer | null
   organigram?: OrganigramJson
 }
 
+/**
+ * Default React Flow node used to display one procedure inside a diagram.
+ */
 export const ProcedureNode: React.FC<
   Partial<
     NodeProps<{
@@ -39,7 +43,6 @@ export const ProcedureNode: React.FC<
   targetPosition,
   hideHandles,
   organigram,
-  signer,
   ...nodeProps
 }) => {
   const resolvedOrganigram = organigram ?? data?.organigram

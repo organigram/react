@@ -1,26 +1,35 @@
 import { useMemo } from 'react'
 import {
-  TransactionOptions,
   OrganigramClient,
-  procedureTypes,
+  type TransactionOptions,
   type ProcedureType,
   type Organ,
   type Procedure
 } from '@organigram/js'
-import { ethers, Signer } from 'ethers'
+import type { PublicClient, WalletClient } from 'viem'
 import { atom } from 'recoil'
 
+/**
+ * Global recoil state storing the active organigram identifier.
+ */
 export const organigramIdState = atom({
   key: 'organigramId',
   default: '',
   dangerouslyAllowMutability: true
 })
 
+/**
+ * Helper signature used by flows that deploy one organ from the UI.
+ */
 export type DeployOrganInput = (
   metadataCid: string,
   salt: string,
   index?: number
 ) => Promise<Organ>
+
+/**
+ * Helper signature used by flows that deploy one procedure from the UI.
+ */
 export type CreateProcedure = (
   type: string,
   options: TransactionOptions,
@@ -34,20 +43,24 @@ export type CreateProcedure = (
   ...args: unknown[]
 ) => Promise<Procedure & { type: ProcedureType }>
 
+/**
+ * Create an {@link OrganigramClient} tied to the provided viem clients.
+ *
+ * The hook returns `null` until a public client is available.
+ *
+ * @param publicClient Read-only viem client used for chain queries.
+ * @param walletClient Optional wallet client used for write operations.
+ */
 export const useOrganigramClient = (
-  signer?: Signer | null,
-  handleTransaction?: (
-    tx: ethers.TransactionResponse,
-    description: string
-  ) => void
+  publicClient?: PublicClient | null,
+  walletClient?: WalletClient | null
 ): OrganigramClient | null => {
   return useMemo(() => {
-    return signer?.provider == null || signer == null
+    return publicClient == null
       ? null
       : new OrganigramClient({
-          provider: signer.provider,
-          signer,
-          procedureTypes: Object.values(procedureTypes)
+          publicClient,
+          walletClient: walletClient ?? undefined
         })
-  }, [signer])
+  }, [publicClient, walletClient])
 }

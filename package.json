@@ -31,12 +31,12 @@
     "@mui/material": "^5.15.4",
     "@organigram/js": "workspace:^",
     "@organigram/protocol": "workspace:^",
-    "ethers": "^6.16.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-flow-renderer": "^10.3.17",
     "react-i18next": "^11.0.0",
-    "recoil": "^0.7.7"
+    "recoil": "^0.7.7",
+    "viem": "^2.18.2"
   },
   "dependencies": {
     "@organigram/js": "workspace:^",
@@ -44,6 +44,7 @@
   },
   "scripts": {
     "build": "vite build",
+    "docs:generate": "env-cmd --silent tsx ./scripts/docs.ts",
     "dev": "vite dev",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit --incremental false",
@@ -55,13 +56,13 @@
     "@mui/icons-material": "^5.18.0",
     "@organigram/js": "workspace:^",
     "@organigram/protocol": "workspace:^",
+    "@types/node": "^20.19.37",
     "@types/dagre": "^0.7.53",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react": "^5.1.2",
     "@vitest/browser-playwright": "^4.0.17",
     "@vitest/coverage-v8": "4.0.17",
-    "ethers": "^6.16.0",
     "playwright": "^1.58.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -71,6 +72,7 @@
     "typescript": "^5.5.4",
     "vite": "^7.3.1",
     "vite-plugin-dts": "^4.5.4",
+    "viem": "^2.18.2",
     "vitest": "^4.0.17",
     "vitest-browser-react": "^2.0.2"
   },

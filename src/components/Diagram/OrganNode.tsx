@@ -1,6 +1,5 @@
 import React from 'react'
 import { Organ, OrganJson } from '@organigram/js'
-import { Signer } from 'ethers'
 import { Handle, NodeProps, Position } from 'react-flow-renderer'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
@@ -11,6 +10,10 @@ import { DiagramNode } from './Node'
 import { palette } from '../../theme/palette'
 import SummitIcon from '../icons/Summit'
 import { PeopleAltRounded } from '@mui/icons-material'
+
+/**
+ * Props accepted by the default organ node renderer.
+ */
 export interface OrganNodeProps {
   data: {
     organ: Organ
@@ -18,13 +21,14 @@ export interface OrganNodeProps {
     onClick?: () => void
   }
   hideHandles?: boolean
-  signer?: Signer | null
 }
 
+/**
+ * Small helper that renders the current entry count for an organ.
+ */
 export const EntryCount: React.FC<{
   organ: OrganJson
-  signer?: Signer | null
-}> = ({ organ, signer }) => {
+}> = ({ organ }) => {
   const { t } = useTranslation()
   const count = organ?.entries?.length?.toString()
   const singularOrPlural =
@@ -38,12 +42,14 @@ export const EntryCount: React.FC<{
   )
 }
 
+/**
+ * Default React Flow node used to display one organ inside a diagram.
+ */
 export const OrganNode: React.FC<Partial<NodeProps> & OrganNodeProps> = ({
   data,
   sourcePosition,
   targetPosition,
-  hideHandles,
-  signer
+  hideHandles
 }) => {
   const isMaster = data?.position?.y === 0
 
@@ -110,7 +116,7 @@ export const OrganNode: React.FC<Partial<NodeProps> & OrganNodeProps> = ({
           />
         </Box>
         <Grid container justifyContent='flex-start' alignItems='center' pt={1}>
-          <EntryCount organ={data.organ} signer={signer} />
+          <EntryCount organ={data.organ} />
         </Grid>
       </Card>
       {hideHandles !== true && (

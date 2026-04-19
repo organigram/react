@@ -1,5 +1,8 @@
 import { atom, useRecoilState, type SetterOrUpdater } from 'recoil'
 
+/**
+ * Visual layer configuration applied to the diagram.
+ */
 export interface Layer {
   name: string
   organAddresses: string[]
@@ -11,6 +14,9 @@ export interface Layer {
   isHidden: boolean
 }
 
+/**
+ * Global recoil state storing the active diagram layers.
+ */
 export const layersState = atom({
   key: 'layers',
   default: [
@@ -27,5 +33,8 @@ export const layersState = atom({
   ] as Layer[]
 })
 
+/**
+ * Read and update the current diagram layer configuration.
+ */
 export const useLayers: () => [Layer[], SetterOrUpdater<Layer[]>] = () =>
   useRecoilState(layersState)

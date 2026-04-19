@@ -9,7 +9,6 @@ import {
   type Asset,
   type OrganigramJson
 } from '@organigram/js'
-import { Signer } from 'ethers'
 import dagre from 'dagre'
 import ReactFlow, {
   Controls,
@@ -27,7 +26,7 @@ import ReactFlow, {
   type NodeProps,
   type NodeTypes
 } from 'react-flow-renderer'
-import { NoSsr } from '@mui/material'
+import NoSsr from '@mui/material/NoSsr'
 
 import { useLayers } from '../../hooks/useLayers'
 import { mobileNavHeight } from '../../theme'
@@ -35,6 +34,9 @@ import { ProcedureNode } from './ProcedureNode'
 import { OrganNode } from './OrganNode'
 import { AssetNode } from './AssetNode'
 
+/**
+ * Props accepted by the default `Diagram` component.
+ */
 export interface DiagramProps {
   nodeTypes?: NodeTypes
   direction?: string
@@ -42,16 +44,18 @@ export interface DiagramProps {
   style?: Record<string, unknown>
   controls?: boolean
   options?: ReactFlowProps
-  signer?: Signer | null
   isTabletOrAbove?: boolean
-  onClickOrgan: (organ: OrganJson) => void
-  onClickAsset: (asset: AssetJson) => void
-  onClickProcedure: (procedure: ProcedureJson) => void
+  onClickOrgan?: (organ: OrganJson) => void
+  onClickAsset?: (asset: AssetJson) => void
+  onClickProcedure?: (procedure: ProcedureJson) => void
   onOrganDeployed?: (organ: OrganJson) => void
   onAssetDeployed?: (asset: AssetJson) => void
   onProcedureDeployed?: (procedure: ProcedureJson) => void
 }
 
+/**
+ * Default React Flow node registry used by the diagram component.
+ */
 export const defaultNodeTypes = {
   procedure: ProcedureNode as React.FC<NodeProps<{ procedure: Procedure }>>,
   organ: OrganNode as React.FC<NodeProps<{ organ: Organ }>>,
@@ -109,6 +113,11 @@ const autodistribute: (
   return nodes
 }
 
+/**
+ * Render an organigram as a React Flow diagram with automatic layout.
+ *
+ * @param props Diagram configuration, callbacks, and the serialized organigram to render.
+ */
 export const Diagram: React.FC<DiagramProps> = ({
   nodeTypes = defaultNodeTypes,
   direction = 'TB',

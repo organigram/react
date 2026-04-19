@@ -6,7 +6,7 @@ import {
 } from '@organigram/js'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
-import { ethers } from 'ethers'
+import type { PublicClient, WalletClient } from 'viem'
 
 export const NominationProcedureComponent = ({
   procedure
@@ -25,7 +25,8 @@ export interface NominationProposalProps {
   }
   wrapTransaction: TransactionOptions['onTransaction']
   t: (key: string, options?: any) => string
-  signer: ethers.Signer | null
+  publicClient?: PublicClient | null
+  walletClient?: WalletClient | null
 }
 
 const NominationProposal = ({
@@ -34,7 +35,8 @@ const NominationProposal = ({
   accountInOrgans,
   wrapTransaction,
   t = key => key,
-  signer
+  publicClient,
+  walletClient
 }: NominationProposalProps) => {
   if (!proposal || !proposal.presented) {
     return <p className='text-danger'>{t('Proposal not presented.')}</p>
@@ -44,7 +46,8 @@ const NominationProposal = ({
   }
   const _procedure = new NominationProcedure({
     ...procedure,
-    signerOrProvider: signer
+    publicClient,
+    walletClient
   })
   return (
     <Grid container justifyContent='space-between' mt={3}>

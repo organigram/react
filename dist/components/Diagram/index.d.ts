@@ -1,6 +1,5 @@
 import { default as React } from 'react';
 import { OrganJson, AssetJson, ProcedureJson, Organ, Procedure, Asset, OrganigramJson } from '@organigram/js';
-import { Signer } from 'ethers';
 import { ReactFlowProps, NodeProps, NodeTypes } from 'react-flow-renderer';
 export interface DiagramProps {
     nodeTypes?: NodeTypes;
@@ -9,11 +8,10 @@ export interface DiagramProps {
     style?: Record<string, unknown>;
     controls?: boolean;
     options?: ReactFlowProps;
-    signer?: Signer | null;
     isTabletOrAbove?: boolean;
-    onClickOrgan: (organ: OrganJson) => void;
-    onClickAsset: (asset: AssetJson) => void;
-    onClickProcedure: (procedure: ProcedureJson) => void;
+    onClickOrgan?: (organ: OrganJson) => void;
+    onClickAsset?: (asset: AssetJson) => void;
+    onClickProcedure?: (procedure: ProcedureJson) => void;
     onOrganDeployed?: (organ: OrganJson) => void;
     onAssetDeployed?: (asset: AssetJson) => void;
     onProcedureDeployed?: (procedure: ProcedureJson) => void;

@@ -3,23 +3,24 @@ import { Organ, Procedure } from '@organigram/js'
 import { useTranslation } from 'react-i18next'
 import Button from '@mui/material/Button'
 import Alert from '@mui/material/Alert'
-import { Provider } from 'ethers'
 import { ElectionComponentProps } from './Election'
 
 export const VoteEnded: React.FC<ElectionComponentProps> = ({
   procedure,
   proposal,
   wrapTransaction,
-  signer
+  publicClient,
+  walletClient
 }) => {
   const { t } = useTranslation()
   const _procedure = useMemo(
     () =>
       new Procedure({
         ...procedure,
-        signerOrProvider: signer
+        publicClient,
+        walletClient
       }),
-    [procedure, signer]
+    [procedure, publicClient, walletClient]
   )
 
   const election = procedure.elections?.find(
@@ -32,18 +33,24 @@ export const VoteEnded: React.FC<ElectionComponentProps> = ({
   )
 
   useEffect(() => {
+    if (publicClient == null) {
+      return
+    }
     const handler = async (): Promise<void> => {
       const deciders = await Organ.load(
         procedure.deciders,
-        procedure.provider as Provider
+        {
+          publicClient,
+          walletClient
+        }
       )
       setDecidersCount(
         deciders.entries.filter(e => e.address != null && e.address !== '')
           .length
       )
     }
-    handler()
-  })
+    handler().catch((error: Error) => console.error(error.message))
+  }, [procedure.deciders, publicClient, walletClient])
 
   return parseInt(election?.votesCount ?? '0') >= quorum &&
     election?.approved ? (
@@ -53,7 +60,7 @@ export const VoteEnded: React.FC<ElectionComponentProps> = ({
         fullWidth
         onClick={() => {
           _procedure
-            .adoptProposal(proposal.key, { onTransaction: wrapTransaction })
+            .applyProposal(proposal.key, { onTransaction: wrapTransaction })
             .catch((error: Error) => console.error(error.message))
         }}
       >

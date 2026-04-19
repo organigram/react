@@ -1,12 +1,11 @@
 import React from 'react'
 import { RecoilRoot } from 'recoil'
 
-import {
-  createTheme,
-  CssBaseline,
-  ThemeOptions,
-  ThemeProvider
-} from '@mui/material'
+import createTheme, {
+  type ThemeOptions
+} from '@mui/material/styles/createTheme'
+import CssBaseline from '@mui/material/CssBaseline'
+import ThemeProvider from '@mui/material/styles/ThemeProvider'
 
 import { theme } from '../src/theme'
 import { ModalProvider } from './Modal'

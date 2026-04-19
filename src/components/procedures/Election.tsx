@@ -7,7 +7,7 @@ import {
 } from '@organigram/js'
 import Grid from '@mui/material/Grid'
 import Alert from '@mui/material/Alert'
-import { ethers } from 'ethers'
+import type { PublicClient, WalletClient } from 'viem'
 
 import { VetoProposal } from './Veto'
 import { DecidersActions } from './DecidersActions'
@@ -23,7 +23,8 @@ export interface ElectionComponentProps {
   }
   wrapTransaction: TransactionOptions['onTransaction']
   t: (key: string) => string
-  signer?: ethers.Signer | null
+  publicClient?: PublicClient | null
+  walletClient?: WalletClient | null
 }
 export const ElectionComponent: React.FC<ElectionComponentProps> = ({
   procedure,
@@ -31,13 +32,16 @@ export const ElectionComponent: React.FC<ElectionComponentProps> = ({
   accountInOrgans,
   wrapTransaction,
   t = (key: string) => key,
-  signer
+  publicClient,
+  walletClient
 }) => {
   const election = procedure.elections?.find(
     (b: { proposalKey: any }) => b.proposalKey && b.proposalKey === proposal.key
   )
 
   const now = Date.now() / 1000
+  const voteStart =
+    election?.start != null ? parseInt(election.start) + 1 : undefined
 
   if (!proposal || !proposal.presented || !election) {
     return (
@@ -58,13 +62,21 @@ export const ElectionComponent: React.FC<ElectionComponentProps> = ({
       mt={3}
       className='procedure-proposal procedure-proposal-vote'
     >
-      {!election || !election.start ? ( // Election does not exist or not started, or block cannot be fetched.
+      {!election || !election.start || voteStart == null ? ( // Election does not exist or not started, or block cannot be fetched.
         <></>
-      ) : now < parseInt(election.start) ? ( // Election is started. Vote is not started.
+      ) : now < voteStart ? ( // The on-chain vote opens strictly after election.start.
         <VetoProposal
-          {...{ procedure, proposal, accountInOrgans, wrapTransaction, t, signer }}
+          {...{
+            procedure,
+            proposal,
+            accountInOrgans,
+            wrapTransaction,
+            t,
+            publicClient,
+            walletClient
+          }}
         />
-      ) : now < parseInt(election.start) + parseInt(procedure.voteDuration) ? ( // Vote is started. Vote is not ended.
+      ) : now < voteStart + parseInt(procedure.voteDuration) ? ( // Vote is started. Vote is not ended.
         <DecidersActions
           {...{
             procedure,
@@ -72,7 +84,8 @@ export const ElectionComponent: React.FC<ElectionComponentProps> = ({
             accountInOrgans,
             wrapTransaction,
             t,
-            signer
+            publicClient,
+            walletClient
           }}
         />
       ) : (
@@ -83,7 +96,8 @@ export const ElectionComponent: React.FC<ElectionComponentProps> = ({
             wrapTransaction,
             t,
             accountInOrgans,
-            signer
+            publicClient,
+            walletClient
           }}
         />
       )}
