@@ -27,8 +27,7 @@ export default defineConfig({
         /@mui/,
         'recoil',
         'viem',
-        '@organigram/js',
-        '@organigram/protocol'
+        '@organigram/js'
       ]
     }
   },

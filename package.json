@@ -30,7 +30,6 @@
     "@mui/icons-material": "^5.18.0",
     "@mui/material": "^5.15.4",
     "@organigram/js": "workspace:^",
-    "@organigram/protocol": "workspace:^",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-flow-renderer": "^10.3.17",
@@ -55,7 +54,7 @@
   "devDependencies": {
     "@mui/icons-material": "^5.18.0",
     "@organigram/js": "workspace:^",
-    "@organigram/protocol": "workspace:^",
+    "@types/dagre": "^0.7.53",
     "@types/node": "^20.19.37",
     "@types/dagre": "^0.7.53",
     "@types/react": "^18.3.3",
