@@ -17,7 +17,7 @@ const ERC20VoteProcedureComponent = ({
       {/* <br />
       {t('Veto Organ')}: <code>{procedure.moderators}</code> */}
       <br />
-      {t('ERC20 Token contract')}: <code>{procedure.erc20}</code>
+      {t('ERC20Votes Token contract')}: <code>{procedure.erc20}</code>
       <br />
       {t('Quorum Size')}: {parseInt(quorumSize) / 1000}%
       <br />
