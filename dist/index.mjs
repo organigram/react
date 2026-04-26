@@ -12230,7 +12230,7 @@ const uY = (A, e) => {
     ": ",
     /* @__PURE__ */ K("code", { children: A.deciders }),
     /* @__PURE__ */ K("br", {}),
-    e("ERC20 Token contract"),
+    e("ERC20Votes Token contract"),
     ": ",
     /* @__PURE__ */ K("code", { children: A.erc20 }),
     /* @__PURE__ */ K("br", {}),
