@@ -9,7 +9,7 @@ const packageDir = path.resolve(__dirname, '..')
 const srcEntry = path.resolve(packageDir, 'src/index.ts')
 const outputPath = path.resolve(
   packageDir,
-  '../../stack/assets/docs/reference/react.mdx'
+  '../docs/mdx/reference/react.mdx'
 )
 
 const categoryOrder = [
