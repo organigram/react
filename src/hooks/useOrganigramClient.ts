@@ -53,14 +53,16 @@ export type CreateProcedure = (
  */
 export const useOrganigramClient = (
   publicClient?: PublicClient | null,
-  walletClient?: WalletClient | null
+  walletClient?: WalletClient | null,
+  chainId?: string | number | null
 ): OrganigramClient | null => {
   return useMemo(() => {
     return publicClient == null
       ? null
       : new OrganigramClient({
           publicClient,
+          chainId: chainId?.toString(),
           walletClient: walletClient ?? undefined
         })
-  }, [publicClient, walletClient])
+  }, [chainId, publicClient, walletClient])
 }

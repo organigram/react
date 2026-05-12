@@ -12258,10 +12258,11 @@ const uY = (A, e) => {
   key: "organigramId",
   default: "",
   dangerouslyAllowMutability: !0
-}), eL = (A, e) => fA(() => A == null ? null : new cv({
+}), eL = (A, e, t) => fA(() => A == null ? null : new cv({
   publicClient: A,
+  chainId: t?.toString(),
   walletClient: e ?? void 0
-}), [A, e]), ea = hE({
+}), [t, A, e]), ea = hE({
   key: "modal",
   default: null
 }), tL = () => Qv(ea), rL = () => Cv(ea), nL = () => sd(ea);
