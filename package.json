@@ -47,6 +47,7 @@
     "dev": "vite dev",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit --incremental false",
+    "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
