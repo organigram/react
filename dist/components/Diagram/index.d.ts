@@ -1,10 +1,12 @@
 import { default as React } from 'react';
-import { OrganJson, AssetJson, ProcedureJson, Organ, Procedure, Asset, OrganigramJson } from '@organigram/js';
+import { OrganJson, AssetJson, ProcedureJson, Organ, Procedure, OrganigramEdgeType, OrganigramNodePositions, Asset, OrganigramJson } from '@organigram/js';
 import { ReactFlowProps, NodeProps, NodeTypes } from 'react-flow-renderer';
 export interface DiagramProps {
     nodeTypes?: NodeTypes;
     direction?: string;
+    edgeType?: OrganigramEdgeType;
     organigram: OrganigramJson | null;
+    onNodePositionsChange?: (nodePositions: OrganigramNodePositions) => void;
     style?: Record<string, unknown>;
     controls?: boolean;
     options?: ReactFlowProps;

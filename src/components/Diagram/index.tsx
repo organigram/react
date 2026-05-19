@@ -6,12 +6,16 @@ import {
   getPermissionsSet,
   Organ,
   Procedure,
+  defaultOrganigramEdgeType,
+  type OrganigramEdgeType,
+  type OrganigramNodePositions,
   type Asset,
   type OrganigramJson
 } from '@organigram/js'
 import dagre from 'dagre'
 import ReactFlow, {
   Controls,
+  ConnectionLineType,
   applyEdgeChanges,
   applyNodeChanges,
   addEdge,
@@ -24,6 +28,7 @@ import ReactFlow, {
   type Connection,
   type EdgeChange,
   type NodeProps,
+  type NodeDragHandler,
   type NodeTypes
 } from 'react-flow-renderer'
 import NoSsr from '@mui/material/NoSsr'
@@ -40,7 +45,9 @@ import { AssetNode } from './AssetNode'
 export interface DiagramProps {
   nodeTypes?: NodeTypes
   direction?: string
+  edgeType?: OrganigramEdgeType
   organigram: OrganigramJson | null
+  onNodePositionsChange?: (nodePositions: OrganigramNodePositions) => void
   style?: Record<string, unknown>
   controls?: boolean
   options?: ReactFlowProps
@@ -66,6 +73,47 @@ const procedureNodeHeight = 48
 const organNodeHeight = 104
 const gridUnitSize = 16
 const snapGrid: [number, number] = [gridUnitSize, gridUnitSize]
+
+const getOrganPositionKey = (address: string): string => `organ:${address}`
+const getProcedurePositionKey = (address: string): string =>
+  `procedure:${address}`
+const getAssetPositionKey = (address: string): string => `asset:${address}`
+
+const getConnectionLineType = (
+  edgeType: OrganigramEdgeType
+): ConnectionLineType => {
+  switch (edgeType) {
+    case 'default':
+      return ConnectionLineType.Bezier
+    case 'straight':
+      return ConnectionLineType.Straight
+    case 'step':
+      return ConnectionLineType.Step
+    // case 'simplebezier':
+    //   return ConnectionLineType.SimpleBezier
+    case 'smoothstep':
+    default:
+      return ConnectionLineType.SmoothStep
+  }
+}
+
+const applyStoredNodePositions = (
+  nodes: Node[],
+  storedNodePositions: OrganigramNodePositions
+): Node[] =>
+  nodes.map(node => {
+    const positionKey = (node.data as { positionKey?: string } | undefined)
+      ?.positionKey
+    const storedPosition =
+      positionKey == null ? undefined : storedNodePositions[positionKey]
+
+    return storedPosition == null
+      ? node
+      : {
+          ...node,
+          position: storedPosition
+        }
+  })
 
 const autodistribute: (
   nodes: Node[],
@@ -121,7 +169,9 @@ const autodistribute: (
 export const Diagram: React.FC<DiagramProps> = ({
   nodeTypes = defaultNodeTypes,
   direction = 'TB',
+  edgeType,
   organigram,
+  onNodePositionsChange,
   style,
   controls,
   options,
@@ -130,16 +180,32 @@ export const Diagram: React.FC<DiagramProps> = ({
   onClickProcedure,
   onClickAsset
 }) => {
+  const {
+    defaultEdgeOptions: optionDefaultEdgeOptions,
+    connectionLineType: optionConnectionLineType,
+    ...reactFlowOptions
+  } = options ?? {}
+  const selectedEdgeType =
+    (optionDefaultEdgeOptions?.type as OrganigramEdgeType | undefined) ??
+    edgeType ??
+    organigram?.edgeType ??
+    defaultOrganigramEdgeType
+  const storedNodePositions = organigram?.nodePositions ?? {}
   const [layers] = useLayers()
   const organsNodes = useMemo(
     () =>
       organigram?.organs?.map(organ => ({
         id: `organ-${organ.name}`,
         type: 'organ',
-        position: { x: 0, y: 0 },
-        data: { organ, onClick: onClickOrgan }
+        position:
+          storedNodePositions[getOrganPositionKey(organ.address)] ?? { x: 0, y: 0 },
+        data: {
+          organ,
+          onClick: onClickOrgan,
+          positionKey: getOrganPositionKey(organ.address)
+        }
       })) ?? [],
-    [organigram?.organs, onClickOrgan]
+    [organigram?.organs, onClickOrgan, storedNodePositions]
   )
 
   const proceduresNodes = useMemo(
@@ -147,10 +213,19 @@ export const Diagram: React.FC<DiagramProps> = ({
       organigram?.procedures?.map(procedure => ({
         id: `procedure-${procedure.name}`,
         type: 'procedure',
-        position: { x: 0, y: 0 },
-        data: { procedure, onClick: onClickProcedure, organigram }
+        position:
+          storedNodePositions[getProcedurePositionKey(procedure.address)] ?? {
+            x: 0,
+            y: 0
+          },
+        data: {
+          procedure,
+          onClick: onClickProcedure,
+          organigram,
+          positionKey: getProcedurePositionKey(procedure.address)
+        }
       })) ?? [],
-    [organigram, onClickProcedure]
+    [organigram, onClickProcedure, storedNodePositions]
   )
 
   const assetsNodes = useMemo(
@@ -158,10 +233,15 @@ export const Diagram: React.FC<DiagramProps> = ({
       organigram?.assets?.map(asset => ({
         id: `asset-${asset.name}`,
         type: 'asset',
-        position: { x: 0, y: 0 },
-        data: { asset, onClick: onClickAsset }
+        position:
+          storedNodePositions[getAssetPositionKey(asset.address)] ?? { x: 0, y: 0 },
+        data: {
+          asset,
+          onClick: onClickAsset,
+          positionKey: getAssetPositionKey(asset.address)
+        }
       })) ?? [],
-    [organigram?.assets, onClickAsset]
+    [organigram?.assets, onClickAsset, storedNodePositions]
   )
 
   const initialEdges = useMemo(
@@ -311,13 +391,33 @@ export const Diagram: React.FC<DiagramProps> = ({
     [layers, organsNodes, proceduresNodes, assetsNodes]
   )
 
-  const distributedNodes = autodistribute(
-    [...organsNodes, ...proceduresNodes, ...assetsNodes],
-    [...initialEdges],
-    direction
+  const distributedNodes = applyStoredNodePositions(
+    autodistribute(
+      [...organsNodes, ...proceduresNodes, ...assetsNodes],
+      [...initialEdges],
+      direction
+    ),
+    storedNodePositions
   )
   const [nodes, setNodes] = useState(distributedNodes)
   const [edges, setEdges] = useState(initialEdges)
+
+  const getCurrentNodePositions = useCallback(
+    (currentNodes: Node[]): OrganigramNodePositions =>
+      Object.fromEntries(
+        currentNodes.flatMap(node => {
+          const positionKey = (node.data as { positionKey?: string } | undefined)
+            ?.positionKey
+
+          if (positionKey == null) {
+            return []
+          }
+
+          return [[positionKey, { x: node.position.x, y: node.position.y }]]
+        })
+      ),
+    []
+  )
 
   const onNodesChange = useCallback(
     (changes: NodeChange[]) => {
@@ -342,16 +442,47 @@ export const Diagram: React.FC<DiagramProps> = ({
     },
     [setEdges]
   )
+  const onNodeDragStop = useCallback<NodeDragHandler>(
+    (_event, draggedNode, currentNodes) => {
+      if (onNodePositionsChange == null) {
+        return
+      }
+
+      onNodePositionsChange(
+        getCurrentNodePositions(
+          currentNodes.map(node =>
+            node.id === draggedNode.id
+              ? {
+                  ...node,
+                  position: draggedNode.position
+                }
+              : node
+          )
+        )
+      )
+    },
+    [getCurrentNodePositions, onNodePositionsChange]
+  )
 
   useEffect(() => {
-    const distributedNodes = autodistribute(
-      [...organsNodes, ...proceduresNodes, ...assetsNodes],
-      initialEdges,
-      direction
+    const distributedNodes = applyStoredNodePositions(
+      autodistribute(
+        [...organsNodes, ...proceduresNodes, ...assetsNodes],
+        initialEdges,
+        direction
+      ),
+      storedNodePositions
     )
     setNodes([...distributedNodes])
     setEdges(initialEdges)
-  }, [direction, organsNodes, proceduresNodes, assetsNodes, initialEdges])
+  }, [
+    direction,
+    organsNodes,
+    proceduresNodes,
+    assetsNodes,
+    initialEdges,
+    storedNodePositions
+  ])
 
   return (
     <NoSsr>
@@ -367,6 +498,7 @@ export const Diagram: React.FC<DiagramProps> = ({
           edges,
           onNodesChange,
           onEdgesChange,
+          onNodeDragStop,
           onConnect,
           nodeTypes,
           snapGrid,
@@ -374,7 +506,13 @@ export const Diagram: React.FC<DiagramProps> = ({
           minZoom: 0.1,
           style,
           fitView: true,
-          ...options
+          ...reactFlowOptions,
+          defaultEdgeOptions: {
+            ...optionDefaultEdgeOptions,
+            type: selectedEdgeType
+          },
+          connectionLineType:
+            optionConnectionLineType ?? getConnectionLineType(selectedEdgeType)
         }}
       >
         <Background gap={16} />
