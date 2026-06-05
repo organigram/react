@@ -60,8 +60,8 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react": "^5.1.2",
-    "@vitest/browser-playwright": "^4.0.17",
-    "@vitest/coverage-v8": "4.0.17",
+    "@vitest/browser-playwright": "^4.1.8",
+    "@vitest/coverage-v8": "4.1.8",
     "playwright": "^1.60.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -70,9 +70,9 @@
     "recoil": "^0.7.7",
     "typescript": "^5.5.4",
     "viem": "^2.18.2",
-    "vite": "^7.3.1",
+    "vite": "^7.3.5",
     "vite-plugin-dts": "^4.5.4",
-    "vitest": "^4.0.17",
+    "vitest": "^4.1.8",
     "vitest-browser-react": "^2.0.2"
   },
   "gitHead": "5aeceb89fcac23a06b21969c01c8bfdd36cea896"
