@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.4](https://github.com/organigram/organigram/compare/v0.1.3...v0.1.4) (2026-06-16)
+
+- Added the new `ClassicOrgChart` component with test coverage.
+- Updated the diagram and client hooks to match the refreshed organigram API surface.
+- Refreshed generated distribution files to ship the new component tree and type definitions.
+
 ## [0.1.3](https://github.com/organigram/organigram/compare/v0.1.2...v0.1.3) (2026-05-04)
 
 - Make draft organigram editing more flexible, including network and procedure-type changes.
