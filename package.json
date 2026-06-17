@@ -1,11 +1,8 @@
 {
   "name": "@organigram/react",
   "version": "0.1.4",
-  "description": "React hooks and components for Organigram.ai.",
+  "description": "React hooks and components for the Organigram protocol.",
   "author": "Organigram (https://organigram.ai)",
-  "contributors": [
-    "alex <alex@organigram.io> (https://github.com/alxmhe)"
-  ],
   "license": "MIT",
   "repository": {
     "type": "git",
