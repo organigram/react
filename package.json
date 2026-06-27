@@ -1,7 +1,7 @@
 {
   "name": "@organigram/react",
   "version": "0.1.4",
-  "description": "React hooks and components for the Organigram protocol.",
+  "description": "React hooks and components for the Organigram Protocol.",
   "author": "Organigram (https://organigram.ai)",
   "license": "MIT",
   "repository": {
