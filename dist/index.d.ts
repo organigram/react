@@ -2,6 +2,7 @@ export * from './components/icons';
 export * from './components/Diagram/index';
 export * from './components/ClassicOrgChart/index';
 export * from './components/ClassicOrgChart/classic';
+export * from './components/Agent';
 export * from './components/Diagram/Node';
 export * from './components/Diagram/AssetNode';
 export * from './components/Diagram/OrganNode';

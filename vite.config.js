@@ -31,6 +31,21 @@ export default defineConfig({
       ]
     }
   },
+  optimizeDeps: {
+    include: [
+      '@mui/icons-material/Add',
+      '@mui/icons-material/AutoAwesome',
+      '@mui/icons-material/Close',
+      '@mui/icons-material/Send',
+      '@mui/material/Divider',
+      '@mui/material/Drawer',
+      '@mui/material/IconButton',
+      '@mui/material/List',
+      '@mui/material/ListItemButton',
+      '@mui/material/Stack',
+      '@mui/material/TextField'
+    ]
+  },
   test: {
     globals: true,
     browser: {
