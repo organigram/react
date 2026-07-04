@@ -1,13 +1,13 @@
 import type { OrganigramJson } from '@organigram/js'
 
-export type WorkspaceAgentMessage = {
+export type Message = {
   role: 'user' | 'assistant'
   content: string
 }
 
-export type WorkspaceAgentThreadSource = 'workspace' | 'hero'
+export type ThreadSource = 'workspace' | 'hero'
 
-export type WorkspaceAgentCitation = {
+export type Citation = {
   type:
     | 'workspace'
     | 'organigram'
@@ -20,7 +20,7 @@ export type WorkspaceAgentCitation = {
   label: string
 }
 
-export type WorkspaceAgentMergeOrganigramPreview = {
+export type MergeOrganigramPreview = {
   type: 'organigram'
   organigramId: string
   persistence: 'merge-additive'
@@ -28,36 +28,36 @@ export type WorkspaceAgentMergeOrganigramPreview = {
   organigram: OrganigramJson
 }
 
-export type WorkspaceAgentNewOrganigramPreview = {
+export type NewOrganigramPreview = {
   type: 'new-organigram'
   persistence: 'create'
   summary: string[]
   organigram: OrganigramJson
 }
 
-export type WorkspaceAgentOrganigramPreview =
-  | WorkspaceAgentMergeOrganigramPreview
-  | WorkspaceAgentNewOrganigramPreview
+export type OrganigramPreview =
+  | MergeOrganigramPreview
+  | NewOrganigramPreview
 
-export type WorkspaceAgentResponse = {
+export type Response = {
   threadId?: string
   message: string
-  citations: WorkspaceAgentCitation[]
-  preview?: WorkspaceAgentOrganigramPreview
+  citations: Citation[]
+  preview?: OrganigramPreview
 }
 
-export type WorkspaceAgentStoredMessage = WorkspaceAgentMessage & {
+export type StoredMessage = Message & {
   id: string
   createdAt: string
-  response?: WorkspaceAgentResponse
+  response?: Response
 }
 
-export type WorkspaceAgentThread = {
+export type Thread = {
   id: string
   title: string
-  source: WorkspaceAgentThreadSource
+  source: ThreadSource
   currentOrganigramId?: string | null
   createdAt: string
   updatedAt: string
-  messages: WorkspaceAgentStoredMessage[]
+  messages: StoredMessage[]
 }

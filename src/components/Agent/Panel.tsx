@@ -1,16 +1,11 @@
-import {
-  useEffect,
-  useRef,
-  type FormEvent,
-  type KeyboardEvent
-} from 'react'
+import { useEffect, useRef, type FormEvent, type KeyboardEvent } from 'react'
 import type { OrganigramJson } from '@organigram/js'
 import type {
-  WorkspaceAgentCitation,
-  WorkspaceAgentMessage,
-  WorkspaceAgentOrganigramPreview,
-  WorkspaceAgentResponse,
-  WorkspaceAgentThread
+  Citation,
+  Message,
+  OrganigramPreview,
+  Response,
+  Thread
 } from './types'
 import AddIcon from '@mui/icons-material/Add'
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
@@ -31,22 +26,16 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 
 import { workspaceNavHeight } from '../../theme'
-import {
-  WorkspaceAgentChatMessage,
-  WorkspaceAgentStreamBox
-} from './Chat'
-import {
-  WorkspaceAgentPreview,
-  type WorkspaceAgentPreviewLabels
-} from './Preview'
+import { ChatMessage, StreamBox } from './Chat'
+import { AgentPreview, type PreviewLabels } from './Preview'
 
-export type WorkspaceAgentPanelMessage = WorkspaceAgentMessage & {
+export type PanelMessage = Message & {
   id?: string
-  response?: WorkspaceAgentResponse
+  response?: Response
   streaming?: boolean
 }
 
-export type WorkspaceAgentPanelLabels = WorkspaceAgentPreviewLabels & {
+export type PanelLabels = PreviewLabels & {
   title: string
   close: string
   threads: string
@@ -58,7 +47,7 @@ export type WorkspaceAgentPanelLabels = WorkspaceAgentPreviewLabels & {
   sourceWorkspace: string
 }
 
-const defaultLabels: WorkspaceAgentPanelLabels = {
+const defaultLabels: PanelLabels = {
   title: 'Workspace agent',
   close: 'Close',
   threads: 'Threads',
@@ -88,23 +77,23 @@ const panelZIndex = 1500
 
 const getPreviewKey = (
   messageIndex: number,
-  preview: WorkspaceAgentOrganigramPreview
+  preview: OrganigramPreview
 ): string =>
   preview.type === 'organigram'
     ? `${messageIndex}:${preview.organigramId}`
     : `${messageIndex}:new-organigram`
 
-export const WorkspaceAgentPanel: React.FC<{
+export const AgentPanel: React.FC<{
   open: boolean
   onClose: () => void
   showThreadList: boolean
   onShowThreadList: () => void
-  threads: WorkspaceAgentThread[]
+  threads: Thread[]
   selectedThreadId: string | null
   historyLoading: boolean
   onSelectThread: (threadId: string) => void
   onStartNewThread: () => void
-  messages: WorkspaceAgentPanelMessage[]
+  messages: PanelMessage[]
   welcomeMessage: string
   currentOrganigram: OrganigramJson | null
   canAsk: boolean
@@ -117,12 +106,9 @@ export const WorkspaceAgentPanel: React.FC<{
   onInputChange: (value: string) => void
   onInputKeyDown: (event: KeyboardEvent<HTMLDivElement>) => void
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
-  onConfirmPreview: (
-    preview: WorkspaceAgentOrganigramPreview,
-    messageIndex: number
-  ) => void
+  onConfirmPreview: (preview: OrganigramPreview, messageIndex: number) => void
   onCancelPreview: (messageIndex: number) => void
-  labels?: Partial<WorkspaceAgentPanelLabels>
+  labels?: Partial<PanelLabels>
 }> = ({
   open,
   onClose,
@@ -169,7 +155,7 @@ export const WorkspaceAgentPanel: React.FC<{
     }
   }, [loading, messages])
 
-  const sourceLabel = (source: WorkspaceAgentThread['source']): string =>
+  const sourceLabel = (source: Thread['source']): string =>
     source === 'hero' ? labels.sourceHero : labels.sourceWorkspace
 
   return (
@@ -346,12 +332,12 @@ export const WorkspaceAgentPanel: React.FC<{
                     return (
                       <Box key={message.id ?? `${message.role}-${index}`}>
                         {message.streaming === true && isAssistant ? (
-                          <WorkspaceAgentStreamBox
+                          <StreamBox
                             content={message.content}
                             thinkingLabel={labels.thinking}
                           />
                         ) : (
-                          <WorkspaceAgentChatMessage
+                          <ChatMessage
                             role={message.role}
                             content={message.content}
                             thinkingLabel={labels.thinking}
@@ -365,7 +351,7 @@ export const WorkspaceAgentPanel: React.FC<{
                             mt={1}
                           >
                             {message.response.citations.map(
-                              (citation: WorkspaceAgentCitation) => (
+                              (citation: Citation) => (
                                 <Chip
                                   id={`workspace-agent-citation-${citation.type}`}
                                   key={`${citation.type}-${citation.id}`}
@@ -378,7 +364,7 @@ export const WorkspaceAgentPanel: React.FC<{
                           </Stack>
                         ) : null}
                         {preview != null && !previewDismissed ? (
-                          <WorkspaceAgentPreview
+                          <AgentPreview
                             preview={preview}
                             currentOrganigram={
                               preview.type === 'new-organigram'
@@ -446,4 +432,4 @@ export const WorkspaceAgentPanel: React.FC<{
   )
 }
 
-export { defaultLabels as defaultWorkspaceAgentPanelLabels }
+export { defaultLabels as defaultPanelLabels }

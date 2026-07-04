@@ -3,12 +3,12 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 
-import { WorkspaceAgentAnimated } from './Animated'
+import { Animated } from './Animated'
 
-export type WorkspaceAgentChatRole = 'user' | 'assistant'
+export type ChatRole = 'user' | 'assistant'
 
-export const WorkspaceAgentChatMessage: React.FC<{
-  role: WorkspaceAgentChatRole
+export const ChatMessage: React.FC<{
+  role: ChatRole
   content: string
   streaming?: boolean
   thinkingLabel?: string
@@ -18,7 +18,7 @@ export const WorkspaceAgentChatMessage: React.FC<{
     content.trim() !== '' ? content : streaming ? thinkingLabel : ''
 
   return (
-    <WorkspaceAgentAnimated visible translateY={8} cursor='inherit'>
+    <Animated visible translateY={8} cursor='inherit'>
       <Box
         sx={{
           display: 'flex',
@@ -53,15 +53,15 @@ export const WorkspaceAgentChatMessage: React.FC<{
           )}
         </Box>
       </Box>
-    </WorkspaceAgentAnimated>
+    </Animated>
   )
 }
 
-export const WorkspaceAgentStreamBox: React.FC<{
+export const StreamBox: React.FC<{
   content: string
   thinkingLabel?: string
 }> = ({ content, thinkingLabel }) => (
-  <WorkspaceAgentChatMessage
+  <ChatMessage
     role='assistant'
     content={content}
     streaming

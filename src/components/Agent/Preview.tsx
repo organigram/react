@@ -1,5 +1,5 @@
 import type { OrganigramJson } from '@organigram/js'
-import type { WorkspaceAgentOrganigramPreview } from './types'
+import type { OrganigramPreview } from './types'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Chip from '@mui/material/Chip'
@@ -7,7 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 
-export type WorkspaceAgentPreviewLabels = {
+export type PreviewLabels = {
   preview: string
   confirmationNotice: string
   organ: string
@@ -23,7 +23,7 @@ export type WorkspaceAgentPreviewLabels = {
   confirm: string
 }
 
-const defaultPreviewLabels: WorkspaceAgentPreviewLabels = {
+const defaultPreviewLabels: PreviewLabels = {
   preview: 'Preview',
   confirmationNotice: 'This preview will only be saved after confirmation.',
   organ: 'organ',
@@ -78,14 +78,14 @@ const isNewAddress = (
 ): boolean =>
   address == null || address === '' || !currentAddresses.has(address)
 
-export const WorkspaceAgentPreview: React.FC<{
-  preview: WorkspaceAgentOrganigramPreview
+export const AgentPreview: React.FC<{
+  preview: OrganigramPreview
   currentOrganigram: OrganigramJson | null
   canConfirm: boolean
   saving: boolean
   onConfirm: () => void
   onCancel: () => void
-  labels?: Partial<WorkspaceAgentPreviewLabels>
+  labels?: Partial<PreviewLabels>
 }> = ({
   preview,
   currentOrganigram,

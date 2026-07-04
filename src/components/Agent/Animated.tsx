@@ -1,6 +1,6 @@
 import { useEffect, useState, type CSSProperties, type ReactNode } from 'react'
 
-type WorkspaceAgentAnimatedProps = {
+type AnimatedProps = {
   visible?: boolean
   delay?: number
   children: ReactNode
@@ -10,7 +10,7 @@ type WorkspaceAgentAnimatedProps = {
 
 const transitionMs = 300
 
-export const WorkspaceAgentAnimated: React.FC<WorkspaceAgentAnimatedProps> = ({
+export const Animated: React.FC<AnimatedProps> = ({
   visible = true,
   delay = 0,
   children,
