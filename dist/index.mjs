@@ -11287,7 +11287,7 @@ const SF = Ra({
   }
 };
 `${Ye.values.xs}`, `${Ye.values.sm}`, `${Ye.values.md}`, `${Ye.values.lg}`, `${Ye.values.xl}`;
-const bL = {
+const xL = {
   palette: eA,
   components: BY,
   shape: {
@@ -11295,7 +11295,7 @@ const bL = {
   },
   typography: aY,
   breakpoints: Ye
-}, ML = 100, EY = 50, wY = 60, gY = (A, e) => A != null || A !== "" ? e?.filter((t) => {
+}, RL = 100, EY = 50, wY = 60, gY = (A, e) => A != null || A !== "" ? e?.filter((t) => {
   switch (A) {
     case "current":
       return t.presented && !t.applied && !t.blocked;
@@ -11308,7 +11308,7 @@ const bL = {
     default:
       return !0;
   }
-}) : e, xL = (A, e, t, r) => e?.filter(
+}) : e, FL = (A, e, t, r) => e?.filter(
   (n) => n.address === t?.[A]
 )?.find(
   async (n) => n?.entries?.map((s) => s?.address).includes(r)
@@ -11758,7 +11758,7 @@ const RY = (A, e) => {
       ) * 16
     }, s;
   }), A;
-}, RL = ({
+}, YL = ({
   nodeTypes: A = HY,
   direction: e = "TB",
   edgeType: t,
@@ -12029,25 +12029,25 @@ const RY = (A, e) => {
   "ALL_ENTRIES",
   "ADD_ENTRIES",
   "REMOVE_ENTRIES"
-]), pY = (A) => A.address != null && A.address.trim() !== "", SY = (A) => WA(A).some(
+]), pY = (A) => A.address != null && A.address.trim() !== "", SY = (A) => A.name != null && A.name.trim() !== "", WY = (A) => pY(A) || SY(A), NY = (A) => WA(A).some(
   (e) => PY.has(e)
-), WY = (A) => [...A].filter(pY).map((e, t) => ({ entry: e, index: t })).sort((e, t) => {
+), TY = (A) => [...A].filter(WY).map((e, t) => ({ entry: e, index: t })).sort((e, t) => {
   const r = Number.parseInt(e.entry.index, 10), n = Number.parseInt(t.entry.index, 10), s = Number.isFinite(r), o = Number.isFinite(n);
   return s && o && r !== n ? r - n : e.entry.index !== t.entry.index ? e.entry.index.localeCompare(t.entry.index) : e.index - t.index;
-}).map(({ entry: e }) => e), NY = ({
+}).map(({ entry: e }) => e), UY = ({
   organ: A,
   organsByAddress: e,
   proceduresByAddress: t
 }) => {
   const r = /* @__PURE__ */ new Set();
   for (const n of A.permissions ?? []) {
-    if (!SY(n.permissionValue))
+    if (!NY(n.permissionValue))
       continue;
     const o = t.get(n.permissionAddress)?.deciders;
     o == null || o === "" || o === A.address || !e.has(o) || r.add(o);
   }
   return r.size === 1 ? [...r][0] ?? null : null;
-}, TY = (A, e, t) => {
+}, jY = (A, e, t) => {
   let r = e;
   for (; r != null && r !== ""; ) {
     if (r === A)
@@ -12055,14 +12055,14 @@ const RY = (A, e) => {
     r = t.get(r);
   }
   return !1;
-}, UY = (A) => {
+}, OY = (A) => {
   const e = A.organs ?? [], t = A.procedures ?? [], r = new Map(e.map((B) => [B.address, B])), n = new Map(
     t.map((B) => [B.address, B])
   ), s = /* @__PURE__ */ new Map(), o = /* @__PURE__ */ new Map();
   for (const B of e)
     s.set(
       B.address,
-      NY({
+      UY({
         organ: B,
         organsByAddress: r,
         proceduresByAddress: n
@@ -12070,14 +12070,14 @@ const RY = (A, e) => {
     );
   for (const B of e) {
     const E = s.get(B.address);
-    E == null || TY(B.address, E, o) || o.set(B.address, E);
+    E == null || jY(B.address, E, o) || o.set(B.address, E);
   }
   const i = new Map(
     e.map((B) => [
       B.address,
       {
         organ: B,
-        entries: WY(B.entries ?? []),
+        entries: TY(B.entries ?? []),
         children: []
       }
     ])
@@ -12090,7 +12090,10 @@ const RY = (A, e) => {
     a == null || w == null || a.children.push(w);
   }
   return e.filter((B) => !o.has(B.address)).map((B) => i.get(B.address)).filter((B) => B != null);
-}, jY = 48, Xt = 80, ba = 280, Ma = 220, BE = (A) => A, pf = (A) => A.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "item", OY = (A) => A.address != null && A.address !== "" ? A.address : A.cid != null && A.cid !== "" ? A.cid : A.index, KY = ({ data: A }) => A.type !== "organ" ? null : /* @__PURE__ */ BA(QA, { children: [
+}, KY = 48, Xt = 80, ba = 280, Ma = 220, BE = (A) => A, pf = (A) => A.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "item", VY = (A) => {
+  const e = A.name?.trim?.() ?? "";
+  return e !== "" ? e : A.address != null && A.address !== "" ? A.address : A.cid != null && A.cid !== "" ? A.cid : A.index;
+}, zY = ({ data: A }) => A.type !== "organ" ? null : /* @__PURE__ */ BA(QA, { children: [
   /* @__PURE__ */ BA(
     ld,
     {
@@ -12140,12 +12143,12 @@ const RY = (A, e) => {
       style: { opacity: 0, pointerEvents: "none" }
     }
   )
-] }), VY = ({
+] }), kY = ({
   data: A
 }) => {
   if (A.type !== "entry")
     return null;
-  const e = OY(A.entry);
+  const e = VY(A.entry);
   return /* @__PURE__ */ BA(QA, { children: [
     /* @__PURE__ */ j(Ya, { sx: { height: Xt }, children: /* @__PURE__ */ j(
       ld,
@@ -12153,7 +12156,7 @@ const RY = (A, e) => {
         elevation: 0,
         sx: {
           width: `${Ma}px`,
-          height: `${jY}px`,
+          height: `${KY}px`,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -12197,10 +12200,10 @@ const RY = (A, e) => {
       }
     )
   ] });
-}, zY = {
-  classicOrgan: KY,
-  classicEntry: VY
-}, kY = (A, e) => {
+}, JY = {
+  classicOrgan: zY,
+  classicEntry: kY
+}, ZY = (A, e) => {
   const t = new Wt.graphlib.Graph();
   return t.setDefaultEdgeLabel(() => ({})), t.setGraph({
     rankdir: "TB",
@@ -12227,7 +12230,7 @@ const RY = (A, e) => {
       }
     };
   });
-}, JY = ({
+}, XY = ({
   forest: A,
   onClickOrgan: e
 }) => {
@@ -12273,10 +12276,10 @@ const RY = (A, e) => {
   return A.forEach((s) => {
     n(s);
   }), {
-    nodes: kY(t, r),
+    nodes: ZY(t, r),
     edges: r
   };
-}, FL = ({
+}, LL = ({
   organigram: A,
   controls: e = !0,
   isTabletOrAbove: t = !0,
@@ -12284,10 +12287,10 @@ const RY = (A, e) => {
   style: n
 }) => {
   const s = lA(
-    () => A == null ? [] : UY(A),
+    () => A == null ? [] : OY(A),
     [A]
   ), o = lA(
-    () => JY({
+    () => XY({
       forest: s,
       onClickOrgan: r
     }),
@@ -12307,7 +12310,7 @@ const RY = (A, e) => {
         {
           nodes: o.nodes,
           edges: o.edges,
-          nodeTypes: zY,
+          nodeTypes: JY,
           nodesDraggable: !1,
           nodesConnectable: !1,
           elementsSelectable: !0,
@@ -12327,7 +12330,7 @@ const RY = (A, e) => {
       ) })
     }
   );
-}, ZY = ({
+}, qY = ({
   accountInOrgans: A,
   procedure: e,
   proposal: t,
@@ -12347,7 +12350,7 @@ const RY = (A, e) => {
     },
     children: n("Veto proposal")
   }
-) : null, XY = ({
+) : null, _Y = ({
   election: A,
   procedure: e
 }) => {
@@ -12362,7 +12365,7 @@ const RY = (A, e) => {
     " ",
     n
   ] }) : null;
-}, qY = ({
+}, $Y = ({
   procedure: A,
   accountInOrgans: e,
   proposal: t,
@@ -12374,7 +12377,7 @@ const RY = (A, e) => {
     (B) => B.proposalKey && B.proposalKey === t.key
   );
   return e.deciders ? /* @__PURE__ */ BA(QA, { children: [
-    /* @__PURE__ */ j(XY, { election: i, procedure: A }),
+    /* @__PURE__ */ j(_Y, { election: i, procedure: A }),
     i?.hasVoted ? /* @__PURE__ */ j(qt, { variant: "filled", sx: { width: "100%" }, severity: "success", children: o("You already voted on this proposal.") }) : /* @__PURE__ */ BA(QA, { children: [
       /* @__PURE__ */ j(
         fe,
@@ -12423,7 +12426,7 @@ const RY = (A, e) => {
       )
     ] })
   ] }) : "You cannot take part to this vote.";
-}, _Y = ({
+}, AL = ({
   procedure: A,
   proposal: e,
   wrapTransaction: t,
@@ -12494,7 +12497,7 @@ const RY = (A, e) => {
       ) : B < E ? (
         // The on-chain vote opens strictly after election.start.
         /* @__PURE__ */ j(
-          ZY,
+          qY,
           {
             procedure: A,
             proposal: e,
@@ -12508,7 +12511,7 @@ const RY = (A, e) => {
       ) : B < E + parseInt(A.voteDuration) ? (
         // Vote is started. Vote is not ended.
         /* @__PURE__ */ j(
-          qY,
+          $Y,
           {
             procedure: A,
             proposal: e,
@@ -12520,7 +12523,7 @@ const RY = (A, e) => {
           }
         )
       ) : /* @__PURE__ */ j(
-        _Y,
+        AL,
         {
           procedure: A,
           proposal: e,
@@ -12533,9 +12536,9 @@ const RY = (A, e) => {
       )
     }
   );
-}, $Y = ({
+}, eL = ({
   procedure: A
-}) => /* @__PURE__ */ j(QA, {}), AL = ({
+}) => /* @__PURE__ */ j(QA, {}), tL = ({
   procedure: A,
   proposal: e,
   accountInOrgans: t,
@@ -12580,10 +12583,10 @@ const RY = (A, e) => {
       }
     )
   ] }) });
-}, eL = {
-  Component: $Y,
-  Proposal: AL
-}, tL = ({
+}, rL = {
+  Component: eL,
+  Proposal: tL
+}, nL = ({
   procedure: A
 }) => {
   const { t: e } = Ve(), { quorumSize: t, voteDuration: r, majoritySize: n } = JSON.parse(A.data);
@@ -12602,10 +12605,10 @@ const RY = (A, e) => {
     parseInt(n) / 1e3,
     "%"
   ] }) : /* @__PURE__ */ j(QA, {});
-}, rL = {
+}, sL = {
   Proposal: Sf,
-  Component: tL
-}, nL = ({
+  Component: nL
+}, oL = ({
   procedure: A
 }) => {
   const { t: e } = Ve(), { quorumSize: t, voteDuration: r, majoritySize: n } = JSON.parse(A.data);
@@ -12632,29 +12635,29 @@ const RY = (A, e) => {
     parseInt(n) / 1e3,
     "%"
   ] }) : /* @__PURE__ */ j(QA, {});
-}, sL = {
-  Component: nL,
+}, iL = {
+  Component: oL,
   Proposal: Sf
-}, oL = { nomination: eL, vote: rL, erc20Vote: sL }, YL = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+}, BL = { nomination: rL, vote: sL, erc20Vote: iL }, mL = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  default: oL
-}, Symbol.toStringTag, { value: "Module" })), LL = Ra({
+  default: BL
+}, Symbol.toStringTag, { value: "Module" })), HL = Ra({
   key: "organigramId",
   default: "",
   dangerouslyAllowMutability: !0
-}), mL = (A, e, t) => lA(() => A == null ? null : new Yv({
+}), GL = (A, e, t) => lA(() => A == null ? null : new Yv({
   publicClient: A,
   chainId: t?.toString(),
   walletClient: e ?? void 0
 }), [t, A, e]), aE = Ra({
   key: "modal",
   default: null
-}), HL = () => Lv(aE), GL = () => mv(aE), yL = () => dd(aE);
+}), yL = () => Lv(aE), PL = () => mv(aE), pL = () => dd(aE);
 export {
   mY as AssetNode,
-  FL as ClassicOrgChart,
-  qY as DecidersActions,
-  RL as Diagram,
+  LL as ClassicOrgChart,
+  $Y as DecidersActions,
+  YL as Diagram,
   iE as DiagramNode,
   Sf as ElectionComponent,
   YY as EntryCount,
@@ -12662,30 +12665,30 @@ export {
   Wv as ProcedureIcon,
   cY as ProcedureNode,
   Nv as Summit,
-  XY as TimeLeft,
+  _Y as TimeLeft,
   Tv as Token,
-  ZY as VetoProposal,
-  _Y as VoteEnded,
+  qY as VetoProposal,
+  AL as VoteEnded,
   Ye as breakpoints,
   BY as components,
   HY as defaultNodeTypes,
   gY as filterProposals,
-  xL as isUserInSourceOrgan,
+  FL as isUserInSourceOrgan,
   SF as layersState,
   EY as mobileNavHeight,
   aE as modalState,
-  ML as navHeight,
-  LL as organigramIdState,
+  RL as navHeight,
+  HL as organigramIdState,
   eA as palette,
-  YL as procedures,
-  UY as projectOrganigramToClassicForest,
+  mL as procedures,
+  OY as projectOrganigramToClassicForest,
   oE as secondsToHms,
-  bL as theme,
+  xL as theme,
   aY as typography,
   WF as useLayers,
-  HL as useModal,
-  yL as useModalState,
-  mL as useOrganigramClient,
-  GL as useSetModal,
+  yL as useModal,
+  pL as useModalState,
+  GL as useOrganigramClient,
+  PL as useSetModal,
   wY as workspaceNavHeight
 };

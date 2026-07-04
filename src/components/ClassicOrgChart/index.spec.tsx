@@ -26,6 +26,29 @@ test('renders classic org chart nodes and filtered entry leaves', async () => {
   // await expect.element(queryByText('1')).not.toBeInTheDocument()
 })
 
+test('renders entry names in classic org chart leaves', async () => {
+  const organigram = new Organigram()
+  organigram.organs[0]!.entries = [
+    {
+      index: '1',
+      address: '',
+      cid: '',
+      name: 'Ada Lovelace'
+    }
+  ]
+
+  const { getByText } = await render(
+    <ClassicOrgChart
+      organigram={organigram}
+      style={{ height: '100vh' }}
+      isTabletOrAbove
+    />,
+    { wrapper: Wrapper }
+  )
+
+  await expect.element(getByText('Ada Lovelace')).toBeInTheDocument()
+})
+
 test('calls onClickOrgan when an organ node is clicked', async () => {
   const organigram = new Organigram()
   const onClickOrgan = vi.fn()

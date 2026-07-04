@@ -14,6 +14,10 @@ const membershipPermissionKeys = new Set([
 
 const hasAddress = (entry: OrganEntry): boolean =>
   entry.address != null && entry.address.trim() !== ''
+const hasName = (entry: OrganEntry): boolean =>
+  entry.name != null && entry.name.trim() !== ''
+const shouldRenderEntry = (entry: OrganEntry): boolean =>
+  hasAddress(entry) || hasName(entry)
 
 export interface ClassicOrgChartNode {
   organ: OrganJson
@@ -28,7 +32,7 @@ const hasMembershipPermission = (permissionValue: number): boolean =>
 
 const sortEntries = (entries: OrganEntry[]): OrganEntry[] =>
   [...entries]
-    .filter(hasAddress)
+    .filter(shouldRenderEntry)
     .map((entry, index) => ({ entry, index }))
     .sort((left, right) => {
       const leftIndex = Number.parseInt(left.entry.index, 10)

@@ -54,6 +54,11 @@ type ClassicNodeData =
     }
 
 const getEntryLabel = (entry: OrganEntry): string => {
+  const name = entry.name?.trim?.() ?? ''
+  if (name !== '') {
+    return name
+  }
+
   if (entry.address != null && entry.address !== '') {
     return entry.address
   }
