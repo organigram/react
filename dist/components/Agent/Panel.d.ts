@@ -15,6 +15,9 @@ export type PanelLabels = PreviewLabels & {
     noConversationsYet: string;
     thinking: string;
     askPlaceholder: string;
+    attachDocument: string;
+    selectedDocument: string;
+    removeDocument: string;
     sourceHero: string;
     sourceWorkspace: string;
 };
@@ -39,8 +42,10 @@ export declare const AgentPanel: React.FC<{
     input: string;
     loading: boolean;
     error: string | null;
+    documentName: string | null;
     onInputChange: (value: string) => void;
     onInputKeyDown: (event: KeyboardEvent<HTMLDivElement>) => void;
+    onDocumentChange: (file: File | null) => void;
     onSubmit: (event: FormEvent<HTMLFormElement>) => void;
     onConfirmPreview: (preview: OrganigramPreview, messageIndex: number) => void;
     onCancelPreview: (messageIndex: number) => void;

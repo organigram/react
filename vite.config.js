@@ -34,6 +34,7 @@ export default defineConfig({
   optimizeDeps: {
     include: [
       '@mui/icons-material/Add',
+      '@mui/icons-material/AttachFile',
       '@mui/icons-material/AutoAwesome',
       '@mui/icons-material/Close',
       '@mui/icons-material/Send',

@@ -34,10 +34,15 @@ export type StoredMessage = Message & {
     createdAt: string;
     response?: Response;
 };
+export type ThreadWorkspace = {
+    id: string;
+    name?: string | null;
+};
 export type Thread = {
     id: string;
     title: string;
     source: ThreadSource;
+    workspace?: ThreadWorkspace | null;
     currentOrganigramId?: string | null;
     createdAt: string;
     updatedAt: string;

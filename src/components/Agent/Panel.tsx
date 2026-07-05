@@ -1,4 +1,10 @@
-import { useEffect, useRef, type FormEvent, type KeyboardEvent } from 'react'
+import {
+  useEffect,
+  useRef,
+  type ChangeEvent,
+  type FormEvent,
+  type KeyboardEvent
+} from 'react'
 import type { OrganigramJson } from '@organigram/js'
 import type {
   Citation,
@@ -8,6 +14,7 @@ import type {
   Thread
 } from './types'
 import AddIcon from '@mui/icons-material/Add'
+import AttachFileIcon from '@mui/icons-material/AttachFile'
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
 import CloseIcon from '@mui/icons-material/Close'
 import SendIcon from '@mui/icons-material/Send'
@@ -43,6 +50,9 @@ export type PanelLabels = PreviewLabels & {
   noConversationsYet: string
   thinking: string
   askPlaceholder: string
+  attachDocument: string
+  selectedDocument: string
+  removeDocument: string
   sourceHero: string
   sourceWorkspace: string
 }
@@ -55,6 +65,9 @@ const defaultLabels: PanelLabels = {
   noConversationsYet: 'No conversations yet.',
   thinking: 'Thinking...',
   askPlaceholder: 'Ask your organization...',
+  attachDocument: 'Add file (.pdf or .docx)',
+  selectedDocument: 'Selected document: {{name}}',
+  removeDocument: 'Remove document',
   sourceHero: 'Hero',
   sourceWorkspace: 'Workspace',
   preview: 'Preview',
@@ -103,8 +116,10 @@ export const AgentPanel: React.FC<{
   input: string
   loading: boolean
   error: string | null
+  documentName: string | null
   onInputChange: (value: string) => void
   onInputKeyDown: (event: KeyboardEvent<HTMLDivElement>) => void
+  onDocumentChange: (file: File | null) => void
   onSubmit: (event: FormEvent<HTMLFormElement>) => void
   onConfirmPreview: (preview: OrganigramPreview, messageIndex: number) => void
   onCancelPreview: (messageIndex: number) => void
@@ -129,8 +144,10 @@ export const AgentPanel: React.FC<{
   input,
   loading,
   error,
+  documentName,
   onInputChange,
   onInputKeyDown,
+  onDocumentChange,
   onSubmit,
   onConfirmPreview,
   onCancelPreview,
@@ -138,6 +155,7 @@ export const AgentPanel: React.FC<{
 }) => {
   const labels = { ...defaultLabels, ...customLabels }
   const normalizedInput = input.trim()
+  const hasMessageInput = normalizedInput !== '' || documentName != null
   const messagesScrollRef = useRef<HTMLDivElement | null>(null)
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
 
@@ -158,6 +176,17 @@ export const AgentPanel: React.FC<{
   const sourceLabel = (source: Thread['source']): string =>
     source === 'hero' ? labels.sourceHero : labels.sourceWorkspace
 
+  const selectedDocumentLabel =
+    documentName == null
+      ? ''
+      : labels.selectedDocument.replace('{{name}}', documentName)
+
+  const handleDocumentInputChange = (
+    event: ChangeEvent<HTMLInputElement>
+  ): void => {
+    onDocumentChange(event.target.files?.[0] ?? null)
+  }
+
   return (
     <Drawer
       id='workspace-agent-panel'
@@ -172,7 +201,6 @@ export const AgentPanel: React.FC<{
           mt: `${workspaceNavHeight + 13}px`,
           mr: '13px',
           height: `calc(100% - ${workspaceNavHeight + 24}px)`,
-          pb: `${workspaceNavHeight + 8}px`,
           boxSizing: 'border-box',
           width: { xs: 'calc(100% - 26px)', sm: `${panelWidth}px` },
           maxWidth: '100vw',
@@ -275,12 +303,24 @@ export const AgentPanel: React.FC<{
                       >
                         {thread.title}
                       </Typography>
-                      <Chip
-                        id={`workspace-agent-thread-source-${thread.source}`}
-                        size='small'
-                        label={sourceLabel(thread.source)}
-                        sx={{ alignSelf: 'flex-start', height: 22 }}
-                      />
+                      <Stack direction='row' flexWrap='wrap' gap={0.5}>
+                        <Chip
+                          id={`workspace-agent-thread-source-${thread.source}`}
+                          size='small'
+                          label={sourceLabel(thread.source)}
+                          sx={{ height: 22 }}
+                        />
+                        {thread.workspace?.name != null &&
+                        thread.workspace.name !== '' ? (
+                          <Chip
+                            id='workspace-agent-thread-workspace'
+                            size='small'
+                            variant='outlined'
+                            label={thread.workspace.name}
+                            sx={{ height: 22 }}
+                          />
+                        ) : null}
+                      </Stack>
                     </Stack>
                   </ListItemButton>
                 ))}
@@ -399,12 +439,31 @@ export const AgentPanel: React.FC<{
               <Divider />
               <Box component='form' onSubmit={onSubmit} sx={{ p: 2 }}>
                 <Stack direction='row' gap={1} alignItems='flex-end'>
+                  <Button
+                    component='label'
+                    variant='outlined'
+                    aria-label={labels.attachDocument}
+                    disabled={!canAsk || loading}
+                    sx={{ minWidth: 44, width: 44, height: 44, px: 0 }}
+                  >
+                    <AttachFileIcon />
+                    <input
+                      key={documentName ?? 'empty-document'}
+                      id='workspace-agent-document-input'
+                      type='file'
+                      hidden
+                      accept='.txt,.md,.markdown,.csv,.html,.htm,.xml,.yaml,.yml,.pdf,.docx'
+                      onChange={handleDocumentInputChange}
+                      disabled={!canAsk || loading}
+                    />
+                  </Button>
                   <TextField
                     id='workspace-agent-input'
                     fullWidth
                     multiline
-                    minRows={1}
-                    maxRows={4}
+                    minRows={2}
+                    maxRows={6}
+                    variant='outlined'
                     value={input}
                     disabled={!canAsk || loading}
                     placeholder={labels.askPlaceholder}
@@ -417,12 +476,44 @@ export const AgentPanel: React.FC<{
                     id='workspace-agent-send-button'
                     type='submit'
                     variant='contained'
-                    disabled={!canAsk || normalizedInput === '' || loading}
+                    disabled={!canAsk || !hasMessageInput || loading}
                     sx={{ minWidth: 44, height: 44 }}
                   >
                     {loading ? <CircularProgress size={18} /> : <SendIcon />}
                   </Button>
                 </Stack>
+                {documentName != null ? (
+                  <Stack
+                    id='workspace-agent-selected-document'
+                    direction='row'
+                    alignItems='center'
+                    justifyContent='space-between'
+                    gap={1}
+                    mt={1}
+                  >
+                    <Typography
+                      variant='body2'
+                      color='text.secondary'
+                      sx={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap'
+                      }}
+                    >
+                      {selectedDocumentLabel}
+                    </Typography>
+                    <IconButton
+                      aria-label={labels.removeDocument}
+                      size='small'
+                      disabled={loading}
+                      onClick={() => {
+                        onDocumentChange(null)
+                      }}
+                    >
+                      <CloseIcon fontSize='small' />
+                    </IconButton>
+                  </Stack>
+                ) : null}
               </Box>
             </>
           )}
