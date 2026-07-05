@@ -6,5 +6,6 @@ export interface ClassicOrgChartProps {
     isTabletOrAbove?: boolean;
     onClickOrgan?: (organ: OrganJson) => void;
     style?: Record<string, unknown>;
+    testIdPrefix?: string;
 }
 export declare const ClassicOrgChart: React.FC<ClassicOrgChartProps>;

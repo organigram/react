@@ -46,12 +46,17 @@ type ClassicNodeData =
       type: 'organ'
       organ: ClassicOrgChartNode['organ']
       entryCount: number
+      testIdPrefix?: string | undefined
       onClick?: ((organ: OrganJson) => void) | undefined
     }
   | {
       type: 'entry'
       entry: OrganEntry
+      testIdPrefix?: string | undefined
     }
+
+const prefixedTestId = (prefix: string | undefined, id: string): string =>
+  makeTestId(prefix == null || prefix === '' ? id : `${prefix}-${id}`)
 
 const getEntryLabel = (entry: OrganEntry): string => {
   const name = entry.name?.trim?.() ?? ''
@@ -79,7 +84,8 @@ const ClassicOrganNode: React.FC<NodeProps<ClassicNodeData>> = ({ data }) => {
     <>
       <Paper
         elevation={0}
-        id={makeTestId(
+        id={prefixedTestId(
+          data.testIdPrefix,
           `classic-org-chart-organ-${toTestIdSegment(data.organ.name)}`
         )}
         sx={{
@@ -152,7 +158,8 @@ const ClassicEntryLeafNode: React.FC<NodeProps<ClassicNodeData>> = ({
         >
           <Grid container justifyContent='center' alignItems='center'>
             <Chip
-              id={makeTestId(
+              id={prefixedTestId(
+                data.testIdPrefix,
                 `classic-org-chart-entry-${toTestIdSegment(label)}`
               )}
               size='small'
@@ -229,10 +236,12 @@ const layoutClassicNodes = (nodes: Node[], edges: Edge[]): Node[] => {
 
 const buildClassicFlow = ({
   forest,
-  onClickOrgan
+  onClickOrgan,
+  testIdPrefix
 }: {
   forest: ClassicOrgChartNode[]
   onClickOrgan?: (organ: OrganJson) => void
+  testIdPrefix?: string | undefined
 }): {
   nodes: Node<ClassicNodeData>[]
   edges: Edge[]
@@ -250,6 +259,7 @@ const buildClassicFlow = ({
         type: 'organ',
         organ: node.organ,
         entryCount: node.entries.length,
+        testIdPrefix,
         onClick: onClickOrgan
       },
       position: { x: 0, y: 0 }
@@ -277,7 +287,8 @@ const buildClassicFlow = ({
         type: 'classicEntry',
         data: {
           type: 'entry',
-          entry
+          entry,
+          testIdPrefix
         },
         position: { x: 0, y: 0 }
       })
@@ -308,6 +319,7 @@ export interface ClassicOrgChartProps {
   isTabletOrAbove?: boolean
   onClickOrgan?: (organ: OrganJson) => void
   style?: Record<string, unknown>
+  testIdPrefix?: string
 }
 
 export const ClassicOrgChart: React.FC<ClassicOrgChartProps> = ({
@@ -315,7 +327,8 @@ export const ClassicOrgChart: React.FC<ClassicOrgChartProps> = ({
   controls = true,
   isTabletOrAbove = true,
   onClickOrgan,
-  style
+  style,
+  testIdPrefix
 }) => {
   const forest = useMemo(
     () =>
@@ -326,9 +339,10 @@ export const ClassicOrgChart: React.FC<ClassicOrgChartProps> = ({
     () =>
       buildClassicFlow({
         forest,
-        onClickOrgan
+        onClickOrgan,
+        testIdPrefix
       }),
-    [forest, onClickOrgan]
+    [forest, onClickOrgan, testIdPrefix]
   )
 
   if (organigram == null) {
@@ -337,7 +351,7 @@ export const ClassicOrgChart: React.FC<ClassicOrgChartProps> = ({
 
   return (
     <Box
-      id={makeTestId('classic-org-chart')}
+      id={prefixedTestId(testIdPrefix, 'classic-org-chart')}
       sx={{
         height: `calc(100vh - ${isTabletOrAbove ? workspaceNavHeight : 0}px)`,
         background:

@@ -11298,7 +11298,7 @@ const eY = Pa({
   }
 };
 `${ye.values.xs}`, `${ye.values.sm}`, `${ye.values.md}`, `${ye.values.lg}`, `${ye.values.xl}`;
-const aL = {
+const EL = {
   palette: tA,
   components: xY,
   shape: {
@@ -11306,7 +11306,7 @@ const aL = {
   },
   typography: RY,
   breakpoints: ye
-}, EL = 100, FY = 50, Ot = 60, YY = (A, e) => A != null || A !== "" ? e?.filter((t) => {
+}, wL = 100, FY = 50, Ot = 60, YY = (A, e) => A != null || A !== "" ? e?.filter((t) => {
   switch (A) {
     case "current":
       return t.presented && !t.applied && !t.blocked;
@@ -11319,7 +11319,7 @@ const aL = {
     default:
       return !0;
   }
-}) : e, wL = (A, e, t, r) => e?.filter(
+}) : e, cL = (A, e, t, r) => e?.filter(
   (n) => n.address === t?.[A]
 )?.find(
   async (n) => n?.entries?.map((s) => s?.address).includes(r)
@@ -11769,7 +11769,7 @@ const KY = (A, e) => {
       ) * 16
     }, s;
   }), A;
-}, cL = ({
+}, gL = ({
   nodeTypes: A = ZY,
   direction: e = "TB",
   edgeType: t,
@@ -12101,15 +12101,16 @@ const KY = (A, e) => {
     a == null || w == null || a.children.push(w);
   }
   return e.filter((B) => !o.has(B.address)).map((B) => i.get(B.address)).filter((B) => B != null);
-}, im = 48, nr = 80, Ha = 280, ya = 220, QE = (A) => A, kf = (A) => A.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "item", Bm = (A) => {
+}, im = 48, nr = 80, Ha = 280, ya = 220, Bm = (A) => A, kf = (A) => A.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "item", QE = (A, e) => Bm(A == null || A === "" ? e : `${A}-${e}`), am = (A) => {
   const e = A.name?.trim?.() ?? "";
   return e !== "" ? e : A.address != null && A.address !== "" ? A.address : A.cid != null && A.cid !== "" ? A.cid : A.index;
-}, am = ({ data: A }) => A.type !== "organ" ? null : /* @__PURE__ */ $(gA, { children: [
+}, Em = ({ data: A }) => A.type !== "organ" ? null : /* @__PURE__ */ $(gA, { children: [
   /* @__PURE__ */ $(
     Fd,
     {
       elevation: 0,
       id: QE(
+        A.testIdPrefix,
         `classic-org-chart-organ-${kf(A.organ.name)}`
       ),
       sx: {
@@ -12154,12 +12155,12 @@ const KY = (A, e) => {
       style: { opacity: 0, pointerEvents: "none" }
     }
   )
-] }), Em = ({
+] }), wm = ({
   data: A
 }) => {
   if (A.type !== "entry")
     return null;
-  const e = Bm(A.entry);
+  const e = am(A.entry);
   return /* @__PURE__ */ $(gA, { children: [
     /* @__PURE__ */ L(PA, { sx: { height: nr }, children: /* @__PURE__ */ L(
       Fd,
@@ -12183,6 +12184,7 @@ const KY = (A, e) => {
           ie,
           {
             id: QE(
+              A.testIdPrefix,
               `classic-org-chart-entry-${kf(e)}`
             ),
             size: "small",
@@ -12211,10 +12213,10 @@ const KY = (A, e) => {
       }
     )
   ] });
-}, wm = {
-  classicOrgan: am,
-  classicEntry: Em
-}, cm = (A, e) => {
+}, cm = {
+  classicOrgan: Em,
+  classicEntry: wm
+}, gm = (A, e) => {
   const t = new kt.graphlib.Graph();
   return t.setDefaultEdgeLabel(() => ({})), t.setGraph({
     rankdir: "TB",
@@ -12241,76 +12243,81 @@ const KY = (A, e) => {
       }
     };
   });
-}, gm = ({
+}, um = ({
   forest: A,
-  onClickOrgan: e
+  onClickOrgan: e,
+  testIdPrefix: t
 }) => {
-  const t = [], r = [], n = (s, o) => {
-    const i = `classic-organ-${s.organ.address}`;
-    t.push({
-      id: i,
+  const r = [], n = [], s = (o, i) => {
+    const B = `classic-organ-${o.organ.address}`;
+    r.push({
+      id: B,
       type: "classicOrgan",
       data: {
         type: "organ",
-        organ: s.organ,
-        entryCount: s.entries.length,
+        organ: o.organ,
+        entryCount: o.entries.length,
+        testIdPrefix: t,
         onClick: e
       },
       position: { x: 0, y: 0 }
-    }), o != null && r.push({
-      id: `classic-edge-${o}-${i}`,
-      source: o,
-      target: i,
+    }), i != null && n.push({
+      id: `classic-edge-${i}-${B}`,
+      source: i,
+      target: B,
       type: "smoothstep",
       animated: !1
-    }), s.children.forEach((B) => {
-      n(B, i);
-    }), s.entries.forEach((B) => {
-      const E = `classic-entry-${s.organ.address}-${B.index}`;
-      t.push({
-        id: E,
+    }), o.children.forEach((E) => {
+      s(E, B);
+    }), o.entries.forEach((E) => {
+      const a = `classic-entry-${o.organ.address}-${E.index}`;
+      r.push({
+        id: a,
         type: "classicEntry",
         data: {
           type: "entry",
-          entry: B
+          entry: E,
+          testIdPrefix: t
         },
         position: { x: 0, y: 0 }
-      }), r.push({
-        id: `classic-edge-${i}-${E}`,
-        source: i,
-        target: E,
+      }), n.push({
+        id: `classic-edge-${B}-${a}`,
+        source: B,
+        target: a,
         type: "smoothstep",
         animated: !1
       });
     });
   };
-  return A.forEach((s) => {
-    n(s);
+  return A.forEach((o) => {
+    s(o);
   }), {
-    nodes: cm(t, r),
-    edges: r
+    nodes: gm(r, n),
+    edges: n
   };
-}, gL = ({
+}, uL = ({
   organigram: A,
   controls: e = !0,
   isTabletOrAbove: t = !0,
   onClickOrgan: r,
-  style: n
+  style: n,
+  testIdPrefix: s
 }) => {
-  const s = lA(
+  const o = lA(
     () => A == null ? [] : om(A),
     [A]
-  ), o = lA(
-    () => gm({
-      forest: s,
-      onClickOrgan: r
+  ), i = lA(
+    () => um({
+      forest: o,
+      onClickOrgan: r,
+      testIdPrefix: s
     }),
-    [s, r]
+    [o, r, s]
   );
   return A == null ? null : /* @__PURE__ */ L(
     PA,
     {
-      id: QE("classic-org-chart"),
+      id: QE(s, "classic-org-chart"),
       sx: {
         height: `calc(100vh - ${t ? Ot : 0}px)`,
         background: "linear-gradient(180deg, rgba(248,250,252,1) 0%, rgba(255,255,255,1) 38%)",
@@ -12319,9 +12326,9 @@ const KY = (A, e) => {
       children: /* @__PURE__ */ L(xd, { children: /* @__PURE__ */ $(
         cE,
         {
-          nodes: o.nodes,
-          edges: o.edges,
-          nodeTypes: wm,
+          nodes: i.nodes,
+          edges: i.edges,
+          nodeTypes: cm,
           nodesDraggable: !1,
           nodesConnectable: !1,
           elementsSelectable: !0,
@@ -12341,7 +12348,7 @@ const KY = (A, e) => {
       ) })
     }
   );
-}, um = 300, Qm = ({
+}, Qm = 300, Cm = ({
   visible: A = !0,
   delay: e = 0,
   children: t,
@@ -12362,7 +12369,7 @@ const KY = (A, e) => {
       style: {
         opacity: o && A ? 1 : 0,
         transform: o && A ? "translateY(0)" : `translateY(${r}px)`,
-        transition: `opacity ${um}ms ease, transform 0.5s ease`,
+        transition: `opacity ${Qm}ms ease, transform 0.5s ease`,
         cursor: n,
         pointerEvents: o && A ? "auto" : "none"
       },
@@ -12371,7 +12378,7 @@ const KY = (A, e) => {
   );
 }, zf = ({ role: A, content: e, streaming: t = !1, thinkingLabel: r = "Thinking..." }) => {
   const n = A === "assistant", s = e.trim() !== "" ? e : t ? r : "";
-  return /* @__PURE__ */ L(Qm, { visible: !0, translateY: 8, cursor: "inherit", children: /* @__PURE__ */ L(
+  return /* @__PURE__ */ L(Cm, { visible: !0, translateY: 8, cursor: "inherit", children: /* @__PURE__ */ L(
     PA,
     {
       sx: {
@@ -12399,7 +12406,7 @@ const KY = (A, e) => {
       )
     }
   ) });
-}, Cm = ({ content: A, thinkingLabel: e }) => /* @__PURE__ */ L(
+}, dm = ({ content: A, thinkingLabel: e }) => /* @__PURE__ */ L(
   zf,
   {
     role: "assistant",
@@ -12407,7 +12414,7 @@ const KY = (A, e) => {
     streaming: !0,
     thinkingLabel: e
   }
-), dm = {
+), lm = {
   preview: "Preview",
   confirmationNotice: "This preview will only be saved after confirmation.",
   organ: "organ",
@@ -12421,12 +12428,12 @@ const KY = (A, e) => {
   assetType: "Asset",
   cancel: "Cancel",
   confirm: "Confirm"
-}, ca = (A) => A.map((e) => e.name?.trim()).filter(Boolean), tt = (A, e) => `${A.toString()} ${e}${A > 1 ? "s" : ""}`, lm = (A) => A?.trim?.() !== "" ? A?.trim() ?? "" : "", Dd = (A) => [
+}, ca = (A) => A.map((e) => e.name?.trim()).filter(Boolean), tt = (A, e) => `${A.toString()} ${e}${A > 1 ? "s" : ""}`, fm = (A) => A?.trim?.() !== "" ? A?.trim() ?? "" : "", Dd = (A) => [
   A.index ?? "",
   A.address ?? "",
   A.cid ?? "",
-  lm(A.name)
-].join(""), ga = (A, e) => A == null || A === "" || !e.has(A), fm = ({
+  fm(A.name)
+].join(""), ga = (A, e) => A == null || A === "" || !e.has(A), vm = ({
   preview: A,
   currentOrganigram: e,
   canConfirm: t,
@@ -12435,7 +12442,7 @@ const KY = (A, e) => {
   onCancel: s,
   labels: o
 }) => {
-  const i = { ...dm, ...o }, B = new Set(
+  const i = { ...lm, ...o }, B = new Set(
     e?.organs.map((u) => u.address).filter((u) => u != null && u !== "")
   ), E = new Set(
     e?.procedures.map((u) => u.address).filter((u) => u != null && u !== "")
@@ -12551,7 +12558,7 @@ const KY = (A, e) => {
       ]
     }
   );
-}, vm = {
+}, Im = {
   title: "Workspace agent",
   close: "Close",
   threads: "Threads",
@@ -12574,7 +12581,7 @@ const KY = (A, e) => {
   assetType: "Asset",
   cancel: "Cancel",
   confirm: "Confirm"
-}, Im = 520, bd = 1500, hm = (A, e) => e.type === "organigram" ? `${A}:${e.organigramId}` : `${A}:new-organigram`, uL = ({
+}, hm = 520, bd = 1500, Dm = (A, e) => e.type === "organigram" ? `${A}:${e.organigramId}` : `${A}:new-organigram`, QL = ({
   open: A,
   onClose: e,
   showThreadList: t,
@@ -12601,7 +12608,7 @@ const KY = (A, e) => {
   onCancelPreview: D,
   labels: M
 }) => {
-  const x = { ...vm, ...M }, m = C.trim(), F = rA(null), p = rA(null);
+  const x = { ...Im, ...M }, m = C.trim(), F = rA(null), p = rA(null);
   nA(() => {
     const b = window.requestAnimationFrame(() => {
       F.current != null && (F.current.scrollTop = F.current.scrollHeight), p.current?.scrollIntoView({ block: "end" });
@@ -12628,7 +12635,7 @@ const KY = (A, e) => {
           height: `calc(100% - ${Ot + 24}px)`,
           pb: `${Ot + 8}px`,
           boxSizing: "border-box",
-          width: { xs: "calc(100% - 26px)", sm: `${Im}px` },
+          width: { xs: "calc(100% - 26px)", sm: `${hm}px` },
           maxWidth: "100vw",
           overflow: "hidden",
           borderLeft: "none",
@@ -12793,7 +12800,7 @@ const KY = (A, e) => {
                         const R = b.role === "assistant", P = b.response?.preview, T = f.includes(y);
                         return /* @__PURE__ */ $(PA, { children: [
                           b.streaming === !0 && R ? /* @__PURE__ */ L(
-                            Cm,
+                            dm,
                             {
                               content: b.content,
                               thinkingLabel: x.thinking
@@ -12828,12 +12835,12 @@ const KY = (A, e) => {
                             }
                           ) : null,
                           P != null && !T ? /* @__PURE__ */ L(
-                            fm,
+                            vm,
                             {
                               preview: P,
                               currentOrganigram: P.type === "new-organigram" ? null : w,
                               canConfirm: g,
-                              saving: Q === hm(y, P),
+                              saving: Q === Dm(y, P),
                               onConfirm: () => {
                                 h(P, y);
                               },
@@ -12888,7 +12895,7 @@ const KY = (A, e) => {
       )
     }
   );
-}, Dm = ({
+}, bm = ({
   accountInOrgans: A,
   procedure: e,
   proposal: t,
@@ -12908,7 +12915,7 @@ const KY = (A, e) => {
     },
     children: n("Veto proposal")
   }
-) : null, bm = ({
+) : null, Mm = ({
   election: A,
   procedure: e
 }) => {
@@ -12923,7 +12930,7 @@ const KY = (A, e) => {
     " ",
     n
   ] }) : null;
-}, Mm = ({
+}, xm = ({
   procedure: A,
   accountInOrgans: e,
   proposal: t,
@@ -12935,7 +12942,7 @@ const KY = (A, e) => {
     (B) => B.proposalKey && B.proposalKey === t.key
   );
   return e.deciders ? /* @__PURE__ */ $(gA, { children: [
-    /* @__PURE__ */ L(bm, { election: i, procedure: A }),
+    /* @__PURE__ */ L(Mm, { election: i, procedure: A }),
     i?.hasVoted ? /* @__PURE__ */ L(Ct, { variant: "filled", sx: { width: "100%" }, severity: "success", children: o("You already voted on this proposal.") }) : /* @__PURE__ */ $(gA, { children: [
       /* @__PURE__ */ L(
         LA,
@@ -12984,7 +12991,7 @@ const KY = (A, e) => {
       )
     ] })
   ] }) : "You cannot take part to this vote.";
-}, xm = ({
+}, Rm = ({
   procedure: A,
   proposal: e,
   wrapTransaction: t,
@@ -13055,7 +13062,7 @@ const KY = (A, e) => {
       ) : B < E ? (
         // The on-chain vote opens strictly after election.start.
         /* @__PURE__ */ L(
-          Dm,
+          bm,
           {
             procedure: A,
             proposal: e,
@@ -13069,7 +13076,7 @@ const KY = (A, e) => {
       ) : B < E + parseInt(A.voteDuration) ? (
         // Vote is started. Vote is not ended.
         /* @__PURE__ */ L(
-          Mm,
+          xm,
           {
             procedure: A,
             proposal: e,
@@ -13081,7 +13088,7 @@ const KY = (A, e) => {
           }
         )
       ) : /* @__PURE__ */ L(
-        xm,
+        Rm,
         {
           procedure: A,
           proposal: e,
@@ -13094,9 +13101,9 @@ const KY = (A, e) => {
       )
     }
   );
-}, Rm = ({
+}, Fm = ({
   procedure: A
-}) => /* @__PURE__ */ L(gA, {}), Fm = ({
+}) => /* @__PURE__ */ L(gA, {}), Ym = ({
   procedure: A,
   proposal: e,
   accountInOrgans: t,
@@ -13141,10 +13148,10 @@ const KY = (A, e) => {
       }
     )
   ] }) });
-}, Ym = {
-  Component: Rm,
-  Proposal: Fm
-}, mm = ({
+}, mm = {
+  Component: Fm,
+  Proposal: Ym
+}, Lm = ({
   procedure: A
 }) => {
   const { t: e } = Ze(), { quorumSize: t, voteDuration: r, majoritySize: n } = JSON.parse(A.data);
@@ -13163,10 +13170,10 @@ const KY = (A, e) => {
     parseInt(n) / 1e3,
     "%"
   ] }) : /* @__PURE__ */ L(gA, {});
-}, Lm = {
+}, Hm = {
   Proposal: Jf,
-  Component: mm
-}, Hm = ({
+  Component: Lm
+}, ym = ({
   procedure: A
 }) => {
   const { t: e } = Ze(), { quorumSize: t, voteDuration: r, majoritySize: n } = JSON.parse(A.data);
@@ -13193,67 +13200,67 @@ const KY = (A, e) => {
     parseInt(n) / 1e3,
     "%"
   ] }) : /* @__PURE__ */ L(gA, {});
-}, ym = {
-  Component: Hm,
+}, Gm = {
+  Component: ym,
   Proposal: Jf
-}, Gm = { nomination: Ym, vote: Lm, erc20Vote: ym }, QL = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+}, Pm = { nomination: mm, vote: Hm, erc20Vote: Gm }, CL = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  default: Gm
-}, Symbol.toStringTag, { value: "Module" })), CL = Pa({
+  default: Pm
+}, Symbol.toStringTag, { value: "Module" })), dL = Pa({
   key: "organigramId",
   default: "",
   dangerouslyAllowMutability: !0
-}), dL = (A, e, t) => lA(() => A == null ? null : new Tv({
+}), lL = (A, e, t) => lA(() => A == null ? null : new Tv({
   publicClient: A,
   chainId: t?.toString(),
   walletClient: e ?? void 0
 }), [t, A, e]), CE = Pa({
   key: "modal",
   default: null
-}), lL = () => Uv(CE), fL = () => jv(CE), vL = () => Rd(CE);
+}), fL = () => Uv(CE), vL = () => jv(CE), IL = () => Rd(CE);
 export {
-  uL as AgentPanel,
-  fm as AgentPreview,
-  Qm as Animated,
+  QL as AgentPanel,
+  vm as AgentPreview,
+  Cm as Animated,
   JY as AssetNode,
   zf as ChatMessage,
-  gL as ClassicOrgChart,
-  Mm as DecidersActions,
-  cL as Diagram,
+  uL as ClassicOrgChart,
+  xm as DecidersActions,
+  gL as Diagram,
   uE as DiagramNode,
   Jf as ElectionComponent,
   kY as EntryCount,
   zY as OrganNode,
   tI as ProcedureIcon,
   mY as ProcedureNode,
-  Cm as StreamBox,
+  dm as StreamBox,
   rI as Summit,
-  bm as TimeLeft,
+  Mm as TimeLeft,
   nI as Token,
-  Dm as VetoProposal,
-  xm as VoteEnded,
+  bm as VetoProposal,
+  Rm as VoteEnded,
   ye as breakpoints,
   xY as components,
   ZY as defaultNodeTypes,
-  vm as defaultPanelLabels,
-  dm as defaultPreviewLabels,
+  Im as defaultPanelLabels,
+  lm as defaultPreviewLabels,
   YY as filterProposals,
-  wL as isUserInSourceOrgan,
+  cL as isUserInSourceOrgan,
   eY as layersState,
   FY as mobileNavHeight,
   CE as modalState,
-  EL as navHeight,
-  CL as organigramIdState,
+  wL as navHeight,
+  dL as organigramIdState,
   tA as palette,
-  QL as procedures,
+  CL as procedures,
   om as projectOrganigramToClassicForest,
   gE as secondsToHms,
-  aL as theme,
+  EL as theme,
   RY as typography,
   tY as useLayers,
-  lL as useModal,
-  vL as useModalState,
-  dL as useOrganigramClient,
-  fL as useSetModal,
+  fL as useModal,
+  IL as useModalState,
+  lL as useOrganigramClient,
+  vL as useSetModal,
   Ot as workspaceNavHeight
 };
