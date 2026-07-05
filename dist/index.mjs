@@ -12346,27 +12346,29 @@ const KY = (A, e) => {
   delay: e = 0,
   children: t,
   translateY: r = 8,
-  cursor: n = "inherit"
+  cursor: n = "inherit",
+  unmountOnExit: s = !0
 }) => {
-  const [s, o] = kA(!1);
+  const [o, i] = kA(!1);
   return nA(() => {
-    const i = setTimeout(() => {
-      o(!0);
+    if (!A) return;
+    const B = setTimeout(() => {
+      i(!0);
     }, e);
-    return () => clearTimeout(i);
-  }, [e, A]), A ? /* @__PURE__ */ L(
+    return () => clearTimeout(B);
+  }, [e, A]), !A && s ? null : /* @__PURE__ */ L(
     "div",
     {
       style: {
-        opacity: s ? 1 : 0,
-        transform: s ? "translateY(0)" : `translateY(${r}px)`,
+        opacity: o && A ? 1 : 0,
+        transform: o && A ? "translateY(0)" : `translateY(${r}px)`,
         transition: `opacity ${um}ms ease, transform 0.5s ease`,
         cursor: n,
-        pointerEvents: s ? "auto" : "none"
+        pointerEvents: o && A ? "auto" : "none"
       },
       children: t
     }
-  ) : null;
+  );
 }, zf = ({ role: A, content: e, streaming: t = !1, thinkingLabel: r = "Thinking..." }) => {
   const n = A === "assistant", s = e.trim() !== "" ? e : t ? r : "";
   return /* @__PURE__ */ L(Qm, { visible: !0, translateY: 8, cursor: "inherit", children: /* @__PURE__ */ L(
@@ -13210,7 +13212,11 @@ const KY = (A, e) => {
   default: null
 }), lL = () => Uv(CE), fL = () => jv(CE), vL = () => Rd(CE);
 export {
+  uL as AgentPanel,
+  fm as AgentPreview,
+  Qm as Animated,
   JY as AssetNode,
+  zf as ChatMessage,
   gL as ClassicOrgChart,
   Mm as DecidersActions,
   cL as Diagram,
@@ -13220,21 +13226,17 @@ export {
   zY as OrganNode,
   tI as ProcedureIcon,
   mY as ProcedureNode,
+  Cm as StreamBox,
   rI as Summit,
   bm as TimeLeft,
   nI as Token,
   Dm as VetoProposal,
   xm as VoteEnded,
-  Qm as WorkspaceAgentAnimated,
-  zf as WorkspaceAgentChatMessage,
-  uL as WorkspaceAgentPanel,
-  fm as WorkspaceAgentPreview,
-  Cm as WorkspaceAgentStreamBox,
   ye as breakpoints,
   xY as components,
   ZY as defaultNodeTypes,
+  vm as defaultPanelLabels,
   dm as defaultPreviewLabels,
-  vm as defaultWorkspaceAgentPanelLabels,
   YY as filterProposals,
   wL as isUserInSourceOrgan,
   eY as layersState,

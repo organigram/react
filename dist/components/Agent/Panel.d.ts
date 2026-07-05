@@ -1,13 +1,13 @@
 import { FormEvent, KeyboardEvent } from 'react';
 import { OrganigramJson } from '@organigram/js';
-import { WorkspaceAgentMessage, WorkspaceAgentOrganigramPreview, WorkspaceAgentResponse, WorkspaceAgentThread } from './types';
-import { WorkspaceAgentPreviewLabels } from './Preview';
-export type WorkspaceAgentPanelMessage = WorkspaceAgentMessage & {
+import { Message, OrganigramPreview, Response, Thread } from './types';
+import { PreviewLabels } from './Preview';
+export type PanelMessage = Message & {
     id?: string;
-    response?: WorkspaceAgentResponse;
+    response?: Response;
     streaming?: boolean;
 };
-export type WorkspaceAgentPanelLabels = WorkspaceAgentPreviewLabels & {
+export type PanelLabels = PreviewLabels & {
     title: string;
     close: string;
     threads: string;
@@ -18,18 +18,18 @@ export type WorkspaceAgentPanelLabels = WorkspaceAgentPreviewLabels & {
     sourceHero: string;
     sourceWorkspace: string;
 };
-declare const defaultLabels: WorkspaceAgentPanelLabels;
-export declare const WorkspaceAgentPanel: React.FC<{
+declare const defaultLabels: PanelLabels;
+export declare const AgentPanel: React.FC<{
     open: boolean;
     onClose: () => void;
     showThreadList: boolean;
     onShowThreadList: () => void;
-    threads: WorkspaceAgentThread[];
+    threads: Thread[];
     selectedThreadId: string | null;
     historyLoading: boolean;
     onSelectThread: (threadId: string) => void;
     onStartNewThread: () => void;
-    messages: WorkspaceAgentPanelMessage[];
+    messages: PanelMessage[];
     welcomeMessage: string;
     currentOrganigram: OrganigramJson | null;
     canAsk: boolean;
@@ -42,8 +42,8 @@ export declare const WorkspaceAgentPanel: React.FC<{
     onInputChange: (value: string) => void;
     onInputKeyDown: (event: KeyboardEvent<HTMLDivElement>) => void;
     onSubmit: (event: FormEvent<HTMLFormElement>) => void;
-    onConfirmPreview: (preview: WorkspaceAgentOrganigramPreview, messageIndex: number) => void;
+    onConfirmPreview: (preview: OrganigramPreview, messageIndex: number) => void;
     onCancelPreview: (messageIndex: number) => void;
-    labels?: Partial<WorkspaceAgentPanelLabels>;
+    labels?: Partial<PanelLabels>;
 }>;
-export { defaultLabels as defaultWorkspaceAgentPanelLabels };
+export { defaultLabels as defaultPanelLabels };

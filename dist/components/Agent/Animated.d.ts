@@ -1,10 +1,11 @@
 import { CSSProperties, ReactNode } from 'react';
-type WorkspaceAgentAnimatedProps = {
+type AnimatedProps = {
     visible?: boolean;
     delay?: number;
     children: ReactNode;
     translateY?: number;
     cursor?: CSSProperties['cursor'];
+    unmountOnExit?: boolean;
 };
-export declare const WorkspaceAgentAnimated: React.FC<WorkspaceAgentAnimatedProps>;
+export declare const Animated: React.FC<AnimatedProps>;
 export {};

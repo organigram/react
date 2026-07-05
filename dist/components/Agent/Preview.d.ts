@@ -1,6 +1,6 @@
 import { OrganigramJson } from '@organigram/js';
-import { WorkspaceAgentOrganigramPreview } from './types';
-export type WorkspaceAgentPreviewLabels = {
+import { OrganigramPreview } from './types';
+export type PreviewLabels = {
     preview: string;
     confirmationNotice: string;
     organ: string;
@@ -15,14 +15,14 @@ export type WorkspaceAgentPreviewLabels = {
     cancel: string;
     confirm: string;
 };
-declare const defaultPreviewLabels: WorkspaceAgentPreviewLabels;
-export declare const WorkspaceAgentPreview: React.FC<{
-    preview: WorkspaceAgentOrganigramPreview;
+declare const defaultPreviewLabels: PreviewLabels;
+export declare const AgentPreview: React.FC<{
+    preview: OrganigramPreview;
     currentOrganigram: OrganigramJson | null;
     canConfirm: boolean;
     saving: boolean;
     onConfirm: () => void;
     onCancel: () => void;
-    labels?: Partial<WorkspaceAgentPreviewLabels>;
+    labels?: Partial<PreviewLabels>;
 }>;
 export { defaultPreviewLabels };
