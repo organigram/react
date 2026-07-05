@@ -12879,7 +12879,7 @@ const VY = (A, e) => {
               ),
               /* @__PURE__ */ L(_v, {}),
               /* @__PURE__ */ X(PA, { component: "form", onSubmit: D, sx: { p: 2 }, children: [
-                /* @__PURE__ */ X(dA, { direction: "row", gap: 1, alignItems: "flex-end", children: [
+                /* @__PURE__ */ X(dA, { direction: "row", gap: 1, alignItems: "flex-start", children: [
                   /* @__PURE__ */ X(
                     MA,
                     {
@@ -12887,7 +12887,7 @@ const VY = (A, e) => {
                       variant: "outlined",
                       "aria-label": F.attachDocument,
                       disabled: !c || u,
-                      sx: { minWidth: 44, width: 44, height: 44, px: 0 },
+                      sx: { minWidth: 44, width: 44, height: 52, px: 0 },
                       children: [
                         /* @__PURE__ */ L(Zv, {}),
                         /* @__PURE__ */ L(
@@ -12911,12 +12911,17 @@ const VY = (A, e) => {
                       id: "workspace-agent-input",
                       fullWidth: !0,
                       multiline: !0,
-                      minRows: 2,
+                      minRows: 1,
                       maxRows: 6,
                       variant: "outlined",
                       value: C,
                       disabled: !c || u,
                       placeholder: F.askPlaceholder,
+                      sx: {
+                        "& .MuiInputBase-root": {
+                          alignItems: "flex-start"
+                        }
+                      },
                       onChange: (P) => {
                         d(P.target.value);
                       },
@@ -12930,7 +12935,7 @@ const VY = (A, e) => {
                       type: "submit",
                       variant: "contained",
                       disabled: !c || !T || u,
-                      sx: { minWidth: 44, height: 44 },
+                      sx: { minWidth: 44, height: 52 },
                       children: u ? /* @__PURE__ */ L(Et, { size: 18 }) : /* @__PURE__ */ L(qv, {})
                     }
                   )

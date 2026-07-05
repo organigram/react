@@ -438,13 +438,13 @@ export const AgentPanel: React.FC<{
 
               <Divider />
               <Box component='form' onSubmit={onSubmit} sx={{ p: 2 }}>
-                <Stack direction='row' gap={1} alignItems='flex-end'>
+                <Stack direction='row' gap={1} alignItems='flex-start'>
                   <Button
                     component='label'
                     variant='outlined'
                     aria-label={labels.attachDocument}
                     disabled={!canAsk || loading}
-                    sx={{ minWidth: 44, width: 44, height: 44, px: 0 }}
+                    sx={{ minWidth: 44, width: 44, height: 52, px: 0 }}
                   >
                     <AttachFileIcon />
                     <input
@@ -461,12 +461,17 @@ export const AgentPanel: React.FC<{
                     id='workspace-agent-input'
                     fullWidth
                     multiline
-                    minRows={2}
+                    minRows={1}
                     maxRows={6}
                     variant='outlined'
                     value={input}
                     disabled={!canAsk || loading}
                     placeholder={labels.askPlaceholder}
+                    sx={{
+                      '& .MuiInputBase-root': {
+                        alignItems: 'flex-start'
+                      }
+                    }}
                     onChange={event => {
                       onInputChange(event.target.value)
                     }}
@@ -477,7 +482,7 @@ export const AgentPanel: React.FC<{
                     type='submit'
                     variant='contained'
                     disabled={!canAsk || !hasMessageInput || loading}
-                    sx={{ minWidth: 44, height: 44 }}
+                    sx={{ minWidth: 44, height: 52 }}
                   >
                     {loading ? <CircularProgress size={18} /> : <SendIcon />}
                   </Button>
