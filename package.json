@@ -40,7 +40,7 @@
   },
   "scripts": {
     "build": "vite build",
-    "docs:generate": "env-cmd --silent tsx ./scripts/docs.ts",
+    "docs:generate": "env-cmd --silent tsx ../docs/scripts/generateReactReference.ts",
     "dev": "vite dev",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit --incremental false",
@@ -66,7 +66,7 @@
     "react-i18next": "^15.0.0",
     "recoil": "^0.7.7",
     "typescript": "^5.5.4",
-    "viem": "^2.18.2",
+    "viem": "2.55.2",
     "vite": "^7.3.5",
     "vite-plugin-dts": "^4.5.4",
     "vitest": "^4.1.8",
