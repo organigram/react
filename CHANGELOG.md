@@ -3,13 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.6](https://github.com/organigram/organigram/compare/v0.1.5...v0.1.6) (2026-07-20)
+
+- Moved React reference generation to the shared docs generation pipeline.
+
 ## [0.1.5](https://github.com/organigram/organigram/compare/v0.1.4...v0.1.5) (2026-07-07)
 
-**Note:** Version bump only for package @organigram/react
-
-
-
-
+- Added reusable workspace agent UI components, including animated transitions, chat messages, the agent drawer panel, and organigram preview confirmation controls.
+- Exported the agent component from the React package.
+- Improved the `ClassicOrgChart` component with better layout behavior and additional test coverage.
+- Updated package metadata and Vite dependency optimization for the new MUI-based agent components.
 
 ## [0.1.4](https://github.com/organigram/organigram/compare/v0.1.3...v0.1.4) (2026-06-16)
 
