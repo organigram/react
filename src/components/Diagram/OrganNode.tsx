@@ -5,7 +5,6 @@ import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 
-import { useTranslation } from 'react-i18next'
 import { DiagramNode } from './Node'
 import { palette } from '../../theme/palette'
 import SummitIcon from '../icons/Summit'
@@ -19,6 +18,7 @@ export interface OrganNodeProps {
     organ: Organ
     position?: { x: number; y: number }
     onClick?: () => void
+    translateLabel?: (label: string) => string
   }
   hideHandles?: boolean
 }
@@ -28,8 +28,8 @@ export interface OrganNodeProps {
  */
 export const EntryCount: React.FC<{
   organ: OrganJson
-}> = ({ organ }) => {
-  const { t } = useTranslation()
+  translateLabel?: (label: string) => string
+}> = ({ organ, translateLabel = label => label }) => {
   const count = organ?.entries?.length?.toString()
   const singularOrPlural =
     organ?.entries?.length != null && organ?.entries?.length > 1
@@ -37,7 +37,7 @@ export const EntryCount: React.FC<{
       : 'entry'
   return (
     <span id={`organ-${organ?.name as string}-entry-count`}>
-      {count} {t(singularOrPlural)}
+      {count} {translateLabel(singularOrPlural)}
     </span>
   )
 }
@@ -51,6 +51,8 @@ export const OrganNode: React.FC<Partial<NodeProps> & OrganNodeProps> = ({
   targetPosition,
   hideHandles
 }) => {
+  const translateLabel =
+    data.translateLabel ?? ((label: string): string => label)
   const isMaster = data?.position?.y === 0
 
   return (
@@ -72,7 +74,7 @@ export const OrganNode: React.FC<Partial<NodeProps> & OrganNodeProps> = ({
           border: data.organ?.isDeployed
             ? 'none'
             : `dashed 1px ${palette.grey.light2 as string}`,
-          minWidth: '240px'
+          width: '288px'
         }}
       >
         <Box
@@ -111,12 +113,12 @@ export const OrganNode: React.FC<Partial<NodeProps> & OrganNodeProps> = ({
                 )}
               </Grid>
             }
-            label={data.organ?.name}
+            label={translateLabel(data.organ?.name ?? '')}
             id={`expand-organ-${data.organ?.name}`}
           />
         </Box>
         <Grid container justifyContent='flex-start' alignItems='center' pt={1}>
-          <EntryCount organ={data.organ} />
+          <EntryCount organ={data.organ} translateLabel={translateLabel} />
         </Grid>
       </Card>
       {hideHandles !== true && (

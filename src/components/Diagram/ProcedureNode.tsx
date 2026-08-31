@@ -34,6 +34,7 @@ export const ProcedureNode: React.FC<
       procedure: ProcedureJson
       onClick?: (procedure: ProcedureJson) => void
       organigram?: OrganigramJson
+      translateLabel?: (label: string) => string
     }>
   > &
     ProcedureNodeProps
@@ -45,6 +46,7 @@ export const ProcedureNode: React.FC<
   organigram,
   ...nodeProps
 }) => {
+  const translateLabel = data?.translateLabel ?? (label => label)
   const resolvedOrganigram = organigram ?? data?.organigram
   const activeProposals = data?.procedure?.isDeployed
     ? (filterProposals(
@@ -102,7 +104,7 @@ export const ProcedureNode: React.FC<
               : `dashed 1px ${palette.violet.light3}`,
             pt: 1,
             pl: 2,
-            minWidth: '240px'
+            width: '288px'
           }}
         >
           <DiagramNode
@@ -136,7 +138,7 @@ export const ProcedureNode: React.FC<
                 )}
               </Grid>
             }
-            label={data?.procedure.name}
+            label={translateLabel(data?.procedure.name ?? '')}
             id={`expand-procedure-${data?.procedure?.name}`}
           />
         </Card>

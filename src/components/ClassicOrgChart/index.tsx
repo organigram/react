@@ -48,6 +48,7 @@ type ClassicNodeData =
       entryCount: number
       testIdPrefix?: string | undefined
       onClick?: ((organ: OrganJson) => void) | undefined
+      translateLabel?: (label: string) => string
     }
   | {
       type: 'entry'
@@ -107,7 +108,7 @@ const ClassicOrganNode: React.FC<NodeProps<ClassicNodeData>> = ({ data }) => {
         }}
       >
         <Typography variant='subtitle1' fontWeight={700}>
-          {data.organ.name}
+          {(data.translateLabel ?? (label => label))(data.organ.name)}
         </Typography>
         <Typography variant='caption' color='text.secondary'>
           {data.entryCount} {data.entryCount === 1 ? 'entry' : 'entries'}
@@ -237,11 +238,13 @@ const layoutClassicNodes = (nodes: Node[], edges: Edge[]): Node[] => {
 const buildClassicFlow = ({
   forest,
   onClickOrgan,
-  testIdPrefix
+  testIdPrefix,
+  translateLabel
 }: {
   forest: ClassicOrgChartNode[]
   onClickOrgan?: (organ: OrganJson) => void
   testIdPrefix?: string | undefined
+  translateLabel?: (label: string) => string
 }): {
   nodes: Node<ClassicNodeData>[]
   edges: Edge[]
@@ -260,7 +263,8 @@ const buildClassicFlow = ({
         organ: node.organ,
         entryCount: node.entries.length,
         testIdPrefix,
-        onClick: onClickOrgan
+        onClick: onClickOrgan,
+        translateLabel
       },
       position: { x: 0, y: 0 }
     })
@@ -320,6 +324,7 @@ export interface ClassicOrgChartProps {
   onClickOrgan?: (organ: OrganJson) => void
   style?: Record<string, unknown>
   testIdPrefix?: string
+  translateLabel?: (label: string) => string
 }
 
 export const ClassicOrgChart: React.FC<ClassicOrgChartProps> = ({
@@ -328,7 +333,8 @@ export const ClassicOrgChart: React.FC<ClassicOrgChartProps> = ({
   isTabletOrAbove = true,
   onClickOrgan,
   style,
-  testIdPrefix
+  testIdPrefix,
+  translateLabel
 }) => {
   const forest = useMemo(
     () =>
@@ -340,9 +346,10 @@ export const ClassicOrgChart: React.FC<ClassicOrgChartProps> = ({
       buildClassicFlow({
         forest,
         onClickOrgan,
-        testIdPrefix
+        testIdPrefix,
+        translateLabel
       }),
-    [forest, onClickOrgan, testIdPrefix]
+    [forest, onClickOrgan, testIdPrefix, translateLabel]
   )
 
   if (organigram == null) {

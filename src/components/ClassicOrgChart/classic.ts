@@ -54,10 +54,12 @@ const sortEntries = (entries: OrganEntry[]): OrganEntry[] =>
 
 const resolveUniqueParentCandidate = ({
   organ,
+  assets,
   organsByAddress,
   proceduresByAddress
 }: {
   organ: OrganJson
+  assets: OrganigramJson['assets']
   organsByAddress: Map<string, OrganJson>
   proceduresByAddress: Map<string, ProcedureJson>
 }): string | null => {
@@ -83,9 +85,39 @@ const resolveUniqueParentCandidate = ({
     parentCandidates.add(parentAddress)
   }
 
-  return parentCandidates.size === 1
-    ? [...parentCandidates][0] ?? null
-    : null
+  for (const asset of assets ?? []) {
+    if (asset.kind !== 'equity' || asset.decisionProcedure == null) continue
+
+    const procedure = proceduresByAddress.get(asset.decisionProcedure)
+    let equityTransferRegister: string | undefined
+    try {
+      const data = JSON.parse(procedure?.data ?? '{}') as {
+        equityTransferRegister?: unknown
+      }
+      equityTransferRegister =
+        typeof data.equityTransferRegister === 'string'
+          ? data.equityTransferRegister
+          : undefined
+    } catch {
+      equityTransferRegister = undefined
+    }
+    if (equityTransferRegister !== organ.address) continue
+
+    const parentAddress = procedure?.deciders
+
+    if (
+      parentAddress == null ||
+      parentAddress === '' ||
+      parentAddress === organ.address ||
+      !organsByAddress.has(parentAddress)
+    ) {
+      continue
+    }
+
+    parentCandidates.add(parentAddress)
+  }
+
+  return parentCandidates.size === 1 ? ([...parentCandidates][0] ?? null) : null
 }
 
 const wouldCreateCycle = (
@@ -123,6 +155,7 @@ export const projectOrganigramToClassicForest = (
       organ.address,
       resolveUniqueParentCandidate({
         organ,
+        assets: organigram.assets,
         organsByAddress,
         proceduresByAddress
       })
