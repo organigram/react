@@ -12,7 +12,6 @@ import {
   type Asset,
   type OrganigramJson
 } from '@organigram/js'
-import dagre from 'dagre'
 import ReactFlow, {
   Controls,
   ConnectionLineType,
@@ -21,7 +20,6 @@ import ReactFlow, {
   addEdge,
   type Node,
   type Edge,
-  type Position,
   Background,
   type ReactFlowProps,
   type NodeChange,
@@ -33,11 +31,15 @@ import ReactFlow, {
 } from 'react-flow-renderer'
 import NoSsr from '@mui/material/NoSsr'
 
-import { useLayers } from '../../hooks/useLayers'
+import {
+  defaultDiagramDisplayOptions,
+  type DiagramDisplayOptions
+} from '../../hooks/useDiagramDisplayOptions'
 import { mobileNavHeight } from '../../theme'
 import { ProcedureNode } from './ProcedureNode'
 import { OrganNode } from './OrganNode'
 import { AssetNode } from './AssetNode'
+import { autodistribute } from './layout'
 
 /**
  * Props accepted by the default `Diagram` component.
@@ -58,6 +60,8 @@ export interface DiagramProps {
   onOrganDeployed?: (organ: OrganJson) => void
   onAssetDeployed?: (asset: AssetJson) => void
   onProcedureDeployed?: (procedure: ProcedureJson) => void
+  translateLabel?: (label: string) => string
+  displayOptions?: DiagramDisplayOptions
 }
 
 /**
@@ -68,9 +72,6 @@ export const defaultNodeTypes = {
   organ: OrganNode as React.FC<NodeProps<{ organ: Organ }>>,
   asset: AssetNode as React.FC<NodeProps<{ asset: Asset }>>
 }
-const nodeWidth = 256
-const procedureNodeHeight = 48
-const organNodeHeight = 104
 const gridUnitSize = 16
 const snapGrid: [number, number] = [gridUnitSize, gridUnitSize]
 
@@ -115,52 +116,6 @@ const applyStoredNodePositions = (
         }
   })
 
-const autodistribute: (
-  nodes: Node[],
-  edges: Edge[],
-  direction: string
-) => Node[] = (nodes, edges, direction) => {
-  const isHorizontal = direction === 'LR'
-  const dagreGraph = new dagre.graphlib.Graph()
-  dagreGraph.setDefaultEdgeLabel(() => ({}))
-  dagreGraph.setGraph({ rankdir: direction })
-
-  nodes.forEach((node: Node) => {
-    dagreGraph.setNode(node.id, {
-      width: nodeWidth,
-      height: node.type === 'procedure' ? procedureNodeHeight : organNodeHeight
-    })
-  })
-
-  edges.forEach((edge: Edge) => {
-    if (edge != null) dagreGraph.setEdge(edge.source, edge.target)
-  })
-
-  dagre.layout(dagreGraph)
-
-  nodes.forEach((node: Node) => {
-    const nodeWithPosition = dagreGraph.node(node.id)
-    node.targetPosition = (isHorizontal ? 'left' : 'top') as Position
-    node.sourcePosition = (isHorizontal ? 'right' : 'bottom') as Position
-    node.position = {
-      x: Math.floor((nodeWithPosition.x - nodeWidth / 2) / 16) * 16,
-      y:
-        Math.floor(
-          (nodeWithPosition.y -
-            (node.type === 'procedure'
-              ? procedureNodeHeight
-              : organNodeHeight) /
-              2) /
-            16
-        ) * 16
-    }
-
-    return node
-  })
-
-  return nodes
-}
-
 /**
  * Render an organigram as a React Flow diagram with automatic layout.
  *
@@ -178,7 +133,9 @@ export const Diagram: React.FC<DiagramProps> = ({
   isTabletOrAbove,
   onClickOrgan,
   onClickProcedure,
-  onClickAsset
+  onClickAsset,
+  translateLabel,
+  displayOptions = defaultDiagramDisplayOptions
 }) => {
   const {
     defaultEdgeOptions: optionDefaultEdgeOptions,
@@ -190,58 +147,68 @@ export const Diagram: React.FC<DiagramProps> = ({
     edgeType ??
     organigram?.edgeType ??
     defaultOrganigramEdgeType
-  const storedNodePositions = organigram?.nodePositions ?? {}
-  const [layers] = useLayers()
+  const storedNodePositions = useMemo(
+    () => organigram?.nodePositions ?? {},
+    [organigram?.nodePositions]
+  )
   const organsNodes = useMemo(
     () =>
       organigram?.organs?.map(organ => ({
-        id: `organ-${organ.name}`,
+        id: `organ-${organ.address}`,
         type: 'organ',
-        position:
-          storedNodePositions[getOrganPositionKey(organ.address)] ?? { x: 0, y: 0 },
+        position: storedNodePositions[getOrganPositionKey(organ.address)] ?? {
+          x: 0,
+          y: 0
+        },
         data: {
           organ,
           onClick: onClickOrgan,
+          translateLabel,
           positionKey: getOrganPositionKey(organ.address)
         }
       })) ?? [],
-    [organigram?.organs, onClickOrgan, storedNodePositions]
+    [organigram?.organs, onClickOrgan, storedNodePositions, translateLabel]
   )
 
   const proceduresNodes = useMemo(
     () =>
       organigram?.procedures?.map(procedure => ({
-        id: `procedure-${procedure.name}`,
+        id: `procedure-${procedure.address}`,
         type: 'procedure',
-        position:
-          storedNodePositions[getProcedurePositionKey(procedure.address)] ?? {
-            x: 0,
-            y: 0
-          },
+        position: storedNodePositions[
+          getProcedurePositionKey(procedure.address)
+        ] ?? {
+          x: 0,
+          y: 0
+        },
         data: {
           procedure,
           onClick: onClickProcedure,
+          translateLabel,
           organigram,
           positionKey: getProcedurePositionKey(procedure.address)
         }
       })) ?? [],
-    [organigram, onClickProcedure, storedNodePositions]
+    [organigram, onClickProcedure, storedNodePositions, translateLabel]
   )
 
   const assetsNodes = useMemo(
     () =>
       organigram?.assets?.map(asset => ({
-        id: `asset-${asset.name}`,
+        id: `asset-${asset.address}`,
         type: 'asset',
-        position:
-          storedNodePositions[getAssetPositionKey(asset.address)] ?? { x: 0, y: 0 },
+        position: storedNodePositions[getAssetPositionKey(asset.address)] ?? {
+          x: 0,
+          y: 0
+        },
         data: {
           asset,
           onClick: onClickAsset,
+          translateLabel,
           positionKey: getAssetPositionKey(asset.address)
         }
       })) ?? [],
-    [organigram?.assets, onClickAsset, storedNodePositions]
+    [organigram?.assets, onClickAsset, storedNodePositions, translateLabel]
   )
 
   const initialEdges = useMemo(
@@ -292,10 +259,17 @@ export const Diagram: React.FC<DiagramProps> = ({
               ].includes(i)
             )
           )
+          const governingAssets = (organigram?.assets ?? []).filter(
+            asset =>
+              asset.kind === 'equity' &&
+              asset.decisionProcedure?.toLowerCase() ===
+                procedure.address.toLowerCase()
+          )
           const shouldShowSources =
             hasAdminPermissions ||
-            (layers[0].showEntriesPermissions && hasEntriesPermissions) ||
-            (layers[0].showAssetsPermissions && hasAssetsPermissions)
+            (displayOptions.showEntriesPermissions && hasEntriesPermissions) ||
+            (displayOptions.showAssetsPermissions && hasAssetsPermissions) ||
+            governingAssets.length > 0
           const sourceOrganAddresses = Array.from(
             new Set(
               [
@@ -323,23 +297,72 @@ export const Diagram: React.FC<DiagramProps> = ({
                 })
                 .filter(s => s != null)
             : []
-          const erc20Asset = JSON.parse(procedure.data ?? '{}')?.erc20
-          const tokenSource =
-            erc20Asset == null
+          const procedureData = JSON.parse(procedure.data ?? '{}')
+          const tokenAssets = Array.from(
+            new Set(
+              [procedureData.erc20].filter(
+                (address): address is string =>
+                  typeof address === 'string' && address !== ''
+              )
+            )
+          )
+          const tokenSource = tokenAssets.flatMap((tokenAsset, tokenIndex) => {
+            const assetNode = assetsNodes.find(
+              node => node.data.asset.address === tokenAsset
+            )
+            return assetNode == null
               ? []
               : [
                   {
-                    id: `procedure-${index}-source-token`,
-                    source: assetsNodes.find(
-                      node => node.data.asset.address === erc20Asset
-                    )?.id,
+                    id: `procedure-${index}-source-token-${tokenIndex}`,
+                    source: assetNode.id,
                     target: procedureNode.id
                   }
                 ]
+          })
+          const settlementDestinations = governingAssets.flatMap(
+            (asset, assetIndex) => {
+              const assetNode = assetsNodes.find(
+                node => node.data.asset.address === asset.address
+              )
+              return assetNode == null
+                ? []
+                : [
+                    {
+                      id: `procedure-${index}-settlement-${assetIndex}`,
+                      source: procedureNode.id,
+                      target: assetNode.id,
+                      animated: true
+                    }
+                  ]
+            }
+          )
+          const registerDestinations = governingAssets.flatMap(
+            (asset, assetIndex) => {
+              const assetNode = assetsNodes.find(
+                node => node.data.asset.address === asset.address
+              )
+              const registerNode = organsNodes.find(
+                node =>
+                  node.data.organ.address ===
+                  procedureData.equityTransferRegister
+              )
+              return assetNode == null || registerNode == null
+                ? []
+                : [
+                    {
+                      id: `procedure-${index}-register-${assetIndex}`,
+                      source: procedureNode.id,
+                      target: registerNode.id,
+                      animated: true
+                    }
+                  ]
+            }
+          )
           const procedureDestinations =
             targetPermissions
               ?.filter(targetOrgan =>
-                layers[0].showAdminPermissions &&
+                displayOptions.showAdminPermissions &&
                 getPermissionsSet(targetOrgan.permissionValue).findIndex(i =>
                   [
                     'ALL_PERMISSIONS',
@@ -348,7 +371,7 @@ export const Diagram: React.FC<DiagramProps> = ({
                   ].includes(i)
                 ) >= 0
                   ? true
-                  : layers[0].showEntriesPermissions &&
+                  : displayOptions.showEntriesPermissions &&
                       getPermissionsSet(targetOrgan.permissionValue).findIndex(
                         i =>
                           [
@@ -385,29 +408,108 @@ export const Diagram: React.FC<DiagramProps> = ({
                 }
                 return null
               }) ?? []
-          return [...procedureSources, ...tokenSource, ...procedureDestinations]
+          return [
+            ...procedureSources,
+            ...tokenSource,
+            ...procedureDestinations,
+            ...settlementDestinations,
+            ...registerDestinations
+          ]
         })
         .flat() as Edge[]) ?? [],
-    [layers, organsNodes, proceduresNodes, assetsNodes]
+    [
+      displayOptions,
+      organsNodes,
+      proceduresNodes,
+      assetsNodes,
+      organigram?.assets
+    ]
   )
 
-  const distributedNodes = applyStoredNodePositions(
-    autodistribute(
-      [...organsNodes, ...proceduresNodes, ...assetsNodes],
-      [...initialEdges],
-      direction
-    ),
-    storedNodePositions
+  const layoutEdges = useMemo(() => {
+    const edgesByEndpoints = new Map<string, Edge>()
+    const addLayoutEdge = (edge: Edge) => {
+      const key = `${edge.source}\u0000${edge.target}`
+      const existingEdge = edgesByEndpoints.get(key)
+      if (
+        existingEdge == null ||
+        (edge.data as { layoutRole?: string } | undefined)?.layoutRole ===
+          'decider'
+      ) {
+        edgesByEndpoints.set(key, edge)
+      }
+    }
+
+    initialEdges.forEach(addLayoutEdge)
+    proceduresNodes.forEach((procedureNode, procedureIndex) => {
+      const procedure = procedureNode.data.procedure
+      const sourceRoles = [
+        { address: procedure.deciders, layoutRole: 'decider' as const },
+        { address: procedure.proposers },
+        { address: procedure.moderators }
+      ]
+      sourceRoles.forEach(({ address: sourceAddress, layoutRole }) => {
+        if (sourceAddress == null || sourceAddress === '') return
+        const sourceNode = organsNodes.find(
+          organNode => organNode.data.organ.address === sourceAddress
+        )
+        if (sourceNode == null) return
+        addLayoutEdge({
+          id: `layout-procedure-${procedureIndex}-source-${sourceAddress}`,
+          source: sourceNode.id,
+          target: procedureNode.id,
+          ...(layoutRole == null ? {} : { data: { layoutRole } })
+        })
+      })
+
+      organsNodes.forEach((organNode, organIndex) => {
+        if (
+          !organNode.data.organ.permissions?.some(
+            permission => permission.permissionAddress === procedure.address
+          )
+        ) {
+          return
+        }
+        addLayoutEdge({
+          id: `layout-procedure-${procedureIndex}-target-${organIndex}`,
+          source: procedureNode.id,
+          target: organNode.id
+        })
+      })
+    })
+
+    return Array.from(edgesByEndpoints.values())
+  }, [initialEdges, organsNodes, proceduresNodes])
+
+  const distributedNodes = useMemo(
+    () =>
+      applyStoredNodePositions(
+        autodistribute(
+          [...organsNodes, ...proceduresNodes, ...assetsNodes],
+          layoutEdges,
+          direction
+        ),
+        storedNodePositions
+      ),
+    [
+      organsNodes,
+      proceduresNodes,
+      assetsNodes,
+      layoutEdges,
+      direction,
+      storedNodePositions
+    ]
   )
-  const [nodes, setNodes] = useState(distributedNodes)
+  const [nodes, setNodes] = useState(() => distributedNodes)
   const [edges, setEdges] = useState(initialEdges)
 
   const getCurrentNodePositions = useCallback(
     (currentNodes: Node[]): OrganigramNodePositions =>
       Object.fromEntries(
         currentNodes.flatMap(node => {
-          const positionKey = (node.data as { positionKey?: string } | undefined)
-            ?.positionKey
+          const positionKey = (
+            node.data as { positionKey?: string } | undefined
+          )?.positionKey
 
           if (positionKey == null) {
             return []
@@ -465,24 +567,9 @@ export const Diagram: React.FC<DiagramProps> = ({
   )
 
   useEffect(() => {
-    const distributedNodes = applyStoredNodePositions(
-      autodistribute(
-        [...organsNodes, ...proceduresNodes, ...assetsNodes],
-        initialEdges,
-        direction
-      ),
-      storedNodePositions
-    )
     setNodes([...distributedNodes])
     setEdges(initialEdges)
-  }, [
-    direction,
-    organsNodes,
-    proceduresNodes,
-    assetsNodes,
-    initialEdges,
-    storedNodePositions
-  ])
+  }, [distributedNodes, initialEdges])
 
   return (
     <NoSsr>
