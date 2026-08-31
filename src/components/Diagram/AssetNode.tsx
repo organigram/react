@@ -73,11 +73,6 @@ export const AssetNode: React.FC<NodeProps & AssetNodeProps> = ({
           </Grid>
         }
         label={translateLabel?.(asset.name) ?? asset.name}
-        detail={
-          translateLabel?.(
-            asset.kind === 'equity' ? 'Equity' : 'ERC-20 token'
-          ) ?? (asset.kind === 'equity' ? 'Equity' : 'ERC-20 token')
-        }
       />
     </Card>
     {hideHandles !== true && (

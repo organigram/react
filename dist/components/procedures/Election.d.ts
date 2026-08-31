@@ -13,5 +13,6 @@ export interface ElectionComponentProps {
     t: (key: string) => string;
     publicClient?: PublicClient | null;
     walletClient?: WalletClient | null;
+    voterAddress?: string;
 }
 export declare const ElectionComponent: React.FC<ElectionComponentProps>;

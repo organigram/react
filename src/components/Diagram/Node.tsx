@@ -32,6 +32,9 @@ export const DiagramNode: React.FC<{
         fontWeight='bold'
         fontSize='12px'
         textAlign='left'
+        noWrap
+        title={label}
+        sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
       >
         {label}
       </Typography>

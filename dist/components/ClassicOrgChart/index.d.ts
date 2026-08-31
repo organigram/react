@@ -7,5 +7,6 @@ export interface ClassicOrgChartProps {
     onClickOrgan?: (organ: OrganJson) => void;
     style?: Record<string, unknown>;
     testIdPrefix?: string;
+    translateLabel?: (label: string) => string;
 }
 export declare const ClassicOrgChart: React.FC<ClassicOrgChartProps>;

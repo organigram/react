@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   ERC20VoteProcedure,
   ProcedureProposal,
@@ -25,6 +25,7 @@ export interface ElectionComponentProps {
   t: (key: string) => string
   publicClient?: PublicClient | null
   walletClient?: WalletClient | null
+  voterAddress?: string
 }
 export const ElectionComponent: React.FC<ElectionComponentProps> = ({
   procedure,
@@ -33,20 +34,60 @@ export const ElectionComponent: React.FC<ElectionComponentProps> = ({
   wrapTransaction,
   t = (key: string) => key,
   publicClient,
-  walletClient
+  walletClient,
+  voterAddress
 }) => {
   const election = procedure.elections?.find(
-    (b: { proposalKey: any }) => b.proposalKey && b.proposalKey === proposal.key
+    (b: { proposalKey: any }) =>
+      b.proposalKey != null && String(b.proposalKey) === String(proposal.key)
   )
 
-  const now = Date.now() / 1000
+  // The procedure is evaluated with the chain timestamp, not the browser
+  // clock. Local chains and machines can legitimately drift by a few seconds;
+  // using Date.now() could therefore leave a closed vote in its voting UI.
+  const [chainTimestamp, setChainTimestamp] = useState<number | null>(null)
+  useEffect(() => {
+    if (publicClient == null) return
+    let cancelled = false
+    const refreshTimestamp = async () => {
+      try {
+        const block = await publicClient.getBlock({ blockTag: 'pending' })
+        if (!cancelled) setChainTimestamp(Number(block.timestamp))
+      } catch {
+        try {
+          const block = await publicClient.getBlock()
+          if (!cancelled) setChainTimestamp(Number(block.timestamp))
+        } catch {
+          // Fall back to the browser clock below while the RPC reconnects.
+        }
+      }
+    }
+    refreshTimestamp()
+    const interval = window.setInterval(() => refreshTimestamp(), 15_000)
+    return () => {
+      cancelled = true
+      window.clearInterval(interval)
+    }
+  }, [publicClient])
+
+  const now = chainTimestamp ?? Math.floor(Date.now() / 1000)
   const voteStart =
     election?.start != null ? parseInt(election.start) + 1 : undefined
+  const voteClosed =
+    voteStart != null && now >= voteStart + parseInt(procedure.voteDuration)
 
-  if (!proposal || !proposal.presented || !election) {
+  if (!proposal || !proposal.presented) {
     return (
       <Alert variant='filled' sx={{ width: '100%' }} severity='info'>
         {t('Proposal not presented.')}
+      </Alert>
+    )
+  }
+
+  if (!election) {
+    return (
+      <Alert variant='filled' sx={{ width: '100%' }} severity='info'>
+        {t('Loading vote status...')}
       </Alert>
     )
   }
@@ -73,10 +114,11 @@ export const ElectionComponent: React.FC<ElectionComponentProps> = ({
             wrapTransaction,
             t,
             publicClient,
-            walletClient
+            walletClient,
+            voterAddress
           }}
         />
-      ) : now < voteStart + parseInt(procedure.voteDuration) ? ( // Vote is started. Vote is not ended.
+      ) : !voteClosed ? ( // Vote is started. Vote is not ended.
         <DecidersActions
           {...{
             procedure,
@@ -85,7 +127,8 @@ export const ElectionComponent: React.FC<ElectionComponentProps> = ({
             wrapTransaction,
             t,
             publicClient,
-            walletClient
+            walletClient,
+            voterAddress
           }}
         />
       ) : (
@@ -97,7 +140,8 @@ export const ElectionComponent: React.FC<ElectionComponentProps> = ({
             t,
             accountInOrgans,
             publicClient,
-            walletClient
+            walletClient,
+            voterAddress
           }}
         />
       )}

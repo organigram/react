@@ -9,10 +9,12 @@ export interface OrganNodeProps {
             y: number;
         };
         onClick?: () => void;
+        translateLabel?: (label: string) => string;
     };
     hideHandles?: boolean;
 }
 export declare const EntryCount: React.FC<{
     organ: OrganJson;
+    translateLabel?: (label: string) => string;
 }>;
 export declare const OrganNode: React.FC<Partial<NodeProps> & OrganNodeProps>;

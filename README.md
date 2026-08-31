@@ -53,7 +53,7 @@ function MyComponent() {
 
   return (
     <div>
-      <button onClick={() => organigramClient.deploy(new Organigram('forProfit'))}>Deploy for-profit organization</button>
+      <button onClick={() => organigramClient.deploy(new Organigram('sas'))}>Deploy for-profit organization</button>
     </div>
   )
 }
