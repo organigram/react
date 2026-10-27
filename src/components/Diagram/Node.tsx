@@ -41,14 +41,16 @@ export const DiagramNode: React.FC<{
     </Grid>
     {/* {organ?.metadata?.name)} */}
     <Grid container item width='30px'>
-      <Button
-        variant='text'
-        onClick={onClick}
-        id={id}
-        sx={{ color: 'grey.light4' }}
-      >
-        <MoreVert style={{ height: '18px', color: palette.grey.light }} />
-      </Button>
+      {onClick != null ? (
+        <Button
+          variant='text'
+          onClick={onClick}
+          id={id}
+          sx={{ color: 'grey.light4' }}
+        >
+          <MoreVert style={{ height: '18px', color: palette.grey.light }} />
+        </Button>
+      ) : null}
     </Grid>
   </Grid>
 )

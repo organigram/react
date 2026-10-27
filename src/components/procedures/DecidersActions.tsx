@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { TimeLeft } from './TimeLeft'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import CheckRoundedIcon from '@mui/icons-material/CheckRounded'
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import { useTranslation } from 'react-i18next'
 import {
   AccountInOrgans,
@@ -27,7 +30,8 @@ export const DecidersActions: React.FC<ElectionComponentProps> = ({
   wrapTransaction,
   publicClient,
   walletClient,
-  voterAddress
+  voterAddress,
+  compact = false
 }) => {
   const { t } = useTranslation()
   const election = procedure.elections?.find(
@@ -113,6 +117,10 @@ export const DecidersActions: React.FC<ElectionComponentProps> = ({
     }
   }
 
+  if (compact && (voteClosed || hasVoted !== false || !accountInOrgans.deciders)) {
+    return null
+  }
+
   return voteClosed ? (
     <Alert variant='filled' sx={{ width: '100%' }} severity='info'>
       {t('Vote has ended with no decision.')}
@@ -133,26 +141,69 @@ export const DecidersActions: React.FC<ElectionComponentProps> = ({
     </>
   ) : accountInOrgans.deciders ? (
     <>
-      <TimeLeft {...{ election, procedure }} />
-      <Button
-        sx={{ width: '48%' }}
-        variant='contained'
-        className='approve-proposal'
-        disabled={isVoting}
-        onClick={() => submitVote(true)}
-      >
-        {t('Approve')}
-      </Button>
-      <Button
-        sx={{ width: '48%' }}
-        variant='contained'
-        color='secondary'
-        className='reject-proposal'
-        disabled={isVoting}
-        onClick={() => submitVote(false)}
-      >
-        {t('Reject')}
-      </Button>
+      {!compact && <TimeLeft {...{ election, procedure }} />}
+      {compact ? (
+        <>
+          <IconButton
+            aria-label={t('Approve')}
+            className='approve-proposal'
+            color='success'
+            disabled={isVoting}
+            onClick={() => submitVote(true)}
+            size='small'
+            sx={{
+              border: '1px solid',
+              borderColor: 'currentColor',
+              borderRadius: 1,
+              height: 28,
+              width: 28
+            }}
+          >
+            <CheckRoundedIcon fontSize='small' />
+          </IconButton>
+          <IconButton
+            aria-label={t('Reject')}
+            className='reject-proposal'
+            color='error'
+            disabled={isVoting}
+            onClick={() => submitVote(false)}
+            size='small'
+            sx={{
+              border: '1px solid',
+              borderColor: 'currentColor',
+              borderRadius: 1,
+              height: 28,
+              width: 28
+            }}
+          >
+            <CloseRoundedIcon fontSize='small' />
+          </IconButton>
+        </>
+      ) : (
+        <>
+          <Button
+            fullWidth
+            sx={{ mb: 1.25, py: 1.25 }}
+            variant='contained'
+            className='approve-proposal'
+            disabled={isVoting}
+            onClick={() => submitVote(true)}
+          >
+            {t('Approve')}
+          </Button>
+          <Button
+            fullWidth
+            sx={{ py: 1.25 }}
+            variant='outlined'
+            color='secondary'
+            className='reject-proposal'
+            disabled={isVoting}
+            onClick={() => submitVote(false)}
+          >
+            {t('Reject')}
+          </Button>
+        </>
+      )}
     </>
   ) : (
     <Alert variant='filled' sx={{ width: '100%' }} severity='warning'>

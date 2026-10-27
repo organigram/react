@@ -31,7 +31,9 @@ export const filterProposals: (
           case 'passed':
             return proposal.adopted
           case 'blocked':
-            return proposal.blocked
+            return (
+              proposal.blocked || (proposal.applied && !proposal.adopted)
+            )
           default:
             return true
         }

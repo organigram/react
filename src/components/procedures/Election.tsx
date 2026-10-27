@@ -26,6 +26,7 @@ export interface ElectionComponentProps {
   publicClient?: PublicClient | null
   walletClient?: WalletClient | null
   voterAddress?: string
+  compact?: boolean
 }
 export const ElectionComponent: React.FC<ElectionComponentProps> = ({
   procedure,
@@ -35,7 +36,8 @@ export const ElectionComponent: React.FC<ElectionComponentProps> = ({
   t = (key: string) => key,
   publicClient,
   walletClient,
-  voterAddress
+  voterAddress,
+  compact
 }) => {
   const election = procedure.elections?.find(
     (b: { proposalKey: any }) =>
@@ -102,6 +104,7 @@ export const ElectionComponent: React.FC<ElectionComponentProps> = ({
       justifyContent='space-between'
       mt={3}
       className='procedure-proposal procedure-proposal-vote'
+      sx={compact ? { display: 'contents' } : undefined}
     >
       {!election || !election.start || voteStart == null ? ( // Election does not exist or not started, or block cannot be fetched.
         <></>
@@ -115,7 +118,8 @@ export const ElectionComponent: React.FC<ElectionComponentProps> = ({
             t,
             publicClient,
             walletClient,
-            voterAddress
+            voterAddress,
+            compact
           }}
         />
       ) : !voteClosed ? ( // Vote is started. Vote is not ended.
@@ -128,7 +132,8 @@ export const ElectionComponent: React.FC<ElectionComponentProps> = ({
             t,
             publicClient,
             walletClient,
-            voterAddress
+            voterAddress,
+            compact
           }}
         />
       ) : (
@@ -141,7 +146,8 @@ export const ElectionComponent: React.FC<ElectionComponentProps> = ({
             accountInOrgans,
             publicClient,
             walletClient,
-            voterAddress
+            voterAddress,
+            compact
           }}
         />
       )}

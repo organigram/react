@@ -11,7 +11,8 @@ export const VoteEnded: React.FC<ElectionComponentProps> = ({
   proposal,
   wrapTransaction,
   publicClient,
-  walletClient
+  walletClient,
+  compact
 }) => {
   const { t } = useTranslation()
   const _procedure = useMemo(
@@ -60,6 +61,8 @@ export const VoteEnded: React.FC<ElectionComponentProps> = ({
       cancelled = true
     }
   }, [election?.approved, proposal.key, procedure.address, publicClient])
+
+  if (compact) return null
 
   if (approved == null) {
     return (

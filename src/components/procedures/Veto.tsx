@@ -7,8 +7,10 @@ export const VetoProposal: React.FC<ElectionComponentProps> = ({
   procedure,
   proposal,
   wrapTransaction,
-  t
+  t,
+  compact
 }) => {
+  if (compact) return null
   return accountInOrgans?.moderators ? (
     <Button
       color='secondary'

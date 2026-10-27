@@ -35,7 +35,8 @@
   },
   "dependencies": {
     "@organigram/js": "workspace:^",
-    "dagre": "^0.8.5"
+    "dagre": "^0.8.5",
+    "ethereum-blockies-base64": "^1.0.2"
   },
   "scripts": {
     "build": "vite build",

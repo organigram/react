@@ -37,7 +37,7 @@ import {
 } from '../../hooks/useDiagramDisplayOptions'
 import { mobileNavHeight } from '../../theme'
 import { ProcedureNode } from './ProcedureNode'
-import { OrganNode } from './OrganNode'
+import { OrganNode, type DiagramEntryUser } from './OrganNode'
 import { AssetNode } from './AssetNode'
 import { autodistribute } from './layout'
 
@@ -61,6 +61,7 @@ export interface DiagramProps {
   onAssetDeployed?: (asset: AssetJson) => void
   onProcedureDeployed?: (procedure: ProcedureJson) => void
   translateLabel?: (label: string) => string
+  entryUsers?: Record<string, DiagramEntryUser>
   displayOptions?: DiagramDisplayOptions
 }
 
@@ -135,6 +136,7 @@ export const Diagram: React.FC<DiagramProps> = ({
   onClickProcedure,
   onClickAsset,
   translateLabel,
+  entryUsers,
   displayOptions = defaultDiagramDisplayOptions
 }) => {
   const {
@@ -164,10 +166,11 @@ export const Diagram: React.FC<DiagramProps> = ({
           organ,
           onClick: onClickOrgan,
           translateLabel,
+          entryUsers,
           positionKey: getOrganPositionKey(organ.address)
         }
       })) ?? [],
-    [organigram?.organs, onClickOrgan, storedNodePositions, translateLabel]
+    [entryUsers, organigram?.organs, onClickOrgan, storedNodePositions, translateLabel]
   )
 
   const proceduresNodes = useMemo(
@@ -337,28 +340,6 @@ export const Diagram: React.FC<DiagramProps> = ({
                   ]
             }
           )
-          const registerDestinations = governingAssets.flatMap(
-            (asset, assetIndex) => {
-              const assetNode = assetsNodes.find(
-                node => node.data.asset.address === asset.address
-              )
-              const registerNode = organsNodes.find(
-                node =>
-                  node.data.organ.address ===
-                  procedureData.equityTransferRegister
-              )
-              return assetNode == null || registerNode == null
-                ? []
-                : [
-                    {
-                      id: `procedure-${index}-register-${assetIndex}`,
-                      source: procedureNode.id,
-                      target: registerNode.id,
-                      animated: true
-                    }
-                  ]
-            }
-          )
           const procedureDestinations =
             targetPermissions
               ?.filter(targetOrgan =>
@@ -412,8 +393,7 @@ export const Diagram: React.FC<DiagramProps> = ({
             ...procedureSources,
             ...tokenSource,
             ...procedureDestinations,
-            ...settlementDestinations,
-            ...registerDestinations
+            ...settlementDestinations
           ]
         })
         .flat() as Edge[]) ?? [],
@@ -502,6 +482,18 @@ export const Diagram: React.FC<DiagramProps> = ({
   )
   const [nodes, setNodes] = useState(() => distributedNodes)
   const [edges, setEdges] = useState(initialEdges)
+  const masterOrganNodeId = useMemo(() => {
+    const axis = direction === 'LR' ? 'x' : 'y'
+    return nodes
+      .filter(node => node.type === 'organ')
+      .reduce<Node | undefined>(
+        (master, node) =>
+          master == null || node.position[axis] < master.position[axis]
+            ? node
+            : master,
+        undefined
+      )?.id
+  }, [direction, nodes])
 
   const getCurrentNodePositions = useCallback(
     (currentNodes: Node[]): OrganigramNodePositions =>
@@ -579,7 +571,8 @@ export const Diagram: React.FC<DiagramProps> = ({
             ...n,
             data: {
               ...n.data,
-              position: n.position
+              position: n.position,
+              isMaster: n.id === masterOrganNodeId
             }
           })),
           edges,

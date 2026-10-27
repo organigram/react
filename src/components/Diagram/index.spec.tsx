@@ -3,6 +3,7 @@ import { render } from 'vitest-browser-react'
 import { test, expect } from 'vitest'
 
 import { Diagram } from '.'
+import { getOrganNodeIconKind, MemberCount } from './OrganNode'
 import Wrapper from '../../../test/Wrapper'
 
 test('Mount', async () => {
@@ -79,6 +80,114 @@ test('translates known organ and procedure names at render time', async () => {
   await expect
     .element(getByText('Enregistrer le transfert de titres'))
     .toBeInTheDocument()
+})
+
+test('shows user avatars and their count for organ members', async () => {
+  const userAddress = '0x0000000000000000000000000000000000000010'
+  const organigram = new Organigram({
+    organs: [{
+      address: '0x0000000000000000000000000000000000000001',
+      name: 'Board of directors',
+      entries: [{ index: '1', address: userAddress, cid: '' }]
+    }],
+    procedures: [],
+    assets: []
+  })
+
+  const { getByText } = await render(
+    <Diagram
+      organigram={organigram}
+      style={{ height: '100vh' }}
+      entryUsers={{
+        [userAddress]: {
+          name: 'Alice Martin',
+          image: 'https://lh3.googleusercontent.com/a/example'
+        }
+      }}
+    />,
+    { wrapper: Wrapper }
+  )
+
+  await expect
+    .element(document.querySelector('img[alt="Alice Martin"]'))
+    .toBeInTheDocument()
+  await expect.element(getByText('1 member')).toBeInTheDocument()
+  await expect.element(document.querySelector('#organ-Board of directors-entry-count')).not.toBeInTheDocument()
+})
+
+test('pluralizes the number of organ members', async () => {
+  const organ = new Organigram().toJson().organs[0]!
+  const { getByText } = await render(
+    <MemberCount organ={organ} count={2} />,
+    { wrapper: Wrapper }
+  )
+
+  await expect.element(getByText('2 members')).toBeInTheDocument()
+})
+
+test('uses a blockie when a user does not have a profile image', async () => {
+  const userAddress = '0x4100000000000000000000000000000000000010'
+  const organigram = new Organigram({
+    organs: [{
+      address: '0x0000000000000000000000000000000000000001',
+      name: 'Board of directors',
+      entries: [{ index: '1', address: userAddress, cid: '' }]
+    }],
+    procedures: [],
+    assets: []
+  })
+
+  await render(
+    <Diagram
+      organigram={organigram}
+      style={{ height: '100vh' }}
+      entryUsers={{ [userAddress]: {} }}
+    />,
+    { wrapper: Wrapper }
+  )
+
+  const blockie = document.querySelector(`img[alt="${userAddress}"]`)
+  await expect.element(blockie).toBeInTheDocument()
+  await expect.element(blockie).toHaveAttribute('src', expect.stringContaining('data:image'))
+  await expect.element(document.querySelector('#organ-Board of directors-entry-count')).not.toBeInTheDocument()
+})
+
+test('selects the organ icon from its role and capabilities', () => {
+  const baseOrgan = new Organigram({
+    organs: [{
+      address: '0x0000000000000000000000000000000000000001',
+      name: 'Board of directors'
+    }],
+    procedures: [],
+    assets: []
+  }).toJson().organs[0]!
+
+  expect(getOrganNodeIconKind({
+    organ: baseOrgan,
+    hasUserEntries: false,
+    isMaster: true
+  })).toBe('master')
+  expect(getOrganNodeIconKind({
+    organ: baseOrgan,
+    hasUserEntries: true,
+    isMaster: false
+  })).toBe('people')
+  expect(getOrganNodeIconKind({
+    organ: {
+      ...baseOrgan,
+      permissions: [{
+        permissionAddress: '0x0000000000000000000000000000000000000002',
+        permissionValue: 0x40
+      }]
+    },
+    hasUserEntries: false,
+    isMaster: false
+  })).toBe('funds')
+  expect(getOrganNodeIconKind({
+    organ: baseOrgan,
+    hasUserEntries: false,
+    isMaster: false
+  })).toBe('documents')
 })
 
 test('aligns a source-only procedure with its sole organ', async () => {
@@ -190,51 +299,4 @@ test('draws a governed share settlement from the procedure to the asset', async 
   await expect
     .element(document.querySelector(`[data-id="asset-${tokenAddress}"]`))
     .toBeInTheDocument()
-})
-
-test('shows the procedure settling and recording a SASU share transfer', async () => {
-  const presidentAddress = '0x0000000000000000000000000000000000000011'
-  const registerAddress = '0x0000000000000000000000000000000000000012'
-  const shareAddress = '0x0000000000000000000000000000000000000013'
-  const procedureAddress = '0x0000000000000000000000000000000000000014'
-  const organigram = new Organigram({
-    organs: [
-      { address: presidentAddress, name: 'President', permissions: [] },
-      {
-        address: registerAddress,
-        name: 'Share transfer register',
-        permissions: []
-      }
-    ],
-    assets: [
-      {
-        address: shareAddress,
-        name: 'Shares',
-        symbol: 'SHR',
-        kind: 'equity',
-        decisionProcedure: procedureAddress
-      }
-    ],
-    procedures: [
-      {
-        address: procedureAddress,
-        name: 'Approve share transfer',
-        typeName: 'nomination',
-        deciders: presidentAddress,
-        data: JSON.stringify({ equityTransferRegister: registerAddress })
-      }
-    ]
-  })
-
-  await render(
-    <Diagram organigram={organigram} style={{ height: '100vh' }} />,
-    { wrapper: Wrapper }
-  )
-
-  await expect
-    .element(document.querySelector('.react-flow__edge-text'))
-    .not.toBeInTheDocument()
-  await expect
-    .poll(() => document.querySelectorAll('.react-flow__edge').length)
-    .toBe(3)
 })
