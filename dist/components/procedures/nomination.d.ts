@@ -15,11 +15,12 @@ export interface NominationProposalProps {
     t: (key: string, options?: any) => string;
     publicClient?: PublicClient | null;
     walletClient?: WalletClient | null;
+    compact?: boolean;
 }
 declare const vote: {
     Component: ({ procedure }: {
         procedure: NominationProcedure;
     }) => import("react/jsx-runtime").JSX.Element;
-    Proposal: ({ procedure, proposal, accountInOrgans, wrapTransaction, t, publicClient, walletClient }: NominationProposalProps) => import("react/jsx-runtime").JSX.Element;
+    Proposal: ({ procedure, proposal, accountInOrgans, wrapTransaction, t, publicClient, walletClient, compact }: NominationProposalProps) => import("react/jsx-runtime").JSX.Element;
 };
 export default vote;
