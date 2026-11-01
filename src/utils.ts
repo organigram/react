@@ -31,7 +31,9 @@ export const filterProposals: (
           case 'passed':
             return proposal.adopted
           case 'blocked':
-            return proposal.blocked
+            return (
+              proposal.blocked || (proposal.applied && !proposal.adopted)
+            )
           default:
             return true
         }
@@ -58,11 +60,11 @@ export const isUserInSourceOrgan: (
       organ => organ.address === deployedProcedure?.[roleType as 'deciders']
     )
     // Find any deployed organ whose entries contain the current user's userAddress
-    ?.find(async organ =>
+    ?.some(organ =>
       organ?.entries
         ?.map((entry: OrganEntry) => entry?.address)
         .includes(userAddress as string)
-    ) !== undefined
+    ) ?? false
 
 /**
  * Convert a duration in seconds into a human-readable string.

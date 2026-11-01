@@ -49,6 +49,25 @@ test('renders entry names in classic org chart leaves', async () => {
   await expect.element(getByText('Ada Lovelace')).toBeInTheDocument()
 })
 
+test('uses the supplied label translator for organ names', async () => {
+  const organigram = new Organigram()
+  const { getByText } = await render(
+    <ClassicOrgChart
+      organigram={organigram}
+      style={{ height: '100vh' }}
+      isTabletOrAbove
+      translateLabel={label =>
+        label === 'Board of directors' ? "Conseil d'administration" : label
+      }
+    />,
+    { wrapper: Wrapper }
+  )
+
+  await expect
+    .element(getByText("Conseil d'administration"))
+    .toBeInTheDocument()
+})
+
 test('calls onClickOrgan when an organ node is clicked', async () => {
   const organigram = new Organigram()
   const onClickOrgan = vi.fn()

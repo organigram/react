@@ -8,6 +8,7 @@ export interface AssetNodeProps {
     data: {
         asset: Asset;
         onClick?: (asset: Asset) => void;
+        translateLabel?: (label: string) => string;
     };
     hideHandles?: boolean;
 }

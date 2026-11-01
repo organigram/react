@@ -12,7 +12,11 @@ import TokenIcon from '../icons/Token'
  */
 export interface AssetNodeProps {
   Token: React.FC<{ style: any }>
-  data: { asset: Asset; onClick?: (asset: Asset) => void }
+  data: {
+    asset: Asset
+    onClick?: (asset: Asset) => void
+    translateLabel?: (label: string) => string
+  }
   hideHandles?: boolean
 }
 
@@ -20,7 +24,7 @@ export interface AssetNodeProps {
  * Default React Flow node used to display one asset inside a diagram.
  */
 export const AssetNode: React.FC<NodeProps & AssetNodeProps> = ({
-  data: { asset, onClick },
+  data: { asset, onClick, translateLabel },
   sourcePosition,
   targetPosition,
   hideHandles
@@ -35,7 +39,7 @@ export const AssetNode: React.FC<NodeProps & AssetNodeProps> = ({
           : `dashed 1px ${palette.violet.light3 as string}`,
         pt: 1,
         pl: 2,
-        minWidth: '180px'
+        width: '288px'
       }}
     >
       <DiagramNode
@@ -68,7 +72,7 @@ export const AssetNode: React.FC<NodeProps & AssetNodeProps> = ({
             />
           </Grid>
         }
-        label={asset.name}
+        label={translateLabel?.(asset.name) ?? asset.name}
       />
     </Card>
     {hideHandles !== true && (

@@ -35,7 +35,8 @@
   },
   "dependencies": {
     "@organigram/js": "workspace:^",
-    "dagre": "^0.8.5"
+    "dagre": "^0.8.5",
+    "ethereum-blockies-base64": "^1.0.2"
   },
   "scripts": {
     "build": "vite build",
@@ -56,8 +57,8 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react": "^5.1.2",
-    "@vitest/browser-playwright": "^4.1.10",
-    "@vitest/coverage-v8": "4.1.10",
+    "@vitest/browser-playwright": "^4.1.12",
+    "@vitest/coverage-v8": "4.1.12",
     "playwright": "^1.60.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -66,9 +67,9 @@
     "recoil": "^0.7.7",
     "typescript": "^5.5.4",
     "viem": "2.55.2",
-    "vite": "^7.3.5",
+    "vite": "^7.3.7",
     "vite-plugin-dts": "^4.5.4",
-    "vitest": "^4.1.10",
+    "vitest": "^4.1.12",
     "vitest-browser-react": "^2.0.2"
   },
   "gitHead": "5aeceb89fcac23a06b21969c01c8bfdd36cea896"

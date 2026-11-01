@@ -32,20 +32,25 @@ export const DiagramNode: React.FC<{
         fontWeight='bold'
         fontSize='12px'
         textAlign='left'
+        noWrap
+        title={label}
+        sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
       >
         {label}
       </Typography>
     </Grid>
     {/* {organ?.metadata?.name)} */}
     <Grid container item width='30px'>
-      <Button
-        variant='text'
-        onClick={onClick}
-        id={id}
-        sx={{ color: 'grey.light4' }}
-      >
-        <MoreVert style={{ height: '18px', color: palette.grey.light }} />
-      </Button>
+      {onClick != null ? (
+        <Button
+          variant='text'
+          onClick={onClick}
+          id={id}
+          sx={{ color: 'grey.light4' }}
+        >
+          <MoreVert style={{ height: '18px', color: palette.grey.light }} />
+        </Button>
+      ) : null}
     </Grid>
   </Grid>
 )

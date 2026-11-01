@@ -83,9 +83,7 @@ const resolveUniqueParentCandidate = ({
     parentCandidates.add(parentAddress)
   }
 
-  return parentCandidates.size === 1
-    ? [...parentCandidates][0] ?? null
-    : null
+  return parentCandidates.size === 1 ? ([...parentCandidates][0] ?? null) : null
 }
 
 const wouldCreateCycle = (

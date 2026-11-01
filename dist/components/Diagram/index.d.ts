@@ -1,6 +1,8 @@
 import { default as React } from 'react';
 import { OrganJson, AssetJson, ProcedureJson, Organ, Procedure, OrganigramEdgeType, OrganigramNodePositions, Asset, OrganigramJson } from '@organigram/js';
 import { ReactFlowProps, NodeProps, NodeTypes } from 'react-flow-renderer';
+import { DiagramDisplayOptions } from '../../hooks/useDiagramDisplayOptions';
+import { DiagramEntryUser } from './OrganNode';
 export interface DiagramProps {
     nodeTypes?: NodeTypes;
     direction?: string;
@@ -17,6 +19,9 @@ export interface DiagramProps {
     onOrganDeployed?: (organ: OrganJson) => void;
     onAssetDeployed?: (asset: AssetJson) => void;
     onProcedureDeployed?: (procedure: ProcedureJson) => void;
+    translateLabel?: (label: string) => string;
+    entryUsers?: Record<string, DiagramEntryUser>;
+    displayOptions?: DiagramDisplayOptions;
 }
 export declare const defaultNodeTypes: {
     procedure: React.FC<NodeProps<{

@@ -9,4 +9,5 @@ export declare const ProcedureNode: React.FC<Partial<NodeProps<{
     procedure: ProcedureJson;
     onClick?: (procedure: ProcedureJson) => void;
     organigram?: OrganigramJson;
+    translateLabel?: (label: string) => string;
 }>> & ProcedureNodeProps>;
